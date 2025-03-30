@@ -1,0 +1,61 @@
+{
+  "navigation": {
+    "home": "Home",
+    "about": "About Us",
+    "programs": "Programs",
+    "news": "News & Events",
+    "gallery": "Gallery",
+    "contact": "Contact Us",
+    "login": "Login",
+    "register": "Register"
+  },
+  "languageNames": {
+    "en": "English",
+    "ar": "العربية"
+  },
+  "home": {
+    "hero": {
+      "title": "Khorramshahr Quranic Complex",
+      "subtitle": "A specialized center for teaching the Holy Quran and its sciences using modern educational methods",
+      "browsePrograms": "Browse Programs",
+      "contactUs": "Contact Us"
+    },
+    "about": {
+      "title": "About Us",
+      "description": "Khorramshahr Quranic Complex is an educational center specialized in teaching the Holy Quran and its sciences, established in 2010 with the aim of spreading Quranic culture and promoting the memorization and recitation of the Holy Quran. The complex includes a group of specialized teachers in Quranic sciences.",
+      "moreAboutUs": "More About Us"
+    },
+    "programs": {
+      "title": "Our Featured Programs",
+      "viewDetails": "View Details",
+      "viewAllPrograms": "View All Programs",
+      "ageGroup": "Age Group",
+      "schedule": "Schedule"
+    },
+    "news": {
+      "title": "Latest News & Events",
+      "readMore": "Read More",
+      "viewAllNews": "View All News"
+    },
+    "cta": {
+      "title": "Join Us Today",
+      "description": "Register now in one of our distinguished programs to learn the Holy Quran and its sciences under the guidance of specialized teachers.",
+      "browsePrograms": "Browse Programs",
+      "contactUs": "Contact Us"
+    }
+  },
+  "footer": {
+    "description": "An educational center specialized in teaching the Holy Quran and its sciences, aiming to spread Quranic culture and promote the memorization of the Holy Quran.",
+    "quickLinks": "Quick Links",
+    "contactInfo": "Contact Information",
+    "address": "Khorramshahr, Imam Street, next to the Grand Mosque",
+    "phone": "Phone: 123-456-7890",
+    "email": "Email: info@quran-khorramshahr.com",
+    "copyright": "All rights reserved.",
+    "about": "About Us",
+    "programs": "Programs",
+    "news": "News & Events",
+    "gallery": "Gallery",
+    "contact": "Contact Us"
+  }
+}
