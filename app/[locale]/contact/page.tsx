@@ -1,11 +1,12 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/Button"
 
 export default function ContactPage() {
+  const t = useTranslations("contact")
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -23,7 +24,7 @@ export default function ContactPage() {
     e.preventDefault()
     // Form submission logic would go here
     // For now, just show an alert
-    alert("تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.")
+    alert(t("formSubmitSuccess"))
     setFormData({
       name: "",
       email: "",
@@ -39,8 +40,8 @@ export default function ContactPage() {
       <section className="bg-secondary py-16 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold">اتصل بنا</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg">نحن هنا للإجابة على استفساراتك ومساعدتك في التسجيل</p>
+            <h1 className="text-4xl font-bold">{t("title")}</h1>
+            <p className="mx-auto mt-4 max-w-2xl text-lg">{t("subtitle")}</p>
           </div>
         </div>
       </section>
@@ -51,13 +52,13 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-secondary">راسلنا</h2>
+              <h2 className="text-2xl font-bold text-secondary">{t("formTitle")}</h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <form onSubmit={handleSubmit} className="mt-8 space-y-6">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                      الاسم
+                      {t("formNameLabel")}
                     </label>
                     <input
                       type="text"
@@ -71,7 +72,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      البريد الإلكتروني
+                      {t("formEmailLabel")}
                     </label>
                     <input
                       type="email"
@@ -86,7 +87,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                    رقم الهاتف
+                    {t("formPhoneLabel")}
                   </label>
                   <input
                     type="tel"
@@ -99,7 +100,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium text-gray-700">
-                    الموضوع
+                    {t("formSubjectLabel")}
                   </label>
                   <select
                     id="subject"
@@ -109,17 +110,17 @@ export default function ContactPage() {
                     required
                     className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
                   >
-                    <option value="">اختر الموضوع</option>
-                    <option value="استفسار عام">استفسار عام</option>
-                    <option value="التسجيل">التسجيل</option>
-                    <option value="البرامج والدورات">البرامج والدورات</option>
-                    <option value="اقتراحات">اقتراحات</option>
-                    <option value="أخرى">أخرى</option>
+                    <option value="">{t("formSubjectPlaceholder")}</option>
+                    <option value="استفسار عام">{t("formSubjectOptionGeneral")}</option>
+                    <option value="التسجيل">{t("formSubjectOptionRegistration")}</option>
+                    <option value="البرامج والدورات">{t("formSubjectOptionPrograms")}</option>
+                    <option value="اقتراحات">{t("formSubjectOptionSuggestions")}</option>
+                    <option value="أخرى">{t("formSubjectOptionOther")}</option>
                   </select>
                 </div>
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                    الرسالة
+                    {t("formMessageLabel")}
                   </label>
                   <textarea
                     id="message"
@@ -133,7 +134,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <Button type="submit" className="w-full bg-primary text-white hover:bg-primary/90">
-                    إرسال
+                    {t("formSubmitButton")}
                   </Button>
                 </div>
               </form>
@@ -141,38 +142,38 @@ export default function ContactPage() {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-2xl font-bold text-secondary">معلومات الاتصال</h2>
+              <h2 className="text-2xl font-bold text-secondary">{t("infoTitle")}</h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <div className="mt-8 space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">العنوان</h3>
-                  <p className="mt-2 text-gray-700">خرمشهر، شارع الأمام، بجوار المسجد الكبير</p>
+                  <h3 className="text-lg font-semibold text-gray-900">{t("infoAddressTitle")}</h3>
+                  <p className="mt-2 text-gray-700">{t("infoAddressValue")}</p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">ساعات العمل</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">{t("infoHoursTitle")}</h3>
                   <p className="mt-2 text-gray-700">
-                    السبت إلى الخميس: 8:00 صباحاً - 8:00 مساءً
+                    {t("infoHoursSatThu")}
                     <br />
-                    الجمعة: مغلق
+                    {t("infoHoursFri")}
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">الهاتف</h3>
-                  <p className="mt-2 text-gray-700">123-456-7890</p>
+                  <h3 className="text-lg font-semibold text-gray-900">{t("infoPhoneTitle")}</h3>
+                  <p className="mt-2 text-gray-700">123-456-7890</p> {/* Assuming phone number is not translated */}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">البريد الإلكتروني</h3>
-                  <p className="mt-2 text-gray-700">info@quran-khorramshahr.com</p>
+                  <h3 className="text-lg font-semibold text-gray-900">{t("infoEmailTitle")}</h3>
+                  <p className="mt-2 text-gray-700">info@quran-khorramshahr.com</p> {/* Assuming email is not translated */}
                 </div>
               </div>
 
               {/* Map */}
               <div className="mt-8">
-                <h3 className="text-lg font-semibold text-gray-900">الموقع على الخريطة</h3>
+                <h3 className="text-lg font-semibold text-gray-900">{t("mapTitle")}</h3>
                 <div className="mt-4 h-80 w-full overflow-hidden rounded-lg bg-gray-200">
                   {/* Placeholder for map */}
                   <div className="flex h-full w-full items-center justify-center">
-                    <p className="text-gray-500">خريطة الموقع</p>
+                    <p className="text-gray-500">{t("mapPlaceholder")}</p>
                   </div>
                 </div>
               </div>
@@ -183,4 +184,3 @@ export default function ContactPage() {
     </div>
   )
 }
-

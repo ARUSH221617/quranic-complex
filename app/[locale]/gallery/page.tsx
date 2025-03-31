@@ -1,15 +1,26 @@
 import Image from "next/image"
+import { useTranslations } from "next-intl"
 import { galleryImages } from "@/lib/placeholder-data"
 
 export default function GalleryPage() {
+  const t = useTranslations("gallery")
+  const categories = [
+    "categoryAll",
+    "categoryEvents",
+    "categoryCompetitions",
+    "categoryLessons",
+    "categoryVisits",
+    "categoryFacilities",
+  ] as const // Define categories using keys
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="bg-secondary py-16 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold">معرض الصور</h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg">صور من فعاليات وأنشطة مجمع قرآنی خرمشهر</p>
+            <h1 className="text-4xl font-bold">{t("title")}</h1>
+            <p className="mx-auto mt-4 max-w-2xl text-lg">{t("subtitle")}</p>
           </div>
         </div>
       </section>
@@ -42,16 +53,16 @@ export default function GalleryPage() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">تصنيفات الصور</h2>
+            <h2 className="text-3xl font-bold text-secondary">{t("categoriesTitle")}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            {["الكل", "فعاليات", "مسابقات", "دروس", "زيارات", "مرافق"].map((category) => (
+            {categories.map((categoryKey) => (
               <button
-                key={category}
+                key={categoryKey}
                 className="rounded-full bg-white px-6 py-2 text-gray-700 shadow-md transition-colors hover:bg-primary hover:text-white"
               >
-                {category}
+                {t(categoryKey)}
               </button>
             ))}
           </div>
@@ -60,4 +71,3 @@ export default function GalleryPage() {
     </div>
   )
 }
-
