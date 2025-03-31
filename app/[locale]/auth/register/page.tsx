@@ -1,14 +1,14 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/Button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useTranslations } from "next-intl"
 
-export default function RegisterPage({ params: { locale } }: { params: { locale: string } }) {
+export default function RegisterPage() {
+  const t = useTranslations('home.auth.register')
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
@@ -31,7 +31,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError(locale === "ar" ? "كلمات المرور غير متطابقة" : "Passwords do not match")
+      setError(t('passwordMismatch'))
       setIsLoading(false)
       return
     }
@@ -41,7 +41,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
     setTimeout(() => {
       setIsLoading(false)
       // Redirect to login page
-      router.push(`/${locale}/auth/login?registered=true`)
+      router.push(`/auth/login?registered=true`)
     }, 1500)
   }
 
@@ -50,10 +50,10 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
-            {locale === "ar" ? "إنشاء حساب جديد" : "Create an Account"}
+            {t('title')}
           </CardTitle>
           <CardDescription>
-            {locale === "ar" ? "قم بإنشاء حساب للوصول إلى بوابة الطالب" : "Register to access the student portal"}
+            {t('subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -65,7 +65,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
             )}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                {locale === "ar" ? "الاسم الكامل" : "Full Name"}
+                {t('nameLabel')}
               </label>
               <input
                 id="name"
@@ -81,7 +81,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                {locale === "ar" ? "البريد الإلكتروني" : "Email"}
+                {t('emailLabel')}
               </label>
               <input
                 id="email"
@@ -97,7 +97,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                {locale === "ar" ? "كلمة المرور" : "Password"}
+                {t('passwordLabel')}
               </label>
               <input
                 id="password"
@@ -113,7 +113,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                {locale === "ar" ? "تأكيد كلمة المرور" : "Confirm Password"}
+                {t('confirmPasswordLabel')}
               </label>
               <input
                 id="confirmPassword"
@@ -129,22 +129,16 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
 
             <div>
               <Button type="submit" className="w-full bg-primary text-white hover:bg-primary/90" disabled={isLoading}>
-                {isLoading
-                  ? locale === "ar"
-                    ? "جاري التسجيل..."
-                    : "Registering..."
-                  : locale === "ar"
-                    ? "التسجيل"
-                    : "Register"}
+                {isLoading ? t('registeringProgress') : t('register')}
               </Button>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600">
-            {locale === "ar" ? "لديك حساب بالفعل؟" : "Already have an account?"}{" "}
-            <Link href={`/${locale}/auth/login`} className="font-medium text-primary hover:underline">
-              {locale === "ar" ? "تسجيل الدخول" : "Sign in"}
+            {t('hasAccount')}{" "}
+            <Link href={`/auth/login`} className="font-medium text-primary hover:underline">
+              {t('signIn')}
             </Link>
           </p>
         </CardFooter>
@@ -152,4 +146,3 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
     </div>
   )
 }
-

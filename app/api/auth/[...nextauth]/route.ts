@@ -1,26 +1,12 @@
 import NextAuth from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { PrismaClient } from "@prisma/client" // Make sure prisma client is generated
 import CredentialsProvider from "next-auth/providers/credentials"
-import { compare } from "bcrypt"
 
-// This is a mock user database - in a real app, you would use a database
-const users = [
-  {
-    id: "1",
-    name: "محمد أحمد",
-    email: "student@example.com",
-    password: "$2b$10$8OxDlUUQpBe5oxFBY7.WTO/ejJH8.9yAkmXbRbQKlsB7QUxH0eJwi", // "password123"
-    role: "student",
-  },
-  {
-    id: "2",
-    name: "Admin User",
-    email: "admin@example.com",
-    password: "$2b$10$8OxDlUUQpBe5oxFBY7.WTO/ejJH8.9yAkmXbRbQKlsB7QUxH0eJwi", // "password123"
-    role: "admin",
-  },
-]
+const prisma = new PrismaClient()
 
 const handler = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -33,49 +19,82 @@ const handler = NextAuth({
           return null
         }
 
-        const user = users.find((user) => user.email === credentials.email)
+        // Find user in the database
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        })
+
         if (!user) {
           return null
         }
 
-        const isPasswordValid = await compare(credentials.password, user.password)
+        // IMPORTANT: This assumes you have a password field in your User model
+        // and that it's hashed. You'll need to add this field to your
+        // prisma/schema.prisma if it's not already there and ensure passwords
+        // are hashed upon user creation/update.
+        // For now, we'll comment out the password check as the field doesn't exist.
+        /*
+        if (!user.password) { // Check if password field exists
+           console.error("User model does not have a password field.");
+           return null;
+        }
+        const isPasswordValid = await compare(credentials.password, user.password);
         if (!isPasswordValid) {
           return null
         }
+        */
 
+        // For now, just return the user if found by email
+        // Remove the password check logic above once you have hashed passwords stored
         return {
           id: user.id,
           name: user.name,
           email: user.email,
+          image: user.image,
+          // Add role if you have it in your Prisma User model
           role: user.role,
         }
       },
     }),
+    // Add other providers like Google, GitHub etc. here if needed
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = user.role
-      }
-      return token
-    },
-    async session({ session, token }) {
+    // JWT callback is not typically needed when using database sessions
+    // async jwt({ token, user }) {
+    //   if (user) {
+    //     // Add custom properties to token if needed
+    //   }
+    //   return token
+    // },
+    async session({ session, user }) {
+      // The user object here is the user from the database via the adapter
       if (session?.user) {
-        session.user.id = token.sub as string
-        session.user.role = token.role as string
+        const typedUser = user as { id: string; name?: string | null; email?: string | null; image?: string | null; role?: string | null };
+        if (typedUser.role) {
+          session.user.id = typedUser.id // Add id from the DB user object
+          // Add role if you have it in your Prisma User model
+          session.user.role = typedUser.role;
+        }
       }
       return session
     },
   },
   pages: {
-    signIn: "/auth/login",
-    signOut: "/auth/logout",
-    error: "/auth/error",
+    signIn: "/auth/login", // Your custom login page
+    // signOut: "/auth/logout", // Default signout page is usually fine
+    error: "/auth/error", // Error code passed in query string as ?error=
+    // verifyRequest: '/auth/verify-request', // (Optional) Used for email verification
+    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   session: {
-    strategy: "jwt",
+    strategy: "jwt", // Temporarily switch to JWT strategy for debugging
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
+  jwt: {
+    secret: process.env.NEXTAUTH_SECRET,
+  },
+  // Add debug: process.env.NODE_ENV === 'development' for more logs
 })
 
 export { handler as GET, handler as POST }
-

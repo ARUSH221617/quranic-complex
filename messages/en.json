@@ -20,6 +20,33 @@
       "browsePrograms": "Browse Programs",
       "contactUs": "Contact Us"
     },
+    "auth": {
+      "login": {
+        "title": "Login",
+        "subtitle": "Sign in to access the student portal",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "signIn": "Sign in",
+        "signingInProgress": "Signing in...",
+        "noAccount": "Don't have an account?",
+        "register": "Register",
+        "invalidCredentials": "Invalid email or password",
+        "loginError": "An error occurred during login"
+      },
+      "register": {
+        "title": "Create an Account",
+        "subtitle": "Register to access the student portal",
+        "nameLabel": "Full Name",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "confirmPasswordLabel": "Confirm Password",
+        "register": "Register",
+        "registeringProgress": "Registering...",
+        "hasAccount": "Already have an account?",
+        "signIn": "Sign in",
+        "passwordMismatch": "Passwords do not match"
+      }
+    },
     "about": {
       "title": "About Us",
       "description": "Khorramshahr Quranic Complex is an educational center specialized in teaching the Holy Quran and its sciences, established in 2010 with the aim of spreading Quranic culture and promoting the memorization and recitation of the Holy Quran. The complex includes a group of specialized teachers in Quranic sciences.",
