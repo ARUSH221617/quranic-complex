@@ -1,6 +1,6 @@
 import Image from "next/image"
 import Link from "next/link"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { programs } from "@/lib/placeholder-data"
 
 export default function ProgramsPage({ params: { locale } }: { params: { locale: string } }) {

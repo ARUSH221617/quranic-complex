@@ -1,17 +1,19 @@
-import { getServerSession } from "next-auth/next"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { getServerSession } from "next-auth/next";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 
-export default async function DashboardPage({ params: { locale } }: { params: { locale: string } }) {
-  const session = await getServerSession()
+export default async function DashboardPage() {
+  const session = await getServerSession();
+  const t = await getTranslations("dashboard");
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold">{locale === "ar" ? "لوحة التحكم" : "Dashboard"}</h1>
+      <h1 className="mb-6 text-2xl font-bold">{t("title")}</h1>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">{locale === "ar" ? "البرامج المسجلة" : "Enrolled Programs"}</CardTitle>
+            <CardTitle className="text-lg">{t("enrolledPrograms")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">2</p>
@@ -20,7 +22,7 @@ export default async function DashboardPage({ params: { locale } }: { params: { 
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">{locale === "ar" ? "الدروس القادمة" : "Upcoming Lessons"}</CardTitle>
+            <CardTitle className="text-lg">{t("upcomingLessons")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">3</p>
@@ -29,7 +31,7 @@ export default async function DashboardPage({ params: { locale } }: { params: { 
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">{locale === "ar" ? "الإشعارات" : "Notifications"}</CardTitle>
+            <CardTitle className="text-lg">{t("notifications")}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold">5</p>
@@ -41,20 +43,14 @@ export default async function DashboardPage({ params: { locale } }: { params: { 
         <Card>
           <CardHeader>
             <CardTitle>
-              {locale === "ar" ? "مرحباً، " : "Welcome, "}
-              {session?.user?.name || (locale === "ar" ? "الطالب" : "Student")}
+              {t("welcome", { name: session?.user?.name || t("student") })}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p>
-              {locale === "ar"
-                ? "مرحباً بك في بوابة الطالب الخاصة بمجمع قرآنی خرمشهر. يمكنك من هنا متابعة برامجك ودروسك والاطلاع على تقدمك."
-                : "Welcome to the student portal of Khorramshahr Quranic Complex. From here, you can track your programs, lessons, and view your progress."}
-            </p>
+            <p>{t("welcomeMessage")}</p>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }
-

@@ -44,7 +44,34 @@
         "registeringProgress": "جاري التسجيل...",
         "hasAccount": "لديك حساب بالفعل؟",
         "signIn": "تسجيل الدخول",
-        "passwordMismatch": "كلمات المرور غير متطابقة"
+        "passwordMismatch": "كلمات المرور غير متطابقة",
+        "phoneLabel": "رقم الهاتف",
+        "optional": "اختياري",
+        "dateOfBirthLabel": "تاريخ الميلاد",
+        "nationalCodeLabel": "الرقم الوطني",
+        "quranicLevelLabel": "مستوى الدراسات القرآنية",
+        "selectLevelPlaceholder": "اختر مستواك",
+        "nationalCardLabel": "صورة البطاقة الوطنية",
+        "registrationFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+        "networkError": "حدث خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى.",
+        "nameRequired": "الاسم الكامل مطلوب",
+        "invalidEmail": "الرجاء إدخال عنوان بريد إلكتروني صالح",
+        "passwordMinLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+        "invalidDateFormat": "الرجاء إدخال تاريخ صالح",
+        "nationalCodeLength": "يجب أن يتكون الرقم الوطني من 10 أرقام بالضبط",
+        "nationalCodeNumeric": "يجب أن يحتوي الرقم الوطني على أرقام فقط",
+        "quranicLevelRequired": "الرجاء اختيار مستوى دراستك القرآنية",
+        "nationalCardRequired": "صورة البطاقة الوطنية مطلوبة",
+        "quranicLevels": {
+          "BEGINNER": "مبتدئ",
+          "INTERMEDIATE": "متوسط",
+          "ADVANCED": "متقدم"
+        },
+        "invalidImageType": "نوع الصورة غير صالح. يرجى تحميل ملف PNG أو JPG أو JPEG.",
+        "imageTooLarge": "لا يمكن أن يتجاوز حجم الصورة {size}.",
+        "nationalCardPreviewAlt": "معاينة البطاقة الوطنية",
+        "removeImageAriaLabel": "إزالة الصورة",
+        "changeImageAriaLabel": "تغيير الصورة"
       }
     },
     "about": {
@@ -123,6 +150,15 @@
     "categoryLessons": "دروس",
     "categoryVisits": "زيارات",
     "categoryFacilities": "مرافق"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "enrolledPrograms": "البرامج المسجلة",
+    "upcomingLessons": "الدروس القادمة",
+    "notifications": "الإشعارات",
+    "welcome": "مرحباً، {name}",
+    "welcomeMessage": "مرحباً بك في بوابة الطالب الخاصة بمجمع قرآنی خرمشهر. يمكنك من هنا متابعة برامجك ودروسك والاطلاع على تقدمك.",
+    "student": "الطالب"
   },
   "about": {
     "title": "من نحن",

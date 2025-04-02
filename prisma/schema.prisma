@@ -40,9 +40,20 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  phone         String?   // Added phone field
   role          String? // Added role field
   accounts      Account[]
   sessions      Session[]
+  nationalCode        String?   @unique // Added for student registration
+  dateOfBirth         DateTime? // Added for student registration
+  quranicStudyLevel   QuranicStudyLevel? // Added for student registration
+  nationalCardPicture String?   // Added for student registration (stores file path/URL)
+}
+
+enum QuranicStudyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
 }
 
 model VerificationToken {

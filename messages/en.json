@@ -44,7 +44,34 @@
         "registeringProgress": "Registering...",
         "hasAccount": "Already have an account?",
         "signIn": "Sign in",
-        "passwordMismatch": "Passwords do not match"
+        "passwordMismatch": "Passwords do not match",
+        "phoneLabel": "Phone Number",
+        "optional": "Optional",
+        "dateOfBirthLabel": "Date of Birth",
+        "nationalCodeLabel": "National Code",
+        "quranicLevelLabel": "Level of Quranic Studies",
+        "selectLevelPlaceholder": "Select your level",
+        "nationalCardLabel": "National Card Picture",
+        "registrationFailed": "Registration failed. Please try again.",
+        "networkError": "A network error occurred. Please check your connection and try again.",
+        "nameRequired": "Full name is required",
+        "invalidEmail": "Please enter a valid email address",
+        "passwordMinLength": "Password must be at least 6 characters long",
+        "invalidDateFormat": "Please enter a valid date",
+        "nationalCodeLength": "National code must be exactly 10 digits",
+        "nationalCodeNumeric": "National code must only contain numbers",
+        "quranicLevelRequired": "Please select your level of Quranic studies",
+        "nationalCardRequired": "National card picture is required",
+        "quranicLevels": {
+          "BEGINNER": "Beginner",
+          "INTERMEDIATE": "Intermediate",
+          "ADVANCED": "Advanced"
+        },
+        "invalidImageType": "Invalid image type. Please upload a PNG, JPG, or JPEG file.",
+        "imageTooLarge": "Image size cannot exceed {size}.",
+        "nationalCardPreviewAlt": "National Card Preview",
+        "removeImageAriaLabel": "Remove image",
+        "changeImageAriaLabel": "Change image"
       }
     },
     "about": {
@@ -123,6 +150,15 @@
     "categoryLessons": "Lessons",
     "categoryVisits": "Visits",
     "categoryFacilities": "Facilities"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "enrolledPrograms": "Enrolled Programs",
+    "upcomingLessons": "Upcoming Lessons",
+    "notifications": "Notifications",
+    "welcome": "Welcome, {name}",
+    "welcomeMessage": "Welcome to the student portal of Khorramshahr Quranic Complex. From here, you can track your programs, lessons, and view your progress.",
+    "student": "Student"
   },
   "about": {
     "title": "About Us",
