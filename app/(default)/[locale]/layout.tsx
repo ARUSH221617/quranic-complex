@@ -3,7 +3,7 @@ import "@/app/globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getLocale, getMessages } from "next-intl/server";
 import SessionWrapper from "@/components/SessionWrapper";
 
 export const metadata: Metadata = {
@@ -13,11 +13,10 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  params: { locale },
 }: {
   children: React.ReactNode;
-  params: { locale: string };
 }) {
+  const locale = await getLocale();
   const messages = await getMessages({ locale });
   const dir = locale === "ar" ? "rtl" : "ltr";
 
