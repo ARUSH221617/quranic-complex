@@ -55,7 +55,7 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">من نحن</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">من نحن</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-8 text-center">
@@ -67,7 +67,7 @@ export default function Home() {
               <Link href="/about">
                 <Button
                   variant="outline"
-                  className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                  className="border-secondary text-secondary-text hover:bg-secondary hover:text-white"
                 >
                   المزيد عنا
                 </Button>
@@ -81,7 +81,7 @@ export default function Home() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">برامجنا المميزة</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">برامجنا المميزة</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -124,7 +124,7 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">آخر الأخبار والفعاليات</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">آخر الأخبار والفعاليات</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -180,7 +180,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-secondary bg-transparent text-secondary hover:bg-secondary hover:text-white"
+                  className="border-secondary bg-transparent text-secondary-text hover:bg-secondary hover:text-white"
                 >
                   تواصل معنا
                 </Button>

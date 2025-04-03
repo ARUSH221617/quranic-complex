@@ -25,7 +25,7 @@ export default function Home() {
         className="relative py-20 text-white"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(223, 207, 159, 0.9), rgba(223, 207, 159, 0.9)), url('/pattern/islamic-geometric-pattern.jpg')",
+            "linear-gradient(rgba(223, 207, 159, 0.9), rgba(223, 207, 159, 0.9)), url('/pattern/islamic-geometric-pattern.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -60,7 +60,7 @@ export default function Home() {
             <div className="flex items-center justify-center">
               <div className="relative h-64 w-full overflow-hidden rounded-lg md:h-80">
                 <Image
-                  src="/masged.jpeg?height=400&width=600"
+                  src="/masged.webp?height=400&width=600"
                   alt="مجمع قرآنی خرمشهر"
                   fill
                   className="object-cover"
@@ -76,10 +76,10 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">
+            <h2 className="text-3xl font-bold text-secondary-text">
               {t("about.title")}
             </h2>
-            <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
+            <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
           </div>
           <div className="mt-8 text-center">
             <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-700">
@@ -89,7 +89,7 @@ export default function Home() {
               <Link href="/about">
                 <Button
                   variant="outline"
-                  className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                  className="border-secondary text-secondary-text hover:bg-secondary hover:text-white"
                 >
                   {t("about.moreAboutUs")}
                 </Button>
@@ -103,10 +103,10 @@ export default function Home() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">
+            <h2 className="text-3xl font-bold text-secondary-text">
               {t("programs.title")}
             </h2>
-            <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
+            <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {featuredPrograms.map((program) => (
@@ -167,10 +167,10 @@ export default function Home() {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">
+            <h2 className="text-3xl font-bold text-secondary-text">
               {t("news.title")}
             </h2>
-            <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
+            <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {latestNews.map((item) => (

@@ -23,16 +23,17 @@ body {
     --primary: 145 63% 29%;
     --primary-foreground: 45 100% 98%;
     --secondary: 45 50% 75%;
-    --secondary-foreground: 145 63% 29%;
+    --secondary-foreground: 145 63% 19%;
+    --secondary-text: 45 50% 55%;
     --muted: 45 30% 90%;
     --muted-foreground: 145 10% 45%;
     --accent: 45 50% 75%;
-    --accent-foreground: 145 63% 29%;
+    --accent-foreground: 145 63% 19%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
     --border: 45 30% 88%;
     --input: 45 30% 88%;
-    --ring: 145 63% 29%;
+    --ring: 145 63% 19%;
     --chart-1: 145 60% 40%;
     --chart-2: 45 55% 60%;
     --chart-3: 145 40% 55%;
@@ -41,12 +42,12 @@ body {
     --radius: 0.5rem;
     --sidebar-background: 45 60% 96%;
     --sidebar-foreground: 145 15% 25%;
-    --sidebar-primary: 145 63% 29%;
+    --sidebar-primary: 145 63% 19%;
     --sidebar-primary-foreground: 45 100% 98%;
     --sidebar-accent: 45 50% 85%;
-    --sidebar-accent-foreground: 145 63% 29%;
+    --sidebar-accent-foreground: 145 63% 19%;
     --sidebar-border: 45 30% 88%;
-    --sidebar-ring: 145 63% 29%;
+    --sidebar-ring: 145 63% 19%;
   }
   .dark {
     --background: 145 15% 10%;
@@ -86,6 +87,7 @@ body {
 
 @layer base {
   * {
+    /* stylelint-disable-next-line at-rule-no-unknown */
     @apply border-border;
   }
   body {

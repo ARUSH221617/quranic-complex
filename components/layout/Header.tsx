@@ -37,7 +37,7 @@ export default function Header() {
               <span className="sr-only">Khorramshahr Quranic Complex</span>
               <div className="relative h-12 w-12 overflow-hidden rounded-full bg-primary/10">
                 <Image
-                  src={"/logo.png"}
+                  src={"/logo.webp"}
                   alt=""
                   width={150}
                   height={150}
@@ -60,7 +60,7 @@ export default function Header() {
               <span
                 className={`hidden md:block ${
                   locale === "ar" ? "me-3" : "ms-3"
-                } text-xl font-serif font-bold text-secondary`}
+                } text-xl font-serif font-bold text-secondary-text`}
               >
                 {t("brand")}
               </span>

@@ -1,10 +1,9 @@
-import type React from "react";
-import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
-import type { Metadata } from "next";
 import "@/app/globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import SessionWrapper from "@/components/SessionWrapper";
+import DashboardLayoutClient from "./DashboardLayoutClient";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Khorramshahr Quranic Complex",
@@ -26,12 +25,7 @@ export default async function RootLayout({
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionWrapper>
-            <main>
-              <div className="flex min-h-screen">
-                <DashboardSidebar locale={locale} />
-                <div className="flex-1 p-8">{children}</div>
-              </div>
-            </main>
+            <DashboardLayoutClient>{children}</DashboardLayoutClient>
           </SessionWrapper>
         </NextIntlClientProvider>
       </body>

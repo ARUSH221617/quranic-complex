@@ -52,7 +52,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             {/* Contact Form */}
             <div>
-              <h2 className="text-2xl font-bold text-secondary">{t("formTitle")}</h2>
+              <h2 className="text-2xl font-bold text-secondary-text">{t("formTitle")}</h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <form onSubmit={handleSubmit} className="mt-8 space-y-6">
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -142,7 +142,7 @@ export default function ContactPage() {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-2xl font-bold text-secondary">{t("infoTitle")}</h2>
+              <h2 className="text-2xl font-bold text-secondary-text">{t("infoTitle")}</h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <div className="mt-8 space-y-6">
                 <div>

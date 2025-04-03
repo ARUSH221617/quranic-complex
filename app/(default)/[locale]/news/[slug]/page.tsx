@@ -68,7 +68,7 @@ export default function NewsDetailPage({
               <Link href={`/${locale}/news`}>
                 <Button
                   variant="outline"
-                  className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                  className="border-secondary text-secondary-text hover:bg-secondary hover:text-white"
                 >
                   {locale === "ar" ? "العودة إلى الأخبار" : "Back to News"}
                 </Button>
@@ -82,7 +82,7 @@ export default function NewsDetailPage({
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">{locale === "ar" ? "أخبار ذات صلة" : "Related News"}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">{locale === "ar" ? "أخبار ذات صلة" : "Related News"}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -98,7 +98,7 @@ export default function NewsDetailPage({
                     <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-bold text-secondary">{item.title}</h3>
+                    <h3 className="text-xl font-bold text-secondary-text">{item.title}</h3>
                     <p className="mt-2 text-sm text-gray-500">
                       {new Date(item.date).toLocaleDateString(locale === "ar" ? "ar-EG" : "en-US", {
                         year: "numeric",

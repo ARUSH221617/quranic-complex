@@ -44,12 +44,12 @@ export default function ProgramDetailPage({
               </div>
             </div>
             <div>
-              <h2 className="text-3xl font-bold text-secondary">{program.title}</h2>
+              <h2 className="text-3xl font-bold text-secondary-text">{program.title}</h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <div className="mt-6 space-y-4">
                 <p className="text-gray-700">{program.description}</p>
                 <div className="rounded-lg bg-gray-50 p-6">
-                  <h3 className="text-xl font-semibold text-secondary">
+                  <h3 className="text-xl font-semibold text-secondary-text">
                     {locale === "ar" ? "تفاصيل البرنامج" : "Program Details"}
                   </h3>
                   <ul className="mt-4 space-y-2">
@@ -80,7 +80,7 @@ export default function ProgramDetailPage({
                   <Link href={`/${locale}/programs`}>
                     <Button
                       variant="outline"
-                      className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                      className="border-secondary text-secondary-text hover:bg-secondary hover:text-white"
                     >
                       {locale === "ar" ? "العودة إلى البرامج" : "Back to Programs"}
                     </Button>
@@ -96,7 +96,7 @@ export default function ProgramDetailPage({
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">{locale === "ar" ? "المنهج الدراسي" : "Curriculum"}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">{locale === "ar" ? "المنهج الدراسي" : "Curriculum"}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-12">
@@ -105,7 +105,7 @@ export default function ProgramDetailPage({
                 {/* Sample curriculum items */}
                 {[1, 2, 3].map((item) => (
                   <div key={item} className="border-b border-gray-200 pb-6 last:border-0 last:pb-0">
-                    <h3 className="text-xl font-semibold text-secondary">
+                    <h3 className="text-xl font-semibold text-secondary-text">
                       {locale === "ar" ? `الوحدة ${item}` : `Module ${item}`}
                     </h3>
                     <p className="mt-2 text-gray-700">

@@ -20,7 +20,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
             <div className="flex flex-col justify-center">
-              <h2 className="text-3xl font-bold text-secondary">{t("historyTitle")}</h2>
+              <h2 className="text-3xl font-bold text-secondary-text">{t("historyTitle")}</h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <div className="mt-6 space-y-4 text-gray-700">
                 <p>{t("historyPara1")}</p>
@@ -46,7 +46,7 @@ export default function AboutPage() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">{t("missionVisionTitle")}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">{t("missionVisionTitle")}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -68,7 +68,7 @@ export default function AboutPage() {
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">{t("valuesTitle")}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">{t("valuesTitle")}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -104,7 +104,7 @@ export default function AboutPage() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">{t("staffTitle")}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">{t("staffTitle")}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
             <p className="mx-auto mt-6 max-w-2xl text-gray-700">{t("staffDescription")}</p>
           </div>
@@ -122,7 +122,7 @@ export default function AboutPage() {
                   />
                 </div>
                 {/* Staff name is likely dynamic or placeholder, keeping original structure */}
-                <h3 className="mt-4 text-xl font-bold text-secondary">الأستاذ محمد {index}</h3>
+                <h3 className="mt-4 text-xl font-bold text-secondary-text">الأستاذ محمد {index}</h3>
                 <p className="text-primary">{t("staffMemberRole")}</p>
               </div>
             ))}

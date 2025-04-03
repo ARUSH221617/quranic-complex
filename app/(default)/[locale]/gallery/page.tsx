@@ -53,7 +53,7 @@ export default function GalleryPage() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">{t("categoriesTitle")}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">{t("categoriesTitle")}</h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">

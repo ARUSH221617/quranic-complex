@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
   Bell,
+  LucideMenu
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
@@ -24,7 +25,11 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-export default function DashboardSidebar() {
+interface DashboardSidebarProps {
+  collapsed?: boolean;
+}
+
+export default function DashboardSidebar({ collapsed = false }: DashboardSidebarProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -60,18 +65,18 @@ export default function DashboardSidebar() {
   ];
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-secondary text-white">
+    <div className={`flex h-screen flex-col bg-secondary text-primary transition-all duration-300 ${collapsed ? "w-0 overflow-hidden" : "w-64"}`}>
       <div className="flex h-24 items-center justify-center border-b border-secondary-foreground/10 px-4">
         <Link href={`/`} className="flex items-center gap-2 text-xl font-bold">
           <Image
-            src="/logo.png"
+            src="/logo.webp"
             alt="Logo"
             width={150}
             height={150}
             className="h-10 w-10 object-contain"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = "/placeholder-logo.png";
+              target.src = "/placeholder-logo.webp";
             }}
           />
           {t("brand")}
@@ -86,14 +91,14 @@ export default function DashboardSidebar() {
               href={item.href}
               className={`flex items-center rounded-lg px-4 py-3 text-base font-medium transition-colors duration-200 ${
                 isActive
-                  ? "bg-primary text-white shadow-md"
-                  : "text-secondary-foreground/80 hover:bg-secondary-foreground/10 hover:text-white"
+                  ? "shadow-md"
+                  : "text-secondary-text-foreground/80 hover:bg-secondary-foreground/10 hover:text-white"
               }`}
             >
               <item.icon
                 className={`${locale === "ar" ? "ml-3" : "mr-3"} h-5 w-5`}
               />
-              {item.name}
+              {!collapsed && item.name}
             </Link>
           );
         })}
@@ -112,12 +117,14 @@ export default function DashboardSidebar() {
                     {session?.user?.name?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-sm font-semibold text-secondary-foreground/80">
-                  {session?.user?.name || t("user")}
-                </span>
+          {!collapsed && (
+            <span className="text-sm font-semibold text-secondary-text-foreground/80 !text-secondary-text-foreground">
+              {session?.user?.name || t("user")}
+            </span>
+          )}
               </div>
               <div className="flex items-center">
-                <Bell className="h-5 w-5 text-secondary-foreground/80" />
+                <LucideMenu className="h-5 w-5 text-secondary-text-foreground/80 !text-secondary-text-foreground" />
               </div>
             </div>
           </DropdownMenuTrigger>

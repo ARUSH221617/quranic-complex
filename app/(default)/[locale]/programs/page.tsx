@@ -24,7 +24,7 @@ export default function ProgramsPage({ params: { locale } }: { params: { locale:
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary">
+            <h2 className="text-3xl font-bold text-secondary-text">
               {locale === "ar" ? "برامجنا التعليمية" : "Our Educational Programs"}
             </h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
@@ -75,7 +75,7 @@ export default function ProgramsPage({ params: { locale } }: { params: { locale:
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="rounded-lg bg-white p-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-secondary">
+            <h2 className="text-2xl font-bold text-secondary-text">
               {locale === "ar" ? "معلومات التسجيل" : "Registration Information"}
             </h2>
             <div className="mt-4 h-1 w-20 bg-accent"></div>

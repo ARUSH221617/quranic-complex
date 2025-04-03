@@ -30,6 +30,7 @@ const config: Config = {
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
+          text: "hsl(var(--secondary-text))",
         },
         accent: {
           DEFAULT: "hsl(var(--accent))",
