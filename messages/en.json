@@ -89,7 +89,7 @@
     },
     "news": {
       "title": "Latest News & Events",
-      "readMore": "Read More",
+      "readMore": "Read More about {title}",
       "viewAllNews": "View All News"
     },
     "cta": {
