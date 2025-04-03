@@ -1,5 +1,6 @@
 {
   "navigation": {
+    "brand": "Khorramshahr Quranic Complex",
     "home": "Home",
     "about": "About Us",
     "programs": "Programs",
@@ -158,7 +159,21 @@
     "notifications": "Notifications",
     "welcome": "Welcome, {name}",
     "welcomeMessage": "Welcome to the student portal of Khorramshahr Quranic Complex. From here, you can track your programs, lessons, and view your progress.",
-    "student": "Student"
+    "student": "Student",
+    "sidebar": {
+      "brand": "Student Portal",
+      "home": "Home",
+      "programs": "My Programs",
+      "schedule": "Schedule",
+      "profile": "Profile",
+      "settings": "Settings",
+      "signOut": "Sign out",
+      "user": "Student",
+      "userMenu": {
+        "profile": "Profile",
+        "logout": "Logout"
+      }
+    }
   },
   "about": {
     "title": "About Us",
