@@ -66,17 +66,25 @@ const handler = NextAuth({
     //   }
     //   return token
     // },
-    async session({ session, user }) {
-      // The user object here is the user from the database via the adapter
+    async session({ session, token, user }) {
+      // The user object may be undefined with JWT strategy
       if (session?.user) {
-        const typedUser = user as { id: string; name?: string | null; email?: string | null; image?: string | null; role?: string | null };
-        if (typedUser.role) {
-          session.user.id = typedUser.id // Add id from the DB user object
-          // Add role if you have it in your Prisma User model
-          session.user.role = typedUser.role;
+        // Add id from token if available (JWT strategy)
+        if (token?.sub) {
+          session.user.id = token.sub;
+        }
+        // Add properties from user if available (database strategy)
+        if (user) {
+          const typedUser = user as { id: string; name?: string | null; email?: string | null; image?: string | null; role?: string | null };
+          session.user.id = typedUser.id;
+          session.user.image = typedUser.image ?? undefined;
+          // Only add role if it exists on the user object
+          if ('role' in typedUser && typedUser.role != null) {
+            session.user.role = typedUser.role ?? undefined;
+          }
         }
       }
-      return session
+      return session;
     },
   },
   pages: {
