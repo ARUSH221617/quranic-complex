@@ -63,3 +63,23 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model News {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String
+  content        String
+  excerpt        String
+  image          String?
+  date           DateTime
+  locale         String
+  metaTitle      String?
+  metaDescription String?
+  keywords       String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([slug, locale], name: "slug_locale")
+  @@index([locale])
+  @@index([slug])
+}

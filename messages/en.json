@@ -95,7 +95,42 @@
     "news": {
       "title": "Latest News & Events",
       "readMore": "Read More about {title}",
-      "viewAllNews": "View All News"
+      "viewAllNews": "View All News",
+      "page": {
+        "heroTitle": "News & Events",
+        "heroDescription": "Latest news and events from Khorramshahr Quranic Complex",
+        "newsSectionTitle": "News",
+        "loadingNews": "Loading news...",
+        "noNews": "No news available",
+        "readMore": "Read More",
+        "eventsSectionTitle": "Upcoming Events",
+        "eventsTable": {
+          "event": "Event",
+          "date": "Date",
+          "time": "Time",
+          "location": "Location"
+        },
+        "events": [
+          {
+            "name": "Quran Memorization Competition",
+            "date": "April 10, 2025",
+            "time": "10:00 AM",
+            "location": "Main Hall"
+          },
+          {
+            "name": "Lecture on the Virtues of Quran Recitation",
+            "date": "March 25, 2025",
+            "time": "7:00 PM",
+            "location": "Lecture Hall"
+          },
+          {
+            "name": "Intensive Summer Course",
+            "date": "June 1, 2025",
+            "time": "9:00 AM",
+            "location": "All Halls"
+          }
+        ]
+      }
     },
     "cta": {
       "title": "Join Us Today",

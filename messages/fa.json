@@ -23,22 +23,22 @@
             "contactUs": "تماس با ما"
         },
         "auth": {
-        "login": {
-            "title": "ورود",
-            "subtitle": "برای دسترسی به پورتال دانشجویی وارد شوید",
-            "emailLabel": "ایمیل",
-            "passwordLabel": "رمز عبور",
-            "signIn": "ورود",
-            "signingInProgress": "در حال ورود...",
-            "noAccount": "حساب کاربری ندارید؟",
-            "register": "ثبت‌نام",
-            "invalidCredentials": "ایمیل یا رمز عبور نامعتبر است",
-            "loginError": "خطا در هنگام ورود رخ داد",
-            "pleaseTryAgain": "لطفاً دوباره تلاش کنید",
-            "loginSuccess": "ورود با موفقیت انجام شد",
-            "redirecting": "در حال انتقال...",
-            "unexpectedError": "خطای غیرمنتظره رخ داد"
-        },
+            "login": {
+                "title": "ورود",
+                "subtitle": "برای دسترسی به پورتال دانشجویی وارد شوید",
+                "emailLabel": "ایمیل",
+                "passwordLabel": "رمز عبور",
+                "signIn": "ورود",
+                "signingInProgress": "در حال ورود...",
+                "noAccount": "حساب کاربری ندارید؟",
+                "register": "ثبت‌نام",
+                "invalidCredentials": "ایمیل یا رمز عبور نامعتبر است",
+                "loginError": "خطا در هنگام ورود رخ داد",
+                "pleaseTryAgain": "لطفاً دوباره تلاش کنید",
+                "loginSuccess": "ورود با موفقیت انجام شد",
+                "redirecting": "در حال انتقال...",
+                "unexpectedError": "خطای غیرمنتظره رخ داد"
+            },
             "register": {
                 "title": "ایجاد حساب کاربری",
                 "subtitle": "برای دسترسی به پورتال دانشجویی ثبت‌نام کنید",
@@ -95,7 +95,42 @@
         "news": {
             "title": "آخرین اخبار و رویدادها",
             "readMore": "اطلاعات بیشتر درباره {title}",
-            "viewAllNews": "مشاهده همه اخبار"
+            "viewAllNews": "مشاهده همه اخبار",
+            "page": {
+                "heroTitle": "اخبار و رویدادها",
+                "heroDescription": "آخرین اخبار و رویدادهای مجتمع قرآنی خرمشهر",
+                "newsSectionTitle": "اخبار",
+                "loadingNews": "در حال بارگذاری اخبار...",
+                "noNews": "هیچ خبری موجود نیست",
+                "readMore": "اطلاعات بیشتر",
+                "eventsSectionTitle": "رویدادهای پیش‌رو",
+                "eventsTable": {
+                    "event": "رویداد",
+                    "date": "تاریخ",
+                    "time": "زمان",
+                    "location": "مکان"
+                },
+                "events": [
+                    {
+                        "name": "مسابقه حفظ قرآن",
+                        "date": "10 آوریل 2025",
+                        "time": "10:00 صبح",
+                        "location": "سالن اصلی"
+                    },
+                    {
+                        "name": "سخنرانی درباره فضائل قرائت قرآن",
+                        "date": "25 مارس 2025",
+                        "time": "7:00 عصر",
+                        "location": "سالن سخنرانی"
+                    },
+                    {
+                        "name": "دوره فشرده تابستانی",
+                        "date": "1 ژوئن 2025",
+                        "time": "9:00 صبح",
+                        "location": "تمام سالن‌ها"
+                    }
+                ]
+            }
         },
         "cta": {
             "title": "همین امروز به ما بپیوندید",
