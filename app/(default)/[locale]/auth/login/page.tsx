@@ -5,17 +5,25 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function LoginPage() {
-  const t = useTranslations('home.auth.login');
+  const t = useTranslations("home.auth.login");
   const router = useRouter();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +34,6 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
 
     try {
       const result = await signIn("credentials", {
@@ -36,12 +43,24 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError(t('invalidCredentials'));
+        toast({
+          title: t("invalidCredentials"),
+          description: t("pleaseTryAgain"),
+          variant: "destructive",
+        });
       } else {
+        toast({
+          title: t("loginSuccess"),
+          description: t("redirecting"),
+        });
         router.push(`/dashboard`);
       }
     } catch (error) {
-      setError(t('loginError'));
+      toast({
+        title: t("loginError"),
+        description: t("unexpectedError"),
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -51,26 +70,17 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            {t('title')}
-          </CardTitle>
-          <CardDescription>
-            {t('subtitle')}
-          </CardDescription>
+          <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
+          <CardDescription>{t("subtitle")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="rounded-md bg-red-50 p-4">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            )}
             <div>
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t('emailLabel')}
+                {t("emailLabel")}
               </label>
               <input
                 id="email"
@@ -89,7 +99,7 @@ export default function LoginPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                {t('passwordLabel')}
+                {t("passwordLabel")}
               </label>
               <input
                 id="password"
@@ -109,19 +119,19 @@ export default function LoginPage() {
                 className="w-full bg-primary text-white hover:bg-primary/90"
                 disabled={isLoading}
               >
-                {isLoading ? t('signingInProgress') : t('signIn')}
+                {isLoading ? t("signingInProgress") : t("signIn")}
               </Button>
             </div>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600">
-            {t('noAccount')}{" "}
+            {t("noAccount")}{" "}
             <Link
               href={`/auth/register`}
               className="font-medium text-primary hover:underline"
             >
-              {t('register')}
+              {t("register")}
             </Link>
           </p>
         </CardFooter>

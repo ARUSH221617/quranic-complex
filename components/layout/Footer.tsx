@@ -60,7 +60,7 @@ export default function Footer() {
 
         <div className="mt-12 border-t border-secondary-foreground/20 pt-8 text-center">
           <p className="text-base text-secondary-text-foreground/80">
-            &copy; {new Date().getFullYear()} Khorramshahr Quranic Complex. {t('copyright')}
+            &copy; {new Date().getFullYear()} <a href="https://arush.ir" className="text-primary">ARUSH</a>. {t('copyright')}
           </p>
         </div>
       </div>

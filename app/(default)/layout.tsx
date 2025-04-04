@@ -18,7 +18,7 @@ export default async function RootLayout({
 }) {
   const locale = await getLocale();
   const messages = await getMessages({ locale });
-  const dir = locale === "ar" ? "rtl" : "ltr";
+  const dir = locale === "ar" || locale === "fa" ? "rtl" : "ltr";
 
   return (
     <html lang={locale} dir={dir}>

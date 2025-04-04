@@ -11,6 +11,7 @@
     "register": "التسجيل"
   },
   "languageNames": {
+    "fa": "فارسی",
     "en": "English",
     "ar": "العربية"
   },
@@ -32,7 +33,11 @@
         "noAccount": "ليس لديك حساب؟",
         "register": "التسجيل",
         "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
-        "loginError": "حدث خطأ أثناء تسجيل الدخول"
+        "loginError": "حدث خطأ أثناء تسجيل الدخول",
+        "pleaseTryAgain": "الرجاء المحاولة مرة أخرى",
+        "loginSuccess": "تم تسجيل الدخول بنجاح",
+        "redirecting": "جاري التحويل...",
+        "unexpectedError": "حدث خطأ غير متوقع"
       },
       "register": {
         "title": "إنشاء حساب جديد",

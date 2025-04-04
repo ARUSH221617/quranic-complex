@@ -11,6 +11,7 @@
     "register": "Register"
   },
   "languageNames": {
+    "fa": "Persian",
     "en": "English",
     "ar": "العربية"
   },
@@ -32,7 +33,11 @@
         "noAccount": "Don't have an account?",
         "register": "Register",
         "invalidCredentials": "Invalid email or password",
-        "loginError": "An error occurred during login"
+        "loginError": "An error occurred during login",
+        "pleaseTryAgain": "Please try again",
+        "loginSuccess": "Login successful",
+        "redirecting": "Redirecting...",
+        "unexpectedError": "An unexpected error occurred"
       },
       "register": {
         "title": "Create an Account",
