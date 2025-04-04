@@ -186,6 +186,7 @@
     "formSubjectOptionOther": "أخرى",
     "formMessageLabel": "الرسالة",
     "formSubmitButton": "إرسال",
+    "formSubmitting": "جاري الإرسال...",
     "formSubmitSuccess": "تم إرسال رسالتك بنجاح. سنتواصل معك قريباً.",
     "infoTitle": "معلومات الاتصال",
     "infoAddressTitle": "العنوان",

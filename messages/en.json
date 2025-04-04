@@ -186,6 +186,7 @@
     "formSubjectOptionOther": "Other",
     "formMessageLabel": "Message",
     "formSubmitButton": "Send",
+    "formSubmitting": "Sending...",
     "formSubmitSuccess": "Your message has been sent successfully. We will contact you soon.",
     "infoTitle": "Contact Information",
     "infoAddressTitle": "Address",
