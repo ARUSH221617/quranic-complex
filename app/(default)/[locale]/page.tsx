@@ -200,12 +200,14 @@ export default function Home() {
                   <p className="text-gray-700">{item.excerpt}</p>
                 </CardContent>
                 <CardFooter>
-                    <Link
+                  <Link
                     href={`/news/${item.id}`}
                     className="text-primary hover:underline"
-                    >
-                    {t("news.readMore", { title: item.title })}
-                    </Link>
+                  >
+                    {t("news.readMore", {
+                      title: `${item.title.slice(0, 10)}...`,
+                    })}
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
