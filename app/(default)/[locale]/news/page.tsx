@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/card";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import type { Event } from "@/types/events";
+import { useLocale, useTranslations } from "next-intl";
+import type { Event } from "@prisma/client";
 
 interface NewsItem {
   id: string;
@@ -28,29 +28,34 @@ interface NewsItem {
   keywords?: string;
 }
 
-export default function NewsPage({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
-  const t = useTranslations("news.page");
+export default function NewsPage() {
+  const t = useTranslations("home.news.page");
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
+  const locale = useLocale();
 
   useEffect(() => {
-    const fetchNews = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(`/api/news?locale=${locale}`);
-        const data = await response.json();
-        setNews(data);
+        const [newsResponse, eventsResponse] = await Promise.all([
+          fetch(`/api/news?locale=${locale}`),
+          fetch(`/api/events?locale=${locale}`),
+        ]);
+
+        const newsData = await newsResponse.json();
+        const eventsData = await eventsResponse.json();
+
+        setNews(newsData);
+        setEvents(eventsData);
       } catch (error) {
-        console.error("Error fetching news:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchNews();
+    fetchData();
   }, [locale]);
   return (
     <div className="flex flex-col">
@@ -151,10 +156,19 @@ export default function NewsPage({
                   </tr>
                 </thead>
                 <tbody>
-                  {(t.raw("events") as Event[]).map((event, index) => (
+                  {events.map((event, index) => (
                     <tr key={index} className="border-b border-gray-200">
                       <td className="py-4 text-gray-700">{event.name}</td>
-                      <td className="py-4 text-gray-700">{event.date}</td>
+                      <td className="py-4 text-gray-700">
+                        {new Date(event.date).toLocaleDateString(
+                          locale === "ar" ? "ar-EG" : "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                      </td>
                       <td className="py-4 text-gray-700">{event.time}</td>
                       <td className="py-4 text-gray-700">{event.location}</td>
                     </tr>
