@@ -103,3 +103,27 @@ model Event {
   @@index([locale])
   @@index([slug])
 }
+
+model Program {
+  id              String   @id @default(cuid())
+  titleEn         String
+  titleAr         String
+  descriptionEn   String
+  descriptionAr   String
+  ageGroupEn      String
+  ageGroupAr      String
+  scheduleEn      String
+  scheduleAr      String
+  image           String?
+  slug            String
+  locale          String
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([slug, locale], name: "program_slug_locale")
+  @@index([locale])
+  @@index([slug])
+}
