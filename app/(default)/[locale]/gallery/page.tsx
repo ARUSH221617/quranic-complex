@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
+import { getLocale, getTranslations } from "next-intl/server";
 
 interface GalleryImage {
   id: string;
@@ -12,11 +12,11 @@ interface GalleryImage {
 }
 
 export default async function GalleryPage() {
-  const t = useTranslations("gallery");
-  const locale = useLocale();
+  const t = await getTranslations("gallery");
+  const locale = await getLocale();
 
   // Fetch gallery images from API
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/gallery`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/gallery`);
   const galleryImages = (await res.json()) as GalleryImage[];
   const categories = [
     "categoryAll",
