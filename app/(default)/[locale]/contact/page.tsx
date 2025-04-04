@@ -3,7 +3,7 @@
 import type React from "react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
 
 export default function ContactPage() {
   const t = useTranslations("contact");
