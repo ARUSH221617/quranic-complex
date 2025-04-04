@@ -127,3 +127,19 @@ model Program {
   @@index([locale])
   @@index([slug])
 }
+
+model Gallery {
+  id              String   @id @default(cuid())
+  titleEn         String
+  titleAr         String
+  titleFa         String
+  descriptionEn   String?
+  descriptionAr   String?
+  descriptionFa   String?
+  image           String
+  category        String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([category])
+}

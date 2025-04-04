@@ -1,9 +1,23 @@
-import Image from "next/image"
-import { useTranslations } from "next-intl"
-import { galleryImages } from "@/lib/placeholder-data"
+import Image from "next/image";
+import { useLocale, useTranslations } from "next-intl";
 
-export default function GalleryPage() {
-  const t = useTranslations("gallery")
+interface GalleryImage {
+  id: string;
+  title: string;
+  titleEn: string;
+  titleAr: string;
+  titleFa: string;
+  image: string;
+  category: string;
+}
+
+export default async function GalleryPage() {
+  const t = useTranslations("gallery");
+  const locale = useLocale();
+
+  // Fetch gallery images from API
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/gallery`);
+  const galleryImages = (await res.json()) as GalleryImage[];
   const categories = [
     "categoryAll",
     "categoryEvents",
@@ -11,7 +25,7 @@ export default function GalleryPage() {
     "categoryLessons",
     "categoryVisits",
     "categoryFacilities",
-  ] as const // Define categories using keys
+  ] as const; // Define categories using keys
 
   return (
     <div className="flex flex-col">
@@ -30,17 +44,26 @@ export default function GalleryPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {galleryImages.map((image) => (
-              <div key={image.id} className="group relative overflow-hidden rounded-lg">
+              <div
+                key={image.id}
+                className="group relative overflow-hidden rounded-lg"
+              >
                 <div className="relative h-64 w-full">
                   <Image
                     src={image.image || "/placeholder.svg"}
-                    alt={image.title}
+                    alt={locale === 'ar' ? image.titleAr : 
+                         locale === 'fa' ? image.titleFa : 
+                         image.titleEn}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
                 <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <h3 className="text-lg font-bold text-white">{image.title}</h3>
+                  <h3 className="text-lg font-bold text-white">
+                    {locale === 'ar' ? image.titleAr : 
+                     locale === 'fa' ? image.titleFa : 
+                     image.titleEn}
+                  </h3>
                   <p className="text-sm text-gray-200">{image.category}</p>
                 </div>
               </div>
@@ -53,7 +76,9 @@ export default function GalleryPage() {
       <section className="bg-gray-50 py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary-text">{t("categoriesTitle")}</h2>
+            <h2 className="text-3xl font-bold text-secondary-text">
+              {t("categoriesTitle")}
+            </h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -69,5 +94,5 @@ export default function GalleryPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }
