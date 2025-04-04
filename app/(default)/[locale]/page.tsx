@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/button";
+import { unstable_noStore as noStore } from "next/cache";
 import {
   Card,
   CardContent,
@@ -8,15 +9,46 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { programs, news } from "@/lib/placeholder-data";
-import { useTranslations } from "next-intl";
+import type { Program, News } from "@prisma/client";
+import { getLocale, getTranslations } from "next-intl/server";
 
-export default function Home() {
-  const t = useTranslations("home");
-  // Get featured programs (first 3)
-  const featuredPrograms = programs.slice(0, 3);
-  // Get latest news (first 3)
-  const latestNews = news.slice(0, 3);
+async function getFeaturedPrograms(locale: string) {
+  noStore();
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/programs?locale=${locale}`
+    );
+    if (!res.ok) throw new Error("Failed to fetch programs");
+    const data = await res.json();
+    return data.slice(0, 3);
+  } catch (error) {
+    console.error("Error fetching programs:", error);
+    return [];
+  }
+}
+
+async function getLatestNews(locale: string) {
+  noStore();
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/news?locale=${locale}`
+    );
+    if (!res.ok) throw new Error(`Failed to fetch news`);
+    const data = await res.json();
+    return data.slice(0, 3);
+  } catch (error) {
+    console.error("Error fetching news:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const t = await getTranslations("home");
+  const locale = await getLocale();
+  const [featuredPrograms, latestNews] = await Promise.all([
+    getFeaturedPrograms(locale),
+    getLatestNews(locale),
+  ]);
 
   return (
     <div className="flex flex-col">
@@ -109,7 +141,7 @@ export default function Home() {
             <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {featuredPrograms.map((program) => (
+            {featuredPrograms.map((program: Program) => (
               <Card
                 key={program.id}
                 className="overflow-hidden transition-all duration-300 hover:shadow-xl"
@@ -117,28 +149,38 @@ export default function Home() {
                 <div className="relative h-48 w-full">
                   <Image
                     src={program.image || "/placeholder.svg"}
-                    alt={program.title}
+                    alt={locale === "ar" ? program.titleAr : program.titleEn}
                     fill
                     className="object-cover"
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle>{program.title}</CardTitle>
+                  <CardTitle>
+                    {locale === "ar" ? program.titleAr : program.titleEn}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700">{program.description}</p>
+                  <p className="text-gray-700">
+                    {locale === "ar"
+                      ? program.descriptionAr
+                      : program.descriptionEn}
+                  </p>
                   <div className="mt-4 space-y-2 text-sm text-gray-600">
                     <p>
                       <span className="font-semibold">
                         {t("programs.ageGroup")}:
                       </span>{" "}
-                      {program.ageGroup}
+                      {locale === "ar"
+                        ? program.ageGroupAr
+                        : program.ageGroupEn}
                     </p>
                     <p>
                       <span className="font-semibold">
                         {t("programs.schedule")}:
                       </span>{" "}
-                      {program.schedule}
+                      {locale === "ar"
+                        ? program.scheduleAr
+                        : program.scheduleEn}
                     </p>
                   </div>
                 </CardContent>
@@ -173,7 +215,7 @@ export default function Home() {
             <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {latestNews.map((item) => (
+            {latestNews.map((item: News) => (
               <Card
                 key={item.id}
                 className="overflow-hidden transition-all duration-300 hover:shadow-xl"
