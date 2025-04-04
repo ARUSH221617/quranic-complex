@@ -175,6 +175,45 @@
       }
     }
   },
+  "Error": {
+    "title": "Something went wrong!",
+    "message": "An unexpected error occurred. Please try again.",
+    "buttonText": "Try again"
+  },
+  "DefaultError": {
+    "title": "Oops! Something went wrong",
+    "message": "We encountered an issue on this page. Please try refreshing or click the button below.",
+    "buttonText": "Try Again"
+  },
+  "DashboardError": {
+    "title": "Dashboard Error",
+    "message": "An error occurred within the dashboard. Please contact support or try again later.",
+    "buttonText": "Reload Dashboard"
+  },
+  "Loading": {
+    "message": "Loading..."
+  },
+  "DefaultLoading": {
+    "message": "Loading site..."
+  },
+  "DashboardLoading": {
+    "message": "Loading dashboard..."
+  },
+  "NotFound": {
+    "title": "404 - Page Not Found",
+    "message": "Oops! The page you're looking for doesn't seem to exist.",
+    "buttonText": "Go back home"
+  },
+  "DefaultNotFound": {
+    "title": "404 - Page Not Found",
+    "message": "Sorry, the page you were looking for could not be found.",
+    "buttonText": "Return to Homepage"
+  },
+  "DashboardNotFound": {
+    "title": "404 - Resource Not Found",
+    "message": "The dashboard resource you requested could not be located.",
+    "buttonText": "Go to Dashboard Home"
+  },
   "about": {
     "title": "About Us",
     "subtitle": "Learn about Khorramshahr Quranic Complex, our mission, vision, and values",
