@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -9,9 +7,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
-import { useState, useEffect } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { headers } from "next/headers";
+import { getLocale, getTranslations } from "next-intl/server";
+import { prisma } from "@/lib/prisma";
 import type { Event } from "@prisma/client";
 
 interface NewsItem {
@@ -28,35 +26,18 @@ interface NewsItem {
   keywords?: string;
 }
 
-export default function NewsPage() {
-  const t = useTranslations("home.news.page");
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const locale = useLocale();
+export default async function NewsPage() {
+  const locale = await getLocale();
+  const t = await getTranslations("home.news.page");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [newsResponse, eventsResponse] = await Promise.all([
-          fetch(`/api/news?locale=${locale}`),
-          fetch(`/api/events?locale=${locale}`),
-        ]);
-
-        const newsData = await newsResponse.json();
-        const eventsData = await eventsResponse.json();
-
-        setNews(newsData);
-        setEvents(eventsData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [locale]);
+  const [news, events] = await Promise.all([
+    prisma.news.findMany({
+      where: { locale },
+    }),
+    prisma.event.findMany({
+      where: { locale },
+    }),
+  ]);
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -78,9 +59,7 @@ export default function NewsPage() {
             {t("newsSectionTitle")}
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {loading ? (
-              <div>{t("loadingNews")}</div>
-            ) : news.length > 0 ? (
+            {news.length > 0 ? (
               news.map((item) => (
                 <Card
                   key={item.id}
