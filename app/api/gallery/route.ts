@@ -6,7 +6,7 @@ export async function GET() {
     const galleryItems = await prisma.gallery.findMany({
       select: {
         id: true,
-        title: true,
+        titleAr: true,
         titleEn: true,
         titleFa: true,
         image: true,
