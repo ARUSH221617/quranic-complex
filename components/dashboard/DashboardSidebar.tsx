@@ -11,7 +11,9 @@ import {
   Settings,
   LogOut,
   Bell,
-  LucideMenu
+  LucideMenu,
+  LucideX,
+  LucideArrowRight,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
@@ -24,17 +26,25 @@ import {
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardSidebarProps {
   collapsed?: boolean;
+  setCollapsed: (arg0: boolean) => void;
 }
 
-export default function DashboardSidebar({ collapsed = false }: DashboardSidebarProps) {
+export default function DashboardSidebar({
+  collapsed = false,
+  setCollapsed,
+}: DashboardSidebarProps) {
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("dashboard.sidebar");
   const locale = useLocale();
+  const IsMobile = useIsMobile();
 
   const navigation = [
     {
@@ -65,7 +75,23 @@ export default function DashboardSidebar({ collapsed = false }: DashboardSidebar
   ];
 
   return (
-    <div className={`flex h-screen flex-col bg-secondary text-primary transition-all duration-300 ${collapsed ? "w-0 overflow-hidden" : "w-64"}`}>
+    <div
+      className={`fixed flex h-screen md:relative flex-col bg-secondary text-primary transition-all duration-300 ${
+        collapsed ? "w-0 overflow-hidden" : "w-64"
+      }`}
+    >
+      {IsMobile && (
+        <Button
+          variant={"default"}
+          className={cn(
+            "bg-secondary/20 text-secondary-text hover:bg-secondary/50 hover:text-secondary-text px-3",
+            collapsed ? "" : "absolute left-0 -translate-x-12 top-2"
+          )}
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          <LucideArrowRight />
+        </Button>
+      )}
       <div className="flex h-24 items-center justify-center border-b border-secondary-foreground/10 px-4">
         <Link href={`/`} className="flex items-center gap-2 text-xl font-bold">
           <Image
@@ -117,11 +143,11 @@ export default function DashboardSidebar({ collapsed = false }: DashboardSidebar
                     {session?.user?.name?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
-          {!collapsed && (
-            <span className="text-sm font-semibold text-secondary-text-foreground/80 !text-secondary-text-foreground">
-              {session?.user?.name || t("user")}
-            </span>
-          )}
+                {!collapsed && (
+                  <span className="text-sm font-semibold text-secondary-text-foreground/80 !text-secondary-text-foreground">
+                    {session?.user?.name || t("user")}
+                  </span>
+                )}
               </div>
               <div className="flex items-center">
                 <LucideMenu className="h-5 w-5 text-secondary-text-foreground/80 !text-secondary-text-foreground" />
