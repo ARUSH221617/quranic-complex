@@ -90,7 +90,24 @@
       "viewDetails": "View Details",
       "viewAllPrograms": "View All Programs",
       "ageGroup": "Age Group",
-      "schedule": "Schedule"
+      "schedule": "Schedule",
+      "page": {
+        "heroTitle": "Programs & Courses",
+        "heroDescription": "Explore our diverse programs in teaching the Holy Quran and its sciences",
+        "programsTitle": "Our Educational Programs",
+        "programsDescription": "Khorramshahr Quranic Complex offers a variety of educational programs and courses in the field of the Holy Quran and its sciences, suitable for different age groups and educational levels.",
+        "registrationTitle": "Registration Information",
+        "registrationDescription": "To register for any of our programs, please visit the complex headquarters or contact us by phone or email.",
+        "requiredDocuments": "Documents required for registration:",
+        "documents": [
+          "A copy of personal ID or passport",
+          "Two personal photos",
+          "Registration form (available at the complex headquarters or can be downloaded from our website)",
+          "Payment of registration fees"
+        ],
+        "contactButton": "Contact Us for Registration",
+        "registrationOpen": "Registration Open"
+      }
     },
     "news": {
       "title": "Latest News & Events",
