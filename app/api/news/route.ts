@@ -25,8 +25,8 @@ export async function GET(request: Request) {
         image: true,
         date: true,
         metaTitle: true,
-        metaDescription: true
-      }
+        metaDescription: true,
+      },
     });
 
     return NextResponse.json(news);

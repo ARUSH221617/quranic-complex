@@ -1,38 +1,38 @@
-import { notFound } from 'next/navigation'
-import { Metadata } from 'next'
-import Image from 'next/image'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import Image from "next/image";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Props {
-  params: { 
-    locale: string
-    slug: string 
-  }
+  params: {
+    locale: string;
+    slug: string;
+  };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/news/${params.slug}?locale=${params.locale}`
-  )
-  const newsItem = await res.json()
+  );
+  const newsItem = await res.json();
 
-  if (!newsItem) return {}
+  if (!newsItem) return {};
 
   return {
     title: newsItem.metaTitle || newsItem.title,
     description: newsItem.metaDescription || newsItem.excerpt,
-    keywords: newsItem.keywords?.split(',') || []
-  }
+    keywords: newsItem.keywords?.split(",") || [],
+  };
 }
 
 export default async function NewsDetailPage({ params }: Props) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/api/news/${params.slug}?locale=${params.locale}`
-  )
-  const newsItem = await res.json()
+  );
+  const newsItem = await res.json();
 
   if (!newsItem) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -51,11 +51,14 @@ export default async function NewsDetailPage({ params }: Props) {
         <CardHeader>
           <CardTitle>{newsItem.title}</CardTitle>
           <p className="text-sm text-gray-500">
-            {new Date(newsItem.date).toLocaleDateString(params.locale === "ar" ? "ar-EG" : "en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric"
-            })}
+            {new Date(newsItem.date).toLocaleDateString(
+              params.locale === "ar" ? "ar-EG" : "en-US",
+              {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }
+            )}
           </p>
         </CardHeader>
         <CardContent className="prose max-w-none">
@@ -63,5 +66,5 @@ export default async function NewsDetailPage({ params }: Props) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

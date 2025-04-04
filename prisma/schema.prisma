@@ -8,18 +8,18 @@ datasource db {
 }
 
 model Account {
-  id                 String    @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -35,19 +35,19 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  phone         String?   // Added phone field
-  role          String? // Added role field
-  accounts      Account[]
-  sessions      Session[]
-  nationalCode        String?   @unique // Added for student registration
+  id                  String             @id @default(cuid())
+  name                String?
+  email               String?            @unique
+  emailVerified       DateTime?
+  image               String?
+  phone               String? // Added phone field
+  role                String? // Added role field
+  accounts            Account[]
+  sessions            Session[]
+  nationalCode        String?            @unique // Added for student registration
   dateOfBirth         DateTime? // Added for student registration
   quranicStudyLevel   QuranicStudyLevel? // Added for student registration
-  nationalCardPicture String?   // Added for student registration (stores file path/URL)
+  nationalCardPicture String? // Added for student registration (stores file path/URL)
 }
 
 enum QuranicStudyLevel {
@@ -65,19 +65,19 @@ model VerificationToken {
 }
 
 model News {
-  id             String   @id @default(cuid())
-  title          String
-  slug           String
-  content        String
-  excerpt        String
-  image          String?
-  date           DateTime
-  locale         String
-  metaTitle      String?
+  id              String   @id @default(cuid())
+  title           String
+  slug            String
+  content         String
+  excerpt         String
+  image           String?
+  date            DateTime
+  locale          String
+  metaTitle       String?
   metaDescription String?
-  keywords       String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  keywords        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@unique([slug, locale], name: "slug_locale")
   @@index([locale])
