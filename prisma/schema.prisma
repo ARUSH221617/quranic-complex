@@ -34,20 +34,39 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum UserRole {
+  USER
+  STUDENT
+  ADMIN
+}
+
+// Enum for User Status
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
-  id                  String             @id @default(cuid())
-  name                String?
-  email               String?            @unique
+  id                  String            @id @default(cuid())
+  name                String
+  email               String            @unique
   emailVerified       DateTime?
+  password            String? // Add password field to store hash
   image               String?
-  phone               String? // Added phone field
-  role                String? // Added role field
+  phone               String?
+  role                UserRole          @default(USER)
   accounts            Account[]
   sessions            Session[]
-  nationalCode        String?            @unique // Added for student registration
-  dateOfBirth         DateTime? // Added for student registration
-  quranicStudyLevel   QuranicStudyLevel? // Added for student registration
-  nationalCardPicture String? // Added for student registration (stores file path/URL)
+  nationalCode        String            @unique
+  dateOfBirth         DateTime
+  quranicStudyLevel   QuranicStudyLevel
+  nationalCardPicture String
+
+  // Fields for email code login
+  loginCode        String?
+  loginCodeExpires DateTime?
+  status           UserStatus @default(PENDING) // Add status field
 }
 
 enum QuranicStudyLevel {
@@ -64,86 +83,124 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// --- News ---
 model News {
-  id              String   @id @default(cuid())
+  id        String   @id @default(cuid())
+  slug      String   @unique // Assuming slug is language-independent or managed separately
+  image     String?
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations NewsTranslation[]
+}
+
+model NewsTranslation {
+  id              String  @id @default(cuid())
+  newsId          String
+  locale          String // e.g., 'en', 'fa', 'ar'
   title           String
-  slug            String
   content         String
   excerpt         String
-  image           String?
-  date            DateTime
-  locale          String
   metaTitle       String?
   metaDescription String?
   keywords        String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
 
-  @@unique([slug, locale], name: "slug_locale")
+  news News @relation(fields: [newsId], references: [id], onDelete: Cascade)
+
+  @@unique([newsId, locale])
   @@index([locale])
-  @@index([slug])
+  @@index([newsId])
 }
 
+// --- Event ---
 model Event {
-  id              String   @id @default(cuid())
-  name            String
-  slug            String
-  description     String?
-  date            DateTime
-  time            String
-  location        String
-  image           String?
-  locale          String
-  metaTitle       String?
-  metaDescription String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id        String   @id @default(cuid())
+  slug      String   @unique // Assuming slug is language-independent
+  date      DateTime
+  time      String
+  location  String // Assuming location is not translated, adjust if needed
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@unique([slug, locale], name: "event_slug_locale")
-  @@index([locale])
-  @@index([slug])
+  translations EventTranslation[]
 }
 
-model Program {
-  id              String   @id @default(cuid())
-  titleEn         String
-  titleAr         String
-  descriptionEn   String
-  descriptionAr   String
-  ageGroupEn      String
-  ageGroupAr      String
-  scheduleEn      String
-  scheduleAr      String
-  image           String?
-  slug            String
+model EventTranslation {
+  id              String  @id @default(cuid())
+  eventId         String
   locale          String
+  name            String
+  description     String?
+  metaTitle       String?
+  metaDescription String?
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, locale])
+  @@index([locale])
+  @@index([eventId])
+}
+
+// --- Program ---
+model Program {
+  id        String   @id @default(cuid())
+  slug      String   @unique // Assuming slug is language-independent
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations ProgramTranslation[]
+}
+
+model ProgramTranslation {
+  id              String  @id @default(cuid())
+  programId       String
+  locale          String
+  title           String
+  description     String
+  ageGroup        String
+  schedule        String
   metaTitle       String?
   metaDescription String?
   keywords        String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
 
-  @@unique([slug, locale], name: "program_slug_locale")
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+
+  @@unique([programId, locale])
   @@index([locale])
-  @@index([slug])
+  @@index([programId])
 }
 
+// --- Gallery ---
 model Gallery {
-  id              String   @id @default(cuid())
-  titleEn         String
-  titleAr         String
-  titleFa         String
-  descriptionEn   String?
-  descriptionAr   String?
-  descriptionFa   String?
-  image           String
-  category        String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id        String   @id @default(cuid())
+  image     String
+  category  String // Assuming category is not translated, adjust if needed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations GalleryTranslation[]
 
   @@index([category])
 }
 
+model GalleryTranslation {
+  id          String  @id @default(cuid())
+  galleryId   String
+  locale      String
+  title       String
+  description String?
+
+  gallery Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+
+  @@unique([galleryId, locale])
+  @@index([locale])
+  @@index([galleryId])
+}
+
+// --- Contact ---
 model Contact {
   id        String   @id @default(cuid())
   name      String
