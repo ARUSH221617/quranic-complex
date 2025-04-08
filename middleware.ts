@@ -5,6 +5,23 @@ import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
+const authAdminMiddleware = withAuth(
+  // No need to call intlMiddleware here for admin routes
+  // withAuth handles the auth check and redirects if needed
+  // If authorized, the request simply proceeds
+  {
+    callbacks: {
+      authorized: ({ token }) => {
+        // Check if token exists and user role is admin
+        return token?.role === "ADMIN";
+      },
+    },
+    pages: {
+      signIn: "/auth/login",
+    },
+  }
+) as (req: NextRequest) => Promise<Response>;
+
 const authMiddleware = withAuth(
   function middleware(req) {
     return intlMiddleware(req);
@@ -22,7 +39,10 @@ const authMiddleware = withAuth(
 export default function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  // Apply auth only to dashboard routes
+  // Apply auth only to dashboard and admin routes
+  if (pathname.startsWith("/admin") || pathname.includes("/admin")) {
+    return authAdminMiddleware(req);
+  }
   if (pathname.startsWith("/dashboard") || pathname.includes("/dashboard")) {
     return authMiddleware(req);
   }
