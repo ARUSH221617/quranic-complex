@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto"; // Import crypto for token generation
+import { sendVerificationEmail } from "@/lib/email"; // Import email sending function
 
 const prisma = new PrismaClient();
 
@@ -15,11 +17,9 @@ const registerSchema = z.object({
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
   phone: z.string().optional(), // Assuming phone is optional for now
-  dateOfBirth: z
-    .string()
-    .refine((date) => !isNaN(Date.parse(date)), {
-      message: "Invalid date format",
-    }), // Validate as string, convert later
+  dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format",
+  }), // Validate as string, convert later
   nationalCode: z
     .string()
     .length(10, { message: "National code must be 10 digits" })
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
       data: {
         name,
         email,
-        // password: hashedPassword, // Removed: Password not stored directly on User model
+        password: hashedPassword, // Store the hashed password
         phone, // Store phone if provided
         dateOfBirth: new Date(dateOfBirth), // Convert string to Date object
         nationalCode,
@@ -121,8 +121,42 @@ export async function POST(request: Request) {
       },
     });
 
-    // Return the newly created user object (without password as it's not included)
-    return NextResponse.json(newUser, { status: 201 });
+    // --- Start Email Verification ---
+    // 1. Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours expiry
+
+    // 2. Store token in the database
+    await prisma.verificationToken.create({
+      data: {
+        identifier: newUser.email, // Use email as identifier
+        token: verificationToken,
+        expires,
+      },
+    });
+
+    // 3. Construct verification link
+    const verificationLink = `${process.env.NEXTAUTH_URL}/api/auth/verify-email?token=${verificationToken}`;
+
+    // 4. Send verification email
+    try {
+      await sendVerificationEmail(newUser.email, verificationLink);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+      // Decide how to handle this: maybe log it but still inform user?
+      // For now, we'll proceed but log the error.
+      // In production, you might want a more robust error handling/retry mechanism.
+    }
+    // --- End Email Verification ---
+
+    // Return success message instead of user object
+    return NextResponse.json(
+      {
+        message:
+          "Registration successful! Please check your email to verify your account.",
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Registration Error:", error);
     // Add specific error handling if needed (e.g., Prisma errors)

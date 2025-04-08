@@ -7,7 +7,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { QuranicStudyLevel } from "@prisma/client"; // Import enum
-import { Button } from "@/components/ui/Button"; // Corrected import path casing
+import { Button } from "@/components/ui/button"; // Corrected import path casing to lowercase 'b'
 import {
   Card,
   CardContent,
@@ -67,8 +67,12 @@ export default function RegisterPage() {
   const t = useTranslations("home.auth.register");
   // const tCommon = useTranslations('common'); // Add if common translations are needed
   const router = useRouter();
-  const [apiError, setApiError] = useState<string | null>(null);
+  const [apiMessage, setApiMessage] = useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null); // For API success/error messages
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false); // State to track successful registration
   const [imagePreview, setImagePreview] = useState<string | null>(null); // State for image preview URL
 
   const form = useForm<RegisterFormValues>({
@@ -148,7 +152,7 @@ export default function RegisterPage() {
 
   const onSubmit = async (data: RegisterFormValues) => {
     setIsLoading(true);
-    setApiError(null);
+    setApiMessage(null); // Clear previous messages
 
     const formData = new FormData();
     formData.append("name", data.name);
@@ -175,14 +179,22 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         // Handle specific API errors (e.g., email exists)
-        setApiError(result.message || t("registrationFailed")); // Use translated fallback
+        setApiMessage({
+          type: "error",
+          text: result.message || t("registrationFailed"),
+        }); // Use translated fallback
       } else {
-        // Registration successful
-        router.push(`/auth/login?registered=true`); // Redirect to login
+        // Registration successful - API sent verification email
+        setIsSuccess(true); // Set success state
+        setApiMessage({
+          type: "success",
+          text: result.message || t("registrationSuccessCheckEmail"),
+        }); // Display success message from API
+        // No redirect here - user stays on page to see the message
       }
     } catch (error) {
       console.error("Registration submission error:", error);
-      setApiError(t("networkError")); // Use translated network error
+      setApiMessage({ type: "error", text: t("networkError") }); // Use translated network error
     } finally {
       setIsLoading(false);
     }
@@ -196,321 +208,342 @@ export default function RegisterPage() {
         {" "}
         {/* Increased max-width */}
         <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold">
-            {" "}
-            {/* Adjusted size */}
-            {t("title")} {/* Keep using translation */}
-          </CardTitle>
+          <CardTitle className="text-3xl font-bold">{t("title")}</CardTitle>
           <CardDescription>
-            {t("subtitle")} {/* Keep using translation */}
+            {isSuccess ? t("checkEmailSubtitle") : t("subtitle")}{" "}
+            {/* Change subtitle on success */}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {/* Use react-hook-form's handleSubmit */}
-          <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              {" "}
-              {/* Adjusted spacing */}
-              {apiError && (
-                <div className="rounded-md bg-red-100 p-3">
-                  {" "}
-                  {/* Adjusted error style */}
-                  <p className="text-sm text-red-700">{apiError}</p>
-                </div>
-              )}
-              {/* Name Field */}
-              <div>
-                <Label htmlFor="name">{t("nameLabel")}</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  autoComplete="name"
-                  {...form.register("name")}
-                  className={form.formState.errors.name ? "border-red-500" : ""}
-                />
-                {form.formState.errors.name && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.name.message as string)}
-                  </p>
+          {/* Display Success Message or Form */}
+          {isSuccess ? (
+            <div className="rounded-md bg-green-100 p-4 text-center">
+              <p className="text-sm font-medium text-green-800">
+                {apiMessage?.text}
+              </p>
+              <p className="mt-2 text-sm text-green-700">
+                {t("verificationEmailSentInfo")}{" "}
+                {/* Add translation key: verificationEmailSentInfo */}
+              </p>
+              <Button variant="outline" asChild className="mt-4">
+                {" "}
+                {/* Changed variant to "outline" */}
+                <Link href="/auth/login">{t("goToLogin")}</Link>{" "}
+                {/* Add translation key: goToLogin */}
+              </Button>
+            </div>
+          ) : (
+            <FormProvider {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+              >
+                {/* Display API Error Message */}
+                {apiMessage && apiMessage.type === "error" && (
+                  <div className="rounded-md bg-red-100 p-3">
+                    <p className="text-sm text-red-700">{apiMessage.text}</p>
+                  </div>
                 )}
-              </div>
-              {/* Email Field */}
-              <div>
-                <Label htmlFor="email">{t("emailLabel")}</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  {...form.register("email")}
-                  className={
-                    form.formState.errors.email ? "border-red-500" : ""
-                  }
-                />
-                {form.formState.errors.email && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.email.message as string)}
-                  </p>
-                )}
-              </div>
-              {/* Password Field */}
-              <div>
-                <Label htmlFor="password">{t("passwordLabel")}</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  {...form.register("password")}
-                  className={
-                    form.formState.errors.password ? "border-red-500" : ""
-                  }
-                />
-                {form.formState.errors.password && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.password.message as string)}
-                  </p>
-                )}
-              </div>
-              {/* Confirm Password Field */}
-              <div>
-                <Label htmlFor="confirmPassword">
-                  {t("confirmPasswordLabel")}
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  {...form.register("confirmPassword")}
-                  className={
-                    form.formState.errors.confirmPassword
-                      ? "border-red-500"
-                      : ""
-                  }
-                />
-                {form.formState.errors.confirmPassword && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.confirmPassword.message as string)}
-                  </p>
-                )}
-              </div>
-              {/* Phone Field (Optional) */}
-              <div>
-                <Label htmlFor="phone">
-                  {t("phoneLabel")} ({t("optional")})
-                </Label>{" "}
-                {/* Add optional text */}
-                <Input
-                  id="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  {...form.register("phone")}
-                  className={
-                    form.formState.errors.phone ? "border-red-500" : ""
-                  }
-                />
-                {form.formState.errors.phone && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.phone.message as string)}
-                  </p>
-                )}
-              </div>
-              {/* Date of Birth Field */}
-              <div>
-                <Label htmlFor="dateOfBirth">{t("dateOfBirthLabel")}</Label>
-                <Input
-                  id="dateOfBirth"
-                  type="date"
-                  {...form.register("dateOfBirth")}
-                  className={
-                    form.formState.errors.dateOfBirth ? "border-red-500" : ""
-                  }
-                />
-                {form.formState.errors.dateOfBirth && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.dateOfBirth.message as string)}
-                  </p>
-                )}
-              </div>
-              {/* National Code Field */}
-              <div>
-                <Label htmlFor="nationalCode">{t("nationalCodeLabel")}</Label>
-                <Input
-                  id="nationalCode"
-                  type="text" // Use text to allow leading zeros if necessary, validation handles numeric check
-                  maxLength={10}
-                  {...form.register("nationalCode")}
-                  className={
-                    form.formState.errors.nationalCode ? "border-red-500" : ""
-                  }
-                />
-                {form.formState.errors.nationalCode && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(form.formState.errors.nationalCode.message as string)}
-                  </p>
-                )}
-              </div>
-              {/* Level of Quranic Studies Field */}
-              <div>
-                <Label htmlFor="quranicStudyLevel">
-                  {t("quranicLevelLabel")}
-                </Label>
-                <Select
-                  onValueChange={(value) =>
-                    form.setValue(
-                      "quranicStudyLevel",
-                      value as QuranicStudyLevel
-                    )
-                  }
-                  defaultValue={form.getValues("quranicStudyLevel")}
-                >
-                  <SelectTrigger
+                {/* Name Field */}
+                <div>
+                  <Label htmlFor="name">{t("nameLabel")}</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    autoComplete="name"
+                    {...form.register("name")}
                     className={
-                      form.formState.errors.quranicStudyLevel
+                      form.formState.errors.name ? "border-red-500" : ""
+                    }
+                  />
+                  {form.formState.errors.name && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(form.formState.errors.name.message as string)}
+                    </p>
+                  )}
+                </div>
+                {/* Email Field */}
+                <div>
+                  <Label htmlFor="email">{t("emailLabel")}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    {...form.register("email")}
+                    className={
+                      form.formState.errors.email ? "border-red-500" : ""
+                    }
+                  />
+                  {form.formState.errors.email && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(form.formState.errors.email.message as string)}
+                    </p>
+                  )}
+                </div>
+                {/* Password Field */}
+                <div>
+                  <Label htmlFor="password">{t("passwordLabel")}</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete="new-password"
+                    {...form.register("password")}
+                    className={
+                      form.formState.errors.password ? "border-red-500" : ""
+                    }
+                  />
+                  {form.formState.errors.password && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(form.formState.errors.password.message as string)}
+                    </p>
+                  )}
+                </div>
+                {/* Confirm Password Field */}
+                <div>
+                  <Label htmlFor="confirmPassword">
+                    {t("confirmPasswordLabel")}
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    {...form.register("confirmPassword")}
+                    className={
+                      form.formState.errors.confirmPassword
                         ? "border-red-500"
                         : ""
                     }
-                  >
-                    <SelectValue placeholder={t("selectLevelPlaceholder")} />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card">
-                    {Object.values(QuranicStudyLevel).map((level) => (
-                      <SelectItem key={level} value={level}>
-                        {t(`quranicLevels.${level}`)}{" "}
-                        {/* Use translation keys for levels */}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {form.formState.errors.quranicStudyLevel && (
-                  <p className="mt-1 text-xs text-red-600">
-                    {t(
-                      form.formState.errors.quranicStudyLevel.message as string
-                    )}
-                  </p>
-                )}
-              </div>
-              {/* National Card Picture Field - Improved UI */}
-              <FormField
-                control={form.control}
-                name="nationalCardPicture"
-                render={(
-                  { field } // field contains { onChange, onBlur, value, name, ref } but we handle onChange manually
-                ) => (
-                  <FormItem>
-                    <Label htmlFor="nationalCardPicture">
-                      {t("nationalCardLabel")}
-                    </Label>
-                    <FormControl>
-                      <Input
-                        id="nationalCardPicture" // Keep ID for label association
-                        type="file"
-                        accept="image/png, image/jpeg, image/jpg"
-                        onChange={handleImageUpload} // Use custom handler
-                        // {...form.register("nationalCardPicture")} // Remove direct register, handled by setValue
-                        className={`mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90 ${
-                          form.formState.errors.nationalCardPicture
-                            ? "border-red-500"
-                            : "border-gray-300"
-                        } ${imagePreview ? "hidden" : ""}`} // Hide input when preview is shown
-                      />
-                      {/* Display error message */}
-                    </FormControl>
-                    {form.formState.errors.nationalCardPicture &&
-                      !imagePreview && (
-                        <p className="mt-1 text-xs text-red-600">
-                          {t(
-                            form.formState.errors.nationalCardPicture
-                              .message as string
-                          )}
-                        </p>
+                  />
+                  {form.formState.errors.confirmPassword && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(
+                        form.formState.errors.confirmPassword.message as string
                       )}
-                    {/* Image Preview and Actions */}
-                    {imagePreview && (
-                      <div className="relative mt-2 h-40 flex items-center justify-center border border-dashed border-gray-300 rounded-lg overflow-hidden group transition duration-200 hover:shadow-lg">
-                        <Image
-                          src={imagePreview}
-                          alt={t("nationalCardPreviewAlt", {
-                            defaultValue: "National Card Preview",
-                          })} // Need translation key: nationalCardPreviewAlt
-                          width={150} // Adjust size as needed
-                          height={150}
-                          className="object-contain transition-transform duration-200 group-hover:scale-105"
+                    </p>
+                  )}
+                </div>
+                {/* Phone Field (Optional) */}
+                <div>
+                  <Label htmlFor="phone">
+                    {t("phoneLabel")} ({t("optional")})
+                  </Label>{" "}
+                  {/* Add optional text */}
+                  <Input
+                    id="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    {...form.register("phone")}
+                    className={
+                      form.formState.errors.phone ? "border-red-500" : ""
+                    }
+                  />
+                  {form.formState.errors.phone && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(form.formState.errors.phone.message as string)}
+                    </p>
+                  )}
+                </div>
+                {/* Date of Birth Field */}
+                <div>
+                  <Label htmlFor="dateOfBirth">{t("dateOfBirthLabel")}</Label>
+                  <Input
+                    id="dateOfBirth"
+                    type="date"
+                    {...form.register("dateOfBirth")}
+                    className={
+                      form.formState.errors.dateOfBirth ? "border-red-500" : ""
+                    }
+                  />
+                  {form.formState.errors.dateOfBirth && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(form.formState.errors.dateOfBirth.message as string)}
+                    </p>
+                  )}
+                </div>
+                {/* National Code Field */}
+                <div>
+                  <Label htmlFor="nationalCode">{t("nationalCodeLabel")}</Label>
+                  <Input
+                    id="nationalCode"
+                    type="text" // Use text to allow leading zeros if necessary, validation handles numeric check
+                    maxLength={10}
+                    {...form.register("nationalCode")}
+                    className={
+                      form.formState.errors.nationalCode ? "border-red-500" : ""
+                    }
+                  />
+                  {form.formState.errors.nationalCode && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(form.formState.errors.nationalCode.message as string)}
+                    </p>
+                  )}
+                </div>
+                {/* Level of Quranic Studies Field */}
+                <div>
+                  <Label htmlFor="quranicStudyLevel">
+                    {t("quranicLevelLabel")}
+                  </Label>
+                  <Select
+                    onValueChange={(value) =>
+                      form.setValue(
+                        "quranicStudyLevel",
+                        value as QuranicStudyLevel
+                      )
+                    }
+                    defaultValue={form.getValues("quranicStudyLevel")}
+                  >
+                    <SelectTrigger
+                      className={
+                        form.formState.errors.quranicStudyLevel
+                          ? "border-red-500"
+                          : ""
+                      }
+                    >
+                      <SelectValue placeholder={t("selectLevelPlaceholder")} />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card">
+                      {Object.values(QuranicStudyLevel).map((level) => (
+                        <SelectItem key={level} value={level}>
+                          {t(`quranicLevels.${level}`)}{" "}
+                          {/* Use translation keys for levels */}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.quranicStudyLevel && (
+                    <p className="mt-1 text-xs text-red-600">
+                      {t(
+                        form.formState.errors.quranicStudyLevel
+                          .message as string
+                      )}
+                    </p>
+                  )}
+                </div>
+                {/* National Card Picture Field - Improved UI */}
+                <FormField
+                  control={form.control}
+                  name="nationalCardPicture"
+                  render={(
+                    { field } // field contains { onChange, onBlur, value, name, ref } but we handle onChange manually
+                  ) => (
+                    <FormItem>
+                      <Label htmlFor="nationalCardPicture">
+                        {t("nationalCardLabel")}
+                      </Label>
+                      <FormControl>
+                        <Input
+                          id="nationalCardPicture" // Keep ID for label association
+                          type="file"
+                          accept="image/png, image/jpeg, image/jpg"
+                          onChange={handleImageUpload} // Use custom handler
+                          // {...form.register("nationalCardPicture")} // Remove direct register, handled by setValue
+                          className={`mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90 ${
+                            form.formState.errors.nationalCardPicture
+                              ? "border-red-500"
+                              : "border-gray-300"
+                          } ${imagePreview ? "hidden" : ""}`} // Hide input when preview is shown
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-0 transition-all duration-200 group-hover:bg-opacity-40">
-                          <div className="absolute bottom-2 left-2 flex items-center justify-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                            {/* Adjusted Remove Button */}
-                            <Button
-                              type="button"
-                              variant="outline" // Changed from destructive
-                              // size="icon" // Removed unsupported size
-                              onClick={handleImageRemove}
-                              className="h-8 w-8 p-1" // Added padding for icon spacing
-                              aria-label={t("removeImageAriaLabel", {
-                                defaultValue: "Remove image",
-                              })}
-                            >
-                              <Trash className="h-4 w-4" />
-                            </Button>
-                            {/* Adjusted Change Button */}
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              // size="icon" // Removed unsupported size
-                              onClick={() =>
-                                document
-                                  .getElementById("nationalCardPicture")
-                                  ?.click()
-                              } // Trigger hidden input click
-                              className="h-8 w-8 p-1" // Added padding for icon spacing
-                              aria-label={t("changeImageAriaLabel", {
-                                defaultValue: "Change image",
-                              })}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                        {/* Display error message below preview if needed */}
-                        {form.formState.errors.nationalCardPicture && (
-                          <p className="absolute bottom-1 right-1 text-xs text-red-500 bg-white px-1 rounded">
+                        {/* Display error message */}
+                      </FormControl>
+                      {form.formState.errors.nationalCardPicture &&
+                        !imagePreview && (
+                          <p className="mt-1 text-xs text-red-600">
                             {t(
                               form.formState.errors.nationalCardPicture
                                 .message as string
                             )}
                           </p>
                         )}
-                      </div>
-                    )}
-                    {/* Ensure FormMessage is rendered if needed, though manual display is added */}
-                    {/* <FormMessage /> */}
-                  </FormItem>
-                )}
-              />
-              {/* Submit Button */}
-              <div className="pt-2">
-                {" "}
-                {/* Added padding top */}
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                      {/* Image Preview and Actions */}
+                      {imagePreview && (
+                        <div className="relative mt-2 h-40 flex items-center justify-center border border-dashed border-gray-300 rounded-lg overflow-hidden group transition duration-200 hover:shadow-lg">
+                          <Image
+                            src={imagePreview}
+                            alt={t("nationalCardPreviewAlt", {
+                              defaultValue: "National Card Preview",
+                            })} // Need translation key: nationalCardPreviewAlt
+                            width={150} // Adjust size as needed
+                            height={150}
+                            className="object-contain transition-transform duration-200 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-0 transition-all duration-200 group-hover:bg-opacity-40">
+                            <div className="absolute bottom-2 left-2 flex items-center justify-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                              {/* Adjusted Remove Button */}
+                              <Button
+                                type="button"
+                                variant="outline" // Changed from destructive
+                                // size="icon" // Removed unsupported size
+                                onClick={handleImageRemove}
+                                className="h-8 w-8 p-1" // Added padding for icon spacing
+                                aria-label={t("removeImageAriaLabel", {
+                                  defaultValue: "Remove image",
+                                })}
+                              >
+                                <Trash className="h-4 w-4" />
+                              </Button>
+                              {/* Adjusted Change Button */}
+                              <Button
+                                type="button"
+                                variant="secondary"
+                                // size="icon" // Removed unsupported size
+                                onClick={() =>
+                                  document
+                                    .getElementById("nationalCardPicture")
+                                    ?.click()
+                                } // Trigger hidden input click
+                                className="h-8 w-8 p-1" // Added padding for icon spacing
+                                aria-label={t("changeImageAriaLabel", {
+                                  defaultValue: "Change image",
+                                })}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          {/* Display error message below preview if needed */}
+                          {form.formState.errors.nationalCardPicture && (
+                            <p className="absolute bottom-1 right-1 text-xs text-red-500 bg-white px-1 rounded">
+                              {t(
+                                form.formState.errors.nationalCardPicture
+                                  .message as string
+                              )}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      {/* Ensure FormMessage is rendered if needed, though manual display is added */}
+                      {/* <FormMessage /> */}
+                    </FormItem>
+                  )}
+                />
+                {/* Submit Button */}
+                <div className="pt-2">
                   {" "}
-                  {/* Removed specific bg color to use default */}
-                  {isLoading ? t("registeringProgress") : t("register")}
-                </Button>
-              </div>
-            </form>
-          </FormProvider>
+                  {/* Added padding top */}
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {" "}
+                    {/* Removed specific bg color to use default */}
+                    {isLoading ? t("registeringProgress") : t("register")}
+                  </Button>
+                </div>
+              </form>
+            </FormProvider>
+          )}
         </CardContent>
-        <CardFooter className="flex flex-col items-center space-y-2">
-          {" "}
-          {/* Adjusted footer layout */}
-          <p className="text-sm text-gray-600">
-            {t("hasAccount")}{" "}
-            <Link
-              href={`/auth/login`}
-              className="font-medium text-primary hover:underline"
-            >
-              {t("signIn")}
-            </Link>
-          </p>
-        </CardFooter>
+        {/* Hide footer link if registration was successful */}
+        {!isSuccess && (
+          <CardFooter className="flex flex-col items-center space-y-2">
+            <p className="text-sm text-gray-600">
+              {t("hasAccount")}{" "}
+              <Link
+                href={`/auth/login`}
+                className="font-medium text-primary hover:underline"
+              >
+                {t("signIn")}
+              </Link>
+            </p>
+          </CardFooter>
+        )}
       </Card>
     </div>
   );

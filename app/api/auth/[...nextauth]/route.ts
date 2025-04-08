@@ -1,64 +1,156 @@
-import NextAuth from "next-auth"
-import { PrismaAdapter } from "@auth/prisma-adapter"
-import { PrismaClient } from "@prisma/client" // Make sure prisma client is generated
-import CredentialsProvider from "next-auth/providers/credentials"
+import NextAuth, { AuthOptions } from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient, User } from "@prisma/client";
+import CredentialsProvider from "next-auth/providers/credentials";
 
-const prisma = new PrismaClient()
+import bcrypt from "bcryptjs"; // Needed if re-enabling password check
 
-const handler = NextAuth({
+const prisma = new PrismaClient();
+
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
+    // Provider 1: Email + Password (Original)
     CredentialsProvider({
+      id: "credentials", // Explicit ID
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        email: { label: "Email", type: "email", placeholder: "your@email.com" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          console.log("Missing email or password");
+          return null;
         }
 
-        // Find user in the database
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
-        })
+        });
 
         if (!user) {
-          return null
+          console.log("No user found with this email");
+          return null;
         }
 
-        // IMPORTANT: This assumes you have a password field in your User model
-        // and that it's hashed. You'll need to add this field to your
-        // prisma/schema.prisma if it's not already there and ensure passwords
-        // are hashed upon user creation/update.
-        // For now, we'll comment out the password check as the field doesn't exist.
-        /*
-        if (!user.password) { // Check if password field exists
-           console.error("User model does not have a password field.");
-           return null;
+        // Check if email is verified *before* checking password
+        if (!user.emailVerified) {
+          console.log(
+            "Attempt to login with unverified email (password flow):",
+            user.email
+          );
+          throw new Error("Email not verified");
         }
-        const isPasswordValid = await compare(credentials.password, user.password);
+
+        // Check password
+        if (!user.password) {
+          console.error(
+            "User model missing password field or password not set for user:",
+            user.email
+          );
+          // Throw error instead of returning null to provide feedback
+          throw new Error("Password not set for user");
+        }
+        const isPasswordValid = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
         if (!isPasswordValid) {
-          return null
+          console.log("Invalid password for user:", user.email);
+          // Throw error instead of returning null
+          throw new Error("Invalid credentials");
         }
-        */
 
-        // For now, just return the user if found by email
-        // Remove the password check logic above once you have hashed passwords stored
+        // Password is valid and email is verified
+        console.log("Password check passed for user:", user.email);
         return {
           id: user.id,
           name: user.name,
           email: user.email,
           image: user.image,
-          // Add role if you have it in your Prisma User model
           role: user.role,
-        }
+        };
       },
     }),
-    // Add other providers like Google, GitHub etc. here if needed
+    // Provider 2: Email + Login Code (New)
+    CredentialsProvider({
+      id: "email-code", // Unique ID for this provider
+      name: "Email Code",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        loginCode: { label: "Login Code", type: "text" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.loginCode) {
+          console.log("Missing email or login code");
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user) {
+          console.log("No user found for email code login:", credentials.email);
+          return null;
+        }
+
+        // Check if code exists, matches, and hasn't expired FIRST
+        const now = new Date();
+        if (
+          !user.loginCode ||
+          !user.loginCodeExpires ||
+          user.loginCode !== credentials.loginCode ||
+          now > user.loginCodeExpires
+        ) {
+          if (now > (user.loginCodeExpires ?? new Date(0))) {
+            console.log("Login code expired for user:", user.email);
+            // Optionally clear expired code here
+            await prisma.user.update({
+              where: { email: credentials.email },
+              data: { loginCode: null, loginCodeExpires: null },
+            });
+            throw new Error("Login code expired");
+          }
+          console.log("Invalid or missing login code for user:", user.email);
+          throw new Error("Invalid login code");
+          // return null;
+        }
+
+        // Code is valid. Verify email if not already verified.
+        let userDataUpdate: {
+          loginCode: null;
+          loginCodeExpires: null;
+          emailVerified?: Date;
+        } = {
+          loginCode: null,
+          loginCodeExpires: null,
+        };
+        if (!user.emailVerified) {
+          console.log("Verifying email via code login for:", user.email);
+          userDataUpdate.emailVerified = now; // Set verification timestamp
+        }
+
+        // Clear the code and potentially update verification status
+        await prisma.user.update({
+          where: { email: credentials.email },
+          data: userDataUpdate,
+        });
+
+        console.log("Email code login successful for:", user.email);
+        // Return necessary user fields
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          role: user.role,
+        };
+      },
+    }),
   ],
   callbacks: {
+    // Ensure session callback includes necessary user data from token/user
     // JWT callback is not typically needed when using database sessions
     // async jwt({ token, user }) {
     //   if (user) {
@@ -66,43 +158,45 @@ const handler = NextAuth({
     //   }
     //   return token
     // },
-    async session({ session, token, user }) {
-      // The user object may be undefined with JWT strategy
-      if (session?.user) {
-        // Add id from token if available (JWT strategy)
-        if (token?.sub) {
-          session.user.id = token.sub;
-        }
-        // Add properties from user if available (database strategy)
-        if (user) {
-          const typedUser = user as { id: string; name?: string | null; email?: string | null; image?: string | null; role?: string | null };
-          session.user.id = typedUser.id;
-          session.user.image = typedUser.image ?? undefined;
-          // Only add role if it exists on the user object
-          if ('role' in typedUser && typedUser.role != null) {
-            session.user.role = typedUser.role ?? undefined;
-          }
-        }
+    async session({ session, token /* user */ }) {
+      // Using JWT strategy, user object might not be passed directly here.
+      // We rely on the token which gets info from authorize() and jwt callback.
+      if (token && session.user) {
+        session.user.id = token.sub ?? session.user.id; // Add id from token subject
+        // @ts-ignore // Add role if persisted in token by jwt callback
+        session.user.role = token.role ?? session.user.role;
+        // Add other properties from token if needed
       }
       return session;
     },
+    // JWT callback is needed with JWT strategy to persist custom data (like role)
+    async jwt({ token, user }) {
+      // On sign in, 'user' object is passed from authorize()
+      if (user) {
+        token.sub = user.id; // Persist user id
+        // @ts-ignore // Persist user role
+        token.role = user.role;
+        // Persist other fields if needed
+      }
+      return token;
+    },
   },
   pages: {
-    signIn: "/auth/login", // Your custom login page
-    // signOut: "/auth/logout", // Default signout page is usually fine
-    error: "/auth/error", // Error code passed in query string as ?error=
-    // verifyRequest: '/auth/verify-request', // (Optional) Used for email verification
-    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    signIn: "/auth/login", // Your custom login page path
+    error: "/auth/error", // Error page, errors passed via query ?error=...
+    // verifyRequest: '/auth/verify-request', // Page shown after requesting email verification (built-in provider) - Not needed for our custom flow
   },
   session: {
-    strategy: "jwt", // Temporarily switch to JWT strategy for debugging
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    strategy: "jwt", // Use JWT strategy
+    maxAge: 30 * 24 * 60 * 60, // 30 days session expiry
   },
   jwt: {
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET, // Secret for signing JWTs
   },
-  // Add debug: process.env.NODE_ENV === 'development' for more logs
-})
+  secret: process.env.NEXTAUTH_SECRET, // Top-level secret also needed
+  debug: process.env.NODE_ENV === "development", // Enable debug logs in development
+};
 
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions);
+
+export { handler as GET, handler as POST };
