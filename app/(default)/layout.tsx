@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import SessionWrapper from "@/components/SessionWrapper";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Khorramshahr Quranic Complex",
@@ -23,6 +24,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir}>
       <body>
+        <Toaster />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionWrapper>
             <Header />

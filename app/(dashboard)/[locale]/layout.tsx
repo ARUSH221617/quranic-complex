@@ -4,6 +4,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import SessionWrapper from "@/components/SessionWrapper";
 import DashboardLayoutClient from "./DashboardLayoutClient";
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Khorramshahr Quranic Complex",
@@ -22,6 +23,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={dir}>
       <body>
+        <Toaster />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionWrapper>
             <DashboardLayoutClient>{children}</DashboardLayoutClient>
