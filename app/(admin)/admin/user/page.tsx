@@ -12,7 +12,7 @@ type GetUsersResult =
 
 async function getUsers(): Promise<GetUsersResult> {
   try {
-    // Fetch data from the API route
+    // Fetch data using a relative path for server-side fetch
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
       cache: "no-store", // Ensure fresh data on each request
     });
@@ -22,28 +22,34 @@ async function getUsers(): Promise<GetUsersResult> {
       console.error(`Failed to fetch users: ${res.status} ${res.statusText}`);
       let errorMessage = `Failed to fetch users. Status: ${res.status}`;
       try {
-        // Attempt to get a more specific error message from the response body
+        // Attempt to get a more specific error message from the response body as JSON
         const errorBody = await res.json();
         if (errorBody && errorBody.message) {
           errorMessage = errorBody.message;
         }
       } catch (jsonError) {
-        // Ignore if response body is not JSON or empty
-        console.error("Error parsing error response body:", jsonError);
+        // If JSON parsing fails, try reading as text
+        console.error("Error parsing error response body as JSON:", jsonError);
+        try {
+          const errorText = await res.text(); // Read response as text
+          console.error("Error response text:", errorText); // Log the HTML/text response
+          // Provide a more informative error message if possible, otherwise stick to status
+          errorMessage = `Failed to fetch users (Status: ${res.status}). The server returned a non-JSON response. Check server logs for details.`;
+        } catch (textError) {
+          console.error(
+            "Error reading error response body as text:",
+            textError,
+          );
+          // Fallback if reading as text also fails
+          errorMessage = `Failed to fetch users (Status: ${res.status}). Unable to parse error response.`;
+        }
       }
       return { success: false, error: errorMessage };
     }
 
     const users: User[] = await res.json();
 
-    // Transform User[] to UserData[]
-    const userData = users.map((user) => ({
-      ...user,
-      verificationToken: null, // Explicitly setting fields not in UserData to null or default
-      verificationTokenExpires: null,
-    }));
-
-    return { success: true, users: userData };
+    return { success: true, users: users };
   } catch (error) {
     // Handle network errors or other exceptions during fetch/processing
     console.error("Error fetching users:", error);
