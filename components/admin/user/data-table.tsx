@@ -54,8 +54,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Toaster } from "@/components/ui/toaster"; // Import Toaster
-import { useToast } from "@/components/ui/use-toast"; // Import useToast
+import { useToast } from "@/hooks/use-toast";
 import { gregorian_to_jalali } from "@/lib/jdf"; // Removed unused import
 import { UserEditSheet } from "./user-edit-sheet"; // Import the edit sheet
 import { UserData } from "./schema";
