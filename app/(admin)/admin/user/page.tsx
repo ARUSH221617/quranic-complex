@@ -1,23 +1,28 @@
 import { DataTable } from "@/components/admin/user/data-table";
-import { User } from "@prisma/client"; // Assuming User type is available via Prisma client
+import { UserData } from "@/components/admin/user/schema";
+import { User } from "@prisma/client";
 
-async function getUsers(): Promise<User[]> {
+async function getUsers(): Promise<UserData[]> {
   // Fetch data from the API route
   // Note: Using the full URL is recommended for server-side fetch in Next.js App Router
   // Replace 'http://localhost:3000' with your actual base URL or use an environment variable
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/users`,
-    {
-      cache: "no-store", // Ensure fresh data on each request
-    }
-  );
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users`, {
+    cache: "no-store", // Ensure fresh data on each request
+  });
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error("Failed to fetch users");
   }
 
-  return res.json();
+  const users: User[] = await res.json();
+
+  // Transform User[] to UserData[]
+  return users.map((user) => ({
+    ...user,
+    verificationToken: null,
+    verificationTokenExpires: null,
+  }));
 }
 
 export default async function Page() {
