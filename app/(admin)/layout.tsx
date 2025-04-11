@@ -4,6 +4,7 @@ import SessionWrapper from "@/components/SessionWrapper";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "Khorramshahr Quranic Complex",
@@ -18,6 +19,7 @@ export default async function RootLayout({
   return (
     <html lang={"en"} dir={"ltr"}>
       <body>
+        <Toaster />
         <SessionWrapper>
           <main>
             <SidebarProvider>
