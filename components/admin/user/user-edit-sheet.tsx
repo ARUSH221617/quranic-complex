@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { QuranicStudyLevel, User } from "@prisma/client";
+import { QuranicStudyLevel, User, UserStatus } from "@prisma/client";
 import { RefreshCwIcon, Trash, Edit } from "lucide-react"; // Import Trash and Edit icons
 import { useForm } from "react-hook-form";
 import Image from "next/image"; // Import Next Image
@@ -47,22 +46,22 @@ type EditUserFormData = z.infer<typeof editUserFormSchema>; // Keep for type hin
 interface UserEditSheetProps {
   user: User | null; // User data to edit, or null if sheet is closed
   isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
-  onUpdateSuccess: () => void; // Callback to refetch data in parent
+  onOpenChangeAction: (isOpen: boolean) => void;
+  onUpdateSuccessAction: () => void; // Callback to refetch data in parent
 }
 
 export function UserEditSheet({
   user,
   isOpen,
-  onOpenChange,
-  onUpdateSuccess,
+  onOpenChangeAction,
+  onUpdateSuccessAction,
 }: UserEditSheetProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const { toast } = useToast(); // Get toast function
   // State for file inputs
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [nationalCardFile, setNationalCardFile] = React.useState<File | null>(
-    null
+    null,
   );
   // State for image previews
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
@@ -101,6 +100,7 @@ export function UserEditSheet({
           ? new Date(user.dateOfBirth).toISOString().split("T")[0] // Format for date input
           : undefined,
         quranicStudyLevel: user.quranicStudyLevel ?? undefined,
+        status: user.status ?? undefined,
       });
       // Reset file, preview, and crop states when sheet opens for a new user
       setImageFile(null);
@@ -125,7 +125,7 @@ export function UserEditSheet({
     event: React.ChangeEvent<HTMLInputElement>,
     setFile: React.Dispatch<React.SetStateAction<File | null>>,
     setPreview: React.Dispatch<React.SetStateAction<string | null>>,
-    isProfilePicture: boolean = false // Flag to trigger cropping
+    isProfilePicture: boolean = false, // Flag to trigger cropping
   ) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -193,7 +193,7 @@ export function UserEditSheet({
         {
           type: croppedBlob.type,
           lastModified: Date.now(),
-        }
+        },
       );
       setImageFile(croppedFile); // Set the cropped file for upload
       // Create a new object URL for the preview
@@ -216,7 +216,7 @@ export function UserEditSheet({
   const handleImageRemove = (
     setFileState: React.Dispatch<React.SetStateAction<File | null>>,
     setPreviewState: React.Dispatch<React.SetStateAction<string | null>>,
-    inputId: string
+    inputId: string,
   ) => {
     setFileState(null);
     // Revoke object URL if the preview was from a blob
@@ -287,8 +287,8 @@ export function UserEditSheet({
         title: "Success",
         description: "User updated successfully!",
       });
-      onUpdateSuccess(); // Trigger refetch in the parent component
-      onOpenChange(false); // Close the sheet
+      onUpdateSuccessAction(); // Trigger refetch in the parent component
+      onOpenChangeAction(false); // Close the sheet
     } catch (error) {
       console.error("Update failed:", error);
       toast({
@@ -302,7 +302,7 @@ export function UserEditSheet({
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+    <Sheet open={isOpen} onOpenChange={onOpenChangeAction}>
       <SheetContent className="flex flex-col">
         <SheetHeader className="gap-1">
           <SheetTitle>Edit User: {user?.name || user?.id}</SheetTitle>
@@ -462,7 +462,7 @@ export function UserEditSheet({
                   <FormLabel>Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value ?? undefined}
+                    defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -470,9 +470,11 @@ export function UserEditSheet({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="PENDING">Pending</SelectItem>
-                      <SelectItem value="APPROVED">Approved</SelectItem>
-                      <SelectItem value="REJECTED">Rejected</SelectItem>
+                      {Object.values(UserStatus).map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {status}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -489,7 +491,7 @@ export function UserEditSheet({
                       `/api/users/${user?.id}/verify-email`,
                       {
                         method: "POST",
-                      }
+                      },
                     );
                     if (!res.ok)
                       throw new Error("Failed to send verification email");
@@ -550,7 +552,7 @@ export function UserEditSheet({
                           handleImageRemove(
                             setImageFile,
                             setImagePreview,
-                            "image"
+                            "image",
                           )
                         }
                         className="h-8 w-8 p-1"
@@ -592,7 +594,7 @@ export function UserEditSheet({
                     e,
                     setNationalCardFile,
                     setNationalCardPreview,
-                    false
+                    false,
                   )
                 }
                 className={`mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90 border-gray-300 ${
@@ -622,7 +624,7 @@ export function UserEditSheet({
                           handleImageRemove(
                             setNationalCardFile,
                             setNationalCardPreview,
-                            "nationalCardPicture"
+                            "nationalCardPicture",
                           )
                         }
                         className="h-8 w-8 p-1"

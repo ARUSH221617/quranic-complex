@@ -18,11 +18,9 @@ export const userSchema = z.object({
   password: z.string().nullable(),
   loginCode: z.string().nullable(),
   loginCodeExpires: z.date().nullable(),
-  verificationToken: z.string().nullable(),
-  verificationTokenExpires: z.date().nullable(),
 });
 
 // Type for the user data based on the schema
-export type UserData = Omit<z.infer<typeof userSchema>, 'quranicStudyLevel'> & {
+export type UserData = Omit<z.infer<typeof userSchema>, "quranicStudyLevel"> & {
   quranicStudyLevel: QuranicStudyLevel | null;
 };

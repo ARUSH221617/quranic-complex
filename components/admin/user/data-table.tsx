@@ -123,7 +123,7 @@ export const columns: ColumnDef<UserData>[] = [
       const jalaliDate = gregorian_to_jalali(
         date?.getFullYear() || 0,
         date?.getMonth() || 0,
-        date?.getDate() || 0
+        date?.getDate() || 0,
       );
       const formattedDate = `${jalaliDate[0]}/${jalaliDate[1]
         .toString()
@@ -150,8 +150,8 @@ export const columns: ColumnDef<UserData>[] = [
             status === "APPROVED"
               ? "default"
               : status === "REJECTED"
-              ? "destructive"
-              : "outline"
+                ? "destructive"
+                : "outline"
           }
         >
           {status as string}
@@ -226,7 +226,7 @@ export function DataTable({ data: initialData }: DataTableProps) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pagination, setPagination] = React.useState({
@@ -238,7 +238,7 @@ export function DataTable({ data: initialData }: DataTableProps) {
   const refetchUsers = React.useCallback(async () => {
     setIsLoading(true);
     // Use shadcn toast for loading state (optional, as button has spinner)
-    // toast({ title: "Refreshing user data...", description: "Please wait." });
+    toast({ title: "Refreshing user data...", description: "Please wait." });
     try {
       const res = await fetch("/api/users", { cache: "no-store" });
       if (!res.ok) {
@@ -369,7 +369,7 @@ export function DataTable({ data: initialData }: DataTableProps) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -389,7 +389,7 @@ export function DataTable({ data: initialData }: DataTableProps) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
@@ -496,12 +496,10 @@ export function DataTable({ data: initialData }: DataTableProps) {
             nationalCardPicture: editingUser.nationalCardPicture as string,
           }}
           isOpen={isSheetOpen}
-          onOpenChange={setIsSheetOpen}
-          onUpdateSuccess={refetchUsers}
+          onOpenChangeAction={setIsSheetOpen}
+          onUpdateSuccessAction={refetchUsers}
         />
       )}
-      {/* Add Toaster component */}
-      <Toaster />
     </div>
   );
 }

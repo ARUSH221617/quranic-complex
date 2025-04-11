@@ -60,15 +60,18 @@ export async function PATCH(
   request: Request,
   { params }: { params: { userId: string } }
 ) {
-  // Ensure userId is accessed correctly (standard access should be fine)
-  const userId = params.userId;
+  // Wait for params to be available and validate userId
+  const { userId } = await Promise.resolve(params);
 
-  if (!userId) {
+  if (!userId || typeof userId !== 'string' || userId.trim() === '') {
     return NextResponse.json(
-      { message: "User ID is required" },
+      { message: "Invalid or missing User ID" },
       { status: 400 }
     );
   }
+
+  // Sanitize userId by trimming any whitespace
+  const sanitizedUserId = userId.trim();
 
   try {
     const formData = await request.formData();
@@ -130,7 +133,7 @@ export async function PATCH(
 
     // --- Process Update ---
     // Fetch current user to get old file paths
-    const currentUser = await prisma.user.findUnique({ where: { id: userId } });
+    const currentUser = await prisma.user.findUnique({ where: { id: sanitizedUserId } });
     if (!currentUser) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
@@ -158,7 +161,7 @@ export async function PATCH(
       } else {
           // Handle invalid date string if necessary, maybe remove it or return error
           delete dataToUpdate.dateOfBirth; // Or return validation error
-          console.warn(`Invalid date string received for user ${userId}: ${body.dateOfBirth}`);
+          console.warn(`Invalid date string received for user ${sanitizedUserId}: ${body.dateOfBirth}`);
       }
     } else if (dataToUpdate.dateOfBirth === '') {
         // Handle empty string case if needed, e.g., set to null or remove
@@ -168,13 +171,13 @@ export async function PATCH(
 
     // Perform the update
     const updatedUser = await prisma.user.update({
-      where: { id: userId },
+      where: { id: sanitizedUserId },
       data: dataToUpdate,
     });
 
     return NextResponse.json(updatedUser); // Return updated user data
   } catch (error) {
-    console.error(`Error updating user ${userId}:`, error);
+    console.error(`Error updating user ${sanitizedUserId}:`, error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { message: "Validation failed", errors: error.errors },
