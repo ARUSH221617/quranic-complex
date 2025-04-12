@@ -1,5 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+
+// Interface for the formatted response
+interface NewsDetail {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  image: string | null;
+  date: Date;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  keywords: string | null;
+}
 
 export async function GET(
   request: Request,
@@ -16,31 +31,56 @@ export async function GET(
   }
 
   try {
-    const newsItem = await prisma.news.findFirst({
+    // Find news by slug with translations filtered by locale
+    const newsItem = await prisma.news.findUnique({
       where: {
         slug: params.slug,
-        locale,
       },
       select: {
         id: true,
-        title: true,
         slug: true,
-        content: true,
-        excerpt: true,
         image: true,
         date: true,
-        metaTitle: true,
-        metaDescription: true,
-        keywords: true,
+        translations: {
+          where: {
+            locale: locale,
+          },
+          select: {
+            title: true,
+            content: true,
+            excerpt: true,
+            metaTitle: true,
+            metaDescription: true,
+            keywords: true,
+          },
+          take: 1,
+        },
       },
     });
 
-    if (!newsItem) {
+    // Handle not found and no translations cases
+    if (!newsItem || newsItem.translations.length === 0) {
       return NextResponse.json({ error: "News not found" }, { status: 404 });
     }
 
-    return NextResponse.json(newsItem);
+    // Format the response combining news and translation data
+    const translation = newsItem.translations[0];
+    const formattedNews: NewsDetail = {
+      id: newsItem.id,
+      slug: newsItem.slug,
+      title: translation.title,
+      content: translation.content,
+      excerpt: translation.excerpt,
+      image: newsItem.image,
+      date: newsItem.date,
+      metaTitle: translation.metaTitle,
+      metaDescription: translation.metaDescription,
+      keywords: translation.keywords,
+    };
+
+    return NextResponse.json(formattedNews);
   } catch (error) {
+    console.error("Error fetching news detail:", error);
     return NextResponse.json(
       { error: "Failed to fetch news" },
       { status: 500 }
