@@ -310,8 +310,7 @@ export default async function Home() {
                     href={`/${locale}/news/${item.slug}`} // Use slug for news link
                     className="text-primary hover:underline"
                   >
-                    {/* Keep Read More simple or adjust t() call if needed */}
-                    {t("news.readMore")}
+                    {t("news.readMore", { title: item.title })}
                   </Link>
                 </CardFooter>
               </Card>
