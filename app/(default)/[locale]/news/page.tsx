@@ -7,37 +7,61 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { headers } from "next/headers";
 import { getLocale, getTranslations } from "next-intl/server";
-import { prisma } from "@/lib/prisma";
-import type { Event } from "@prisma/client";
 
-interface NewsItem {
+// Define types for news and events with translations
+interface FormattedNewsItem {
   id: string;
-  title: string;
   slug: string;
-  content: string;
+  title: string;
   excerpt: string;
-  image?: string;
+  image: string | null;
   date: string;
-  locale: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  keywords?: string;
+  metaTitle: string | null;
+  metaDescription: string | null;
+}
+
+interface FormattedEventItem {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  date: string;
+  time: string;
+  location: string;
+  image: string | null;
+}
+
+async function fetchWithLocale<T>(
+  endpoint: string,
+  locale: string,
+): Promise<T> {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const url = new URL(`${baseUrl}/api/${endpoint}`);
+  url.searchParams.append("locale", locale);
+
+  const response = await fetch(url.toString(), { next: { revalidate: 3600 } }); // Cache for 1 hour
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch from ${endpoint}: ${response.statusText}`);
+  }
+
+  return response.json();
 }
 
 export default async function NewsPage() {
   const locale = await getLocale();
   const t = await getTranslations("home.news.page");
 
-  const [news, events] = await Promise.all([
-    prisma.news.findMany({
-      where: { locale },
-    }),
-    prisma.event.findMany({
-      where: { locale },
-    }),
-  ]);
+  // Fetch news and events from API routes
+  const [formattedNews, formattedEvents] = await Promise.all([
+    fetchWithLocale<FormattedNewsItem[]>("news", locale),
+    fetchWithLocale<FormattedEventItem[]>("events", locale),
+  ]).catch((error) => {
+    console.error("Error fetching data:", error);
+    return [[], []]; // Return empty arrays if fetch fails
+  });
+
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
@@ -55,12 +79,12 @@ export default async function NewsPage() {
       {/* News Listing */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-secondary-text mb-8">
+          <h2 className="mb-8 text-3xl font-bold text-secondary-text">
             {t("newsSectionTitle")}
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {news.length > 0 ? (
-              news.map((item) => (
+            {formattedNews.length > 0 ? (
+              formattedNews.map((item) => (
                 <Card
                   key={item.id}
                   className="overflow-hidden transition-all duration-300 hover:shadow-xl"
@@ -77,12 +101,16 @@ export default async function NewsPage() {
                     <CardTitle>{item.title}</CardTitle>
                     <p className="text-sm text-gray-500">
                       {new Date(item.date).toLocaleDateString(
-                        locale === "ar" ? "ar-EG" : "en-US",
+                        locale === "ar"
+                          ? "ar-EG"
+                          : locale === "fa"
+                            ? "fa-IR"
+                            : "en-US",
                         {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
-                        }
+                        },
                       )}
                     </p>
                   </CardHeader>
@@ -100,7 +128,9 @@ export default async function NewsPage() {
                 </Card>
               ))
             ) : (
-              <div>{t("noNews")}</div>
+              <div className="col-span-3 text-center text-gray-500">
+                {t("noNews")}
+              </div>
             )}
           </div>
         </div>
@@ -135,23 +165,38 @@ export default async function NewsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {events.map((event, index) => (
-                    <tr key={index} className="border-b border-gray-200">
-                      <td className="py-4 text-gray-700">{event.name}</td>
-                      <td className="py-4 text-gray-700">
-                        {new Date(event.date).toLocaleDateString(
-                          locale === "ar" ? "ar-EG" : "en-US",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )}
+                  {formattedEvents.length > 0 ? (
+                    formattedEvents.map((event) => (
+                      <tr key={event.id} className="border-b border-gray-200">
+                        <td className="py-4 text-gray-700">{event.name}</td>
+                        <td className="py-4 text-gray-700">
+                          {new Date(event.date).toLocaleDateString(
+                            locale === "ar"
+                              ? "ar-EG"
+                              : locale === "fa"
+                                ? "fa-IR"
+                                : "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            },
+                          )}
+                        </td>
+                        <td className="py-4 text-gray-700">{event.time}</td>
+                        <td className="py-4 text-gray-700">{event.location}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan={4}
+                        className="py-4 text-center text-gray-500"
+                      >
+                        No upcoming events
                       </td>
-                      <td className="py-4 text-gray-700">{event.time}</td>
-                      <td className="py-4 text-gray-700">{event.location}</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
