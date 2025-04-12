@@ -348,5 +348,46 @@
     "staffMemberAlt": "Team Member {index}",
     "staffMemberName": "Professor Mohamed {index}",
     "staffMemberRole": "Quran and Tajweed Teacher"
+  },
+  "curriculum": {
+    "title": "Curriculum",
+    "description": "You will learn the following skills in this program through an integrated curriculum",
+    "module1": {
+      "title": "Module 1",
+      "description": "Detailed description of the module, its contents, and the skills that the student will acquire.",
+      "lesson1": "Lesson One",
+      "lesson2": "Lesson Two",
+      "lesson3": "Lesson Three",
+      "lesson4": "Lesson Four"
+    },
+    "module2": {
+      "title": "Module 2",
+      "description": "Detailed description of the module, its contents, and the skills that the student will acquire.",
+      "lesson1": "Lesson One",
+      "lesson2": "Lesson Two",
+      "lesson3": "Lesson Three",
+      "lesson4": "Lesson Four"
+    },
+    "module3": {
+      "title": "Module 3",
+      "description": "Detailed description of the module, its contents, and the skills that the student will acquire.",
+      "lesson1": "Lesson One",
+      "lesson2": "Lesson Two",
+      "lesson3": "Lesson Three",
+      "lesson4": "Lesson Four"
+    }
+  },
+  "programDetail": {
+    "duration": "Duration",
+    "durationValue": "3 months",
+    "fees": "Fees",
+    "feesValue": "500 Riyals",
+    "registerNow": "Register Now",
+    "backToPrograms": "Back to Programs"
+  },
+  "cta": {
+    "title": "Ready to Join Us?",
+    "description": "Register now and reserve your place in this distinguished educational program",
+    "startRegistration": "Start Registration"
   }
 }
