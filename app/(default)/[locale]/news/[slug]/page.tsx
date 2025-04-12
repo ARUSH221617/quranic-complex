@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getTranslations } from "next-intl/server";
 
 interface Props {
   params: {
@@ -10,26 +11,69 @@ interface Props {
   };
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/news/${params.slug}?locale=${params.locale}`
-  );
-  const newsItem = await res.json();
+interface NewsDetail {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  image: string | null;
+  date: string;
+  metaTitle: string | null;
+  metaDescription: string | null;
+  keywords: string | null;
+}
 
-  if (!newsItem) return {};
+async function fetchNewsDetail(
+  slug: string,
+  locale: string,
+): Promise<NewsDetail | null> {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const url = new URL(`${baseUrl}/api/news/${slug}`);
+  url.searchParams.append("locale", locale);
+
+  try {
+    const response = await fetch(url.toString(), {
+      next: { revalidate: 3600 },
+    }); // Cache for 1 hour
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      throw new Error(`Failed to fetch news detail: ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error(`Error fetching news detail for slug ${slug}:`, error);
+    return null;
+  }
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const newsItem = await fetchNewsDetail(params.slug, params.locale);
+
+  if (!newsItem)
+    return {
+      title: "News Not Found",
+    };
 
   return {
     title: newsItem.metaTitle || newsItem.title,
     description: newsItem.metaDescription || newsItem.excerpt,
     keywords: newsItem.keywords?.split(",") || [],
+    openGraph: {
+      title: newsItem.title,
+      description: newsItem.excerpt,
+      images: newsItem.image ? [{ url: newsItem.image }] : [],
+    },
   };
 }
 
 export default async function NewsDetailPage({ params }: Props) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/news/${params.slug}?locale=${params.locale}`
-  );
-  const newsItem = await res.json();
+  const t = await getTranslations("home.news.page");
+  const newsItem = await fetchNewsDetail(params.slug, params.locale);
 
   if (!newsItem) {
     notFound();
@@ -37,7 +81,7 @@ export default async function NewsDetailPage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <Card>
+      <Card className="overflow-hidden shadow-lg">
         {newsItem.image && (
           <div className="relative h-96 w-full">
             <Image
@@ -45,23 +89,28 @@ export default async function NewsDetailPage({ params }: Props) {
               alt={newsItem.title}
               fill
               className="object-cover"
+              priority
             />
           </div>
         )}
         <CardHeader>
-          <CardTitle>{newsItem.title}</CardTitle>
+          <CardTitle className="text-3xl font-bold">{newsItem.title}</CardTitle>
           <p className="text-sm text-gray-500">
             {new Date(newsItem.date).toLocaleDateString(
-              params.locale === "ar" ? "ar-EG" : "en-US",
+              params.locale === "ar"
+                ? "ar-EG"
+                : params.locale === "fa"
+                  ? "fa-IR"
+                  : "en-US",
               {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-              }
+              },
             )}
           </p>
         </CardHeader>
-        <CardContent className="prose max-w-none">
+        <CardContent className="prose max-w-none lg:prose-lg dark:prose-invert">
           <div dangerouslySetInnerHTML={{ __html: newsItem.content }} />
         </CardContent>
       </Card>
