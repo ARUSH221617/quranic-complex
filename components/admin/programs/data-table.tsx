@@ -56,6 +56,8 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { ProgramData } from "./schema";
+// Import the edit sheet component
+import { ProgramEditSheet } from "./program-edit-sheet";
 
 // Define columns based on the ProgramData type
 export const columns: ColumnDef<ProgramData>[] = [
@@ -94,7 +96,9 @@ export const columns: ColumnDef<ProgramData>[] = [
   {
     accessorKey: "ageGroup",
     header: "Age Group",
-    cell: ({ row }) => <Badge variant="outline">{row.getValue("ageGroup")}</Badge>,
+    cell: ({ row }) => (
+      <Badge variant="outline">{row.getValue("ageGroup")}</Badge>
+    ),
   },
   {
     accessorKey: "schedule",
@@ -149,7 +153,8 @@ interface DataTableProps {
 export function DataTable({ data: initialData }: DataTableProps) {
   // State for table data, editing sheet, and loading
   const [programs, setPrograms] = React.useState<ProgramData[]>(initialData);
-  const [editingProgram, setEditingProgram] = React.useState<ProgramData | null>(null);
+  const [editingProgram, setEditingProgram] =
+    React.useState<ProgramData | null>(null);
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast(); // Get toast function
@@ -167,17 +172,30 @@ export function DataTable({ data: initialData }: DataTableProps) {
     pageSize: 10,
   });
 
+  // Update local data when initialData changes (e.g., after parent fetch)
+  React.useEffect(() => {
+    setPrograms(initialData);
+  }, [initialData]);
+
   // Function to refetch programs
   const refetchPrograms = React.useCallback(async () => {
     setIsLoading(true);
     toast({ title: "Refreshing program data...", description: "Please wait." });
     try {
+      // Use relative path for API routes within the same app
       const res = await fetch("/api/programs", { cache: "no-store" });
       if (!res.ok) {
-        throw new Error("Failed to fetch programs");
+        let errorMsg = "Failed to fetch programs";
+        try {
+          const errorBody = await res.json();
+          errorMsg = errorBody.message || errorMsg;
+        } catch (e) {
+          /* ignore json parse error */
+        }
+        throw new Error(errorMsg);
       }
-      const freshPrograms = await res.json();
-      setPrograms(freshPrograms);
+      const freshPrograms: ProgramData[] = await res.json();
+      setPrograms(freshPrograms); // Update local state
       toast({
         title: "Success",
         description: "Program data refreshed!",
@@ -276,7 +294,8 @@ export function DataTable({ data: initialData }: DataTableProps) {
                         column.toggleVisibility(!!value)
                       }
                     >
-                      {column.id}
+                      {/* Display column name more nicely if possible */}
+                      {column.id === "ageGroup" ? "Age Group" : column.id}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
@@ -417,15 +436,13 @@ export function DataTable({ data: initialData }: DataTableProps) {
           </div>
         </div>
       </div>
-      {/* Eventually add program edit sheet component here */}
-      {/* {editingProgram && (
-        <ProgramEditSheet
-          program={editingProgram}
-          isOpen={isSheetOpen}
-          onOpenChangeAction={setIsSheetOpen}
-          onUpdateSuccessAction={refetchPrograms}
-        />
-      )} */}
+      {/* Uncomment and integrate the ProgramEditSheet component */}
+      <ProgramEditSheet
+        program={editingProgram}
+        isOpen={isSheetOpen}
+        onOpenChangeAction={setIsSheetOpen}
+        onUpdateSuccessAction={refetchPrograms} // Pass refetch function
+      />
     </div>
   );
 }
