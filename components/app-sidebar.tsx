@@ -17,13 +17,14 @@ import {
   SearchIcon,
   SettingsIcon,
   UsersIcon,
+  BotIcon,
 } from "lucide-react";
 
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
-import Link from 'next/link';
+import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
@@ -46,6 +47,26 @@ const data = {
       url: "/admin/user",
       icon: UsersIcon,
     },
+    {
+      title: "Program Management",
+      url: "/admin/programs",
+      icon: ClipboardListIcon,
+    },
+    {
+      title: "News Management",
+      url: "/admin/news",
+      icon: FileTextIcon,
+    },
+    {
+      title: "Contact Management",
+      url: "/admin/contact",
+      icon: DatabaseIcon,
+    },
+    {
+      title: "AI Agent",
+      url: "/admin/ai-agent",
+      icon: BotIcon,
+    },
   ],
   navSecondary: [
     {
@@ -57,11 +78,6 @@ const data = {
       title: "Get Help",
       url: "#",
       icon: HelpCircleIcon,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: SearchIcon,
     },
   ],
 };
