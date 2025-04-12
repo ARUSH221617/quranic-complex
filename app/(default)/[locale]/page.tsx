@@ -32,7 +32,9 @@ interface LatestNews {
   title: string;
   excerpt: string;
   image: string | null;
-  date: string; // Or Date, depending on API
+  date: Date; // API returns a Date object that we'll format
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 async function getFeaturedPrograms(locale: string): Promise<FeaturedProgram[]> {
@@ -286,12 +288,9 @@ export default async function Home() {
                   />
                 </div>
                 <CardHeader>
-                  <CardTitle className="line-clamp-2">{item.title}</CardTitle>{" "}
-                  {/* Add line-clamp */}
+                  <CardTitle className="line-clamp-2">{item.title}</CardTitle>
                   <p className="text-sm text-gray-500">
-                    {/* Consider formatting date based on locale if needed */}
                     {new Date(item.date).toLocaleDateString(locale, {
-                      // Use dynamic locale
                       year: "numeric",
                       month: "long",
                       day: "numeric",
