@@ -2,14 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 
 // Types for the program data
 type ProgramDetails = {
   id: string;
   slug: string;
-  image: string | null;
+  image: string;
   title: string;
   description: string;
   ageGroup: string;
@@ -92,7 +92,7 @@ async function getProgram(
       return {
         id: program.id,
         slug: program.slug,
-        image: program.image,
+        image: program.image as string,
         title: translation.title,
         description: translation.description,
         ageGroup: translation.ageGroup,
@@ -106,14 +106,16 @@ async function getProgram(
 }
 
 export default async function ProgramDetailPage({
-  params: { locale, slug },
+  params,
 }: {
-  params: { locale: string; slug: string };
+  params: { slug: string };
 }) {
   // Get translations
   const t = await getTranslations("home.programs.page");
+  const locale = await getLocale();
   const commonT = await getTranslations("home.programs");
-  const contactT = await getTranslations("contact");
+
+  const { slug } = await Promise.resolve(params);
 
   // Get curriculum translations
   const curriculumT = await getTranslations();
@@ -188,7 +190,7 @@ export default async function ProgramDetailPage({
             <div>
               <div className="relative h-80 w-full overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl">
                 <Image
-                  src={program.image || "/placeholder.svg"}
+                  src={program.image}
                   alt={program.title}
                   fill
                   className="object-cover transition-transform duration-500 hover:scale-105"
