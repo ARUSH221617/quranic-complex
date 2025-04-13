@@ -56,8 +56,8 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { ProgramData } from "./schema";
-// Import the edit sheet component
 import { ProgramEditSheet } from "./program-edit-sheet";
+import { ProgramCreateSheet } from "./program-create-sheet";
 
 // Define columns based on the ProgramData type
 export const columns: ColumnDef<ProgramData>[] = [
@@ -155,7 +155,8 @@ export function DataTable({ data: initialData }: DataTableProps) {
   const [programs, setPrograms] = React.useState<ProgramData[]>(initialData);
   const [editingProgram, setEditingProgram] =
     React.useState<ProgramData | null>(null);
-  const [isSheetOpen, setIsSheetOpen] = React.useState(false);
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
+  const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const { toast } = useToast(); // Get toast function
 
@@ -183,7 +184,7 @@ export function DataTable({ data: initialData }: DataTableProps) {
     toast({ title: "Refreshing program data...", description: "Please wait." });
     try {
       // Use relative path for API routes within the same app
-      const res = await fetch("/api/programs", { cache: "no-store" });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/programs`, { cache: "no-store" });
       if (!res.ok) {
         let errorMsg = "Failed to fetch programs";
         try {
@@ -215,7 +216,7 @@ export function DataTable({ data: initialData }: DataTableProps) {
   // Function to open the edit sheet
   const openEditSheet = (program: ProgramData) => {
     setEditingProgram(program);
-    setIsSheetOpen(true);
+    setIsEditOpen(true);
   };
 
   const table = useReactTable({
@@ -302,7 +303,11 @@ export function DataTable({ data: initialData }: DataTableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
           {/* Add Program button */}
-          <Button variant="default" size="sm">
+          <Button 
+            variant="default" 
+            size="sm"
+            onClick={() => setIsCreateOpen(true)}
+          >
             <PlusIcon className="mr-2 size-4" />
             Add Program
           </Button>
@@ -436,12 +441,18 @@ export function DataTable({ data: initialData }: DataTableProps) {
           </div>
         </div>
       </div>
-      {/* Uncomment and integrate the ProgramEditSheet component */}
+
+      <ProgramCreateSheet
+        isOpen={isCreateOpen}
+        onOpenChangeAction={setIsCreateOpen}
+        onCreateSuccessAction={refetchPrograms}
+      />
+
       <ProgramEditSheet
         program={editingProgram}
-        isOpen={isSheetOpen}
-        onOpenChangeAction={setIsSheetOpen}
-        onUpdateSuccessAction={refetchPrograms} // Pass refetch function
+        isOpen={isEditOpen}
+        onOpenChangeAction={setIsEditOpen}
+        onUpdateSuccessAction={refetchPrograms}
       />
     </div>
   );

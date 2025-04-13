@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { TipTapEditor } from "@/components/ui/tiptap-editor";
 import {
   Sheet,
   SheetClose,
@@ -35,7 +36,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { programSchema, ProgramData } from "./schema";
+import { ProgramData } from "./schema";
 import { Separator } from "@/components/ui/separator";
 import { languages, LanguageId } from "@/lib/constants/languages";
 
@@ -78,34 +79,50 @@ export function ProgramEditSheet({
     mode: "onSubmit",
     defaultValues: {
       locale: "en",
+      title: "",
+      slug: "",
+      description: "",
+      ageGroup: "",
+      schedule: "",
+      metaTitle: "",
+      metaDescription: "",
+      keywords: "",
     },
   });
 
   // Function to fetch program data for a specific locale
-  const fetchProgramTranslation = React.useCallback(async (programId: string, locale: string) => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/programs/${programId}?locale=${locale}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch program translation');
+  const fetchProgramTranslation = React.useCallback(
+    async (programId: string, locale: string) => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/programs/${programId}?locale=${locale}`,
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch program translation");
+        }
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error fetching program translation:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to fetch program translation",
+        });
+        return null;
       }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching program translation:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to fetch program translation",
-      });
-      return null;
-    }
-  }, [toast]);
+    },
+    [toast],
+  );
 
   // Effect to load program data when locale changes or program changes
   React.useEffect(() => {
     if (program) {
       const loadTranslation = async () => {
-        const translatedProgram = await fetchProgramTranslation(program.id, selectedLocale);
+        const translatedProgram = await fetchProgramTranslation(
+          program.id,
+          selectedLocale,
+        );
         if (translatedProgram) {
           form.reset({
             locale: selectedLocale,
@@ -198,7 +215,7 @@ export function ProgramEditSheet({
 
     // Append text data - send all values for the current locale
     Object.entries(data).forEach(([key, value]) => {
-      if (key !== 'locale' && value !== undefined && value !== null) {
+      if (key !== "locale" && value !== undefined && value !== null) {
         formData.append(key, String(value));
       }
     });
@@ -240,9 +257,9 @@ export function ProgramEditSheet({
 
       const updatedProgram = await response.json();
 
-      toast({ 
-        title: "Success", 
-        description: `Program updated successfully in ${languages.find(l => l.id === data.locale)?.name || data.locale}!` 
+      toast({
+        title: "Success",
+        description: `Program updated successfully in ${languages.find((l) => l.id === data.locale)?.name || data.locale}!`,
       });
       onUpdateSuccessAction();
       onOpenChangeAction(false);
@@ -316,7 +333,9 @@ export function ProgramEditSheet({
 
               {/* Shared Fields Section */}
               <div className="space-y-4 rounded-lg border p-4">
-                <h4 className="text-sm font-medium text-muted-foreground">Shared Properties</h4>
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Shared Properties
+                </h4>
                 <FormField
                   control={form.control}
                   name="slug"
@@ -324,7 +343,11 @@ export function ProgramEditSheet({
                     <FormItem>
                       <FormLabel>Slug</FormLabel>
                       <FormControl>
-                        <Input placeholder="program-slug" {...field} />
+                        <Input
+                          placeholder="program-slug"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -335,7 +358,8 @@ export function ProgramEditSheet({
               {/* Translated Fields Section */}
               <div className="space-y-4 rounded-lg border p-4">
                 <h4 className="text-sm font-medium text-muted-foreground">
-                  Translated Content - {languages.find(l => l.id === selectedLocale)?.name}
+                  Translated Content -{" "}
+                  {languages.find((l) => l.id === selectedLocale)?.name}
                 </h4>
                 <FormField
                   control={form.control}
@@ -344,7 +368,11 @@ export function ProgramEditSheet({
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input placeholder="Program Title" {...field} />
+                        <Input
+                          placeholder="Program Title"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -357,11 +385,16 @@ export function ProgramEditSheet({
                     <FormItem>
                       <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea
+                        <TipTapEditor
                           placeholder="Program Description"
                           {...field}
-                          value={field.value ?? ""}
-                          rows={4}
+                          value={field.value || ""}
+                          onChangeAction={field.onChange}
+                          dir={
+                            selectedLocale === "ar" || selectedLocale === "fa"
+                              ? "rtl"
+                              : "ltr"
+                          }
                         />
                       </FormControl>
                       <FormMessage />
@@ -375,7 +408,11 @@ export function ProgramEditSheet({
                     <FormItem>
                       <FormLabel>Age Group</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Adults, Kids 5-7" {...field} />
+                        <Input
+                          placeholder="e.g., Adults, Kids 5-7"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -388,7 +425,11 @@ export function ProgramEditSheet({
                     <FormItem>
                       <FormLabel>Schedule</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Mon & Wed 6-8 PM" {...field} />
+                        <Input
+                          placeholder="e.g., Mon & Wed 6-8 PM"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -397,7 +438,9 @@ export function ProgramEditSheet({
 
                 {/* SEO Fields */}
                 <div className="space-y-4 rounded-lg border p-4">
-                  <h5 className="text-sm font-medium text-muted-foreground">SEO Details</h5>
+                  <h5 className="text-sm font-medium text-muted-foreground">
+                    SEO Details
+                  </h5>
                   <FormField
                     control={form.control}
                     name="metaTitle"
@@ -405,7 +448,11 @@ export function ProgramEditSheet({
                       <FormItem>
                         <FormLabel>Meta Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="SEO Meta Title" {...field} value={field.value ?? ""} />
+                          <Input
+                            placeholder="SEO Meta Title"
+                            {...field}
+                            value={field.value || ""}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -421,7 +468,7 @@ export function ProgramEditSheet({
                           <Textarea
                             placeholder="SEO Meta Description"
                             {...field}
-                            value={field.value ?? ""}
+                            value={field.value || ""}
                             rows={2}
                           />
                         </FormControl>
@@ -439,7 +486,7 @@ export function ProgramEditSheet({
                           <Input
                             placeholder="comma-separated keywords"
                             {...field}
-                            value={field.value ?? ""}
+                            value={field.value || ""}
                           />
                         </FormControl>
                         <FormMessage />
