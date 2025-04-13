@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"; // Import Textarea
+import { Textarea } from "@/components/ui/textarea";
 import {
   Sheet,
   SheetClose,
@@ -27,17 +27,34 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { programSchema, ProgramData } from "./schema"; // Import ProgramData and programSchema
+import { programSchema, ProgramData } from "./schema";
 import { Separator } from "@/components/ui/separator";
+import { languages, LanguageId } from "@/lib/constants/languages";
 
-// Define the schema for the edit form (subset of programSchema, make fields optional for PATCH)
-// Ensure all fields match the ProgramData type expected by the form
-const editProgramFormSchema = programSchema.partial().omit({ id: true });
+// Define the schema for the edit form with translations
+const editProgramFormSchema = z.object({
+  locale: z.string(),
+  slug: z.string().optional(),
+  title: z.string().optional(),
+  description: z.string().optional(),
+  ageGroup: z.string().optional(),
+  schedule: z.string().optional(),
+  metaTitle: z.string().optional().nullable(),
+  metaDescription: z.string().optional().nullable(),
+  keywords: z.string().optional().nullable(),
+});
+
 type EditProgramFormData = z.infer<typeof editProgramFormSchema>;
 
 interface ProgramEditSheetProps {
-  // Change Program to ProgramData
   program: ProgramData | null;
   isOpen: boolean;
   onOpenChangeAction: (isOpen: boolean) => void;
@@ -54,38 +71,72 @@ export function ProgramEditSheet({
   const { toast } = useToast();
   const [imageFile, setImageFile] = React.useState<File | null>(null);
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
+  const [selectedLocale, setSelectedLocale] = React.useState<LanguageId>("en");
 
   // Ensure form type matches the schema fields
   const form = useForm<EditProgramFormData>({
     mode: "onSubmit",
-    defaultValues: {},
+    defaultValues: {
+      locale: "en",
+    },
   });
 
+  // Function to fetch program data for a specific locale
+  const fetchProgramTranslation = React.useCallback(async (programId: string, locale: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/programs/${programId}?locale=${locale}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch program translation');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching program translation:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to fetch program translation",
+      });
+      return null;
+    }
+  }, [toast]);
+
+  // Effect to load program data when locale changes or program changes
   React.useEffect(() => {
     if (program) {
-      // Reset form with program data
-      form.reset({
-        title: program.title ?? "",
-        slug: program.slug ?? "",
-        description: program.description ?? "",
-        ageGroup: program.ageGroup ?? "",
-        schedule: program.schedule ?? "",
-        // image is handled separately
-      });
-      setImageFile(null);
-      // Set initial image preview from program data if it exists
-      setImagePreview(program.image || null);
+      const loadTranslation = async () => {
+        const translatedProgram = await fetchProgramTranslation(program.id, selectedLocale);
+        if (translatedProgram) {
+          form.reset({
+            locale: selectedLocale,
+            title: translatedProgram.title ?? "",
+            slug: translatedProgram.slug ?? "",
+            description: translatedProgram.description ?? "",
+            ageGroup: translatedProgram.ageGroup ?? "",
+            schedule: translatedProgram.schedule ?? "",
+            metaTitle: translatedProgram.metaTitle ?? null,
+            metaDescription: translatedProgram.metaDescription ?? null,
+            keywords: translatedProgram.keywords ?? null,
+          });
+        }
+        setImagePreview(program.image || null);
+      };
+
+      loadTranslation();
     } else {
-      form.reset({});
+      form.reset({
+        locale: selectedLocale,
+      });
       setImageFile(null);
       setImagePreview(null);
     }
+
     // Reset image file input when sheet closes or program changes
     const fileInput = document.getElementById("image") as HTMLInputElement;
     if (fileInput) {
       fileInput.value = "";
     }
-  }, [program, form, isOpen]); // Add isOpen dependency to reset on reopen
+  }, [program, form, selectedLocale, fetchProgramTranslation, isOpen]); // Add isOpen dependency to reset on reopen
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -142,16 +193,12 @@ export function ProgramEditSheet({
     setIsSubmitting(true);
     const formData = new FormData();
 
-    // Append text data - only send changed values
+    // Always append locale
+    formData.append("locale", data.locale);
+
+    // Append text data - send all values for the current locale
     Object.entries(data).forEach(([key, value]) => {
-      // Check if the value exists and is different from the original program value
-      // Need to handle type differences (e.g., form gives string, program might have null)
-      const originalValue = program[key as keyof ProgramData];
-      if (
-        value !== undefined &&
-        value !== null &&
-        String(value) !== String(originalValue ?? "")
-      ) {
+      if (key !== 'locale' && value !== undefined && value !== null) {
         formData.append(key, String(value));
       }
     });
@@ -163,21 +210,6 @@ export function ProgramEditSheet({
       // If preview is null AND there was an original image, signal removal
       formData.append("remove_image", "true");
     }
-    // If imagePreview is not null and matches the original program image, and no new file selected,
-    // then the image wasn't changed, so don't send anything image-related.
-
-    // Check if any data actually changed
-    let hasChanges = false;
-    formData.forEach(() => {
-      hasChanges = true;
-    }); // Check if formData has any entries
-
-    if (!hasChanges) {
-      toast({ title: "No Changes", description: "No modifications detected." });
-      setIsSubmitting(false);
-      onOpenChangeAction(false); // Optionally close sheet if no changes
-      return;
-    }
 
     toast({
       title: "Updating program...",
@@ -185,12 +217,11 @@ export function ProgramEditSheet({
     });
 
     try {
-      // Assuming API endpoint structure /api/programs/{id}
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/programs/${program.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/programs/${program.id}?locale=${data.locale}`,
         {
           method: "PATCH",
-          body: formData, // Send FormData directly
+          body: formData,
         },
       );
 
@@ -207,11 +238,14 @@ export function ProgramEditSheet({
         );
       }
 
-      const updatedProgram = await response.json(); // Get updated data
+      const updatedProgram = await response.json();
 
-      toast({ title: "Success", description: "Program updated successfully!" });
-      onUpdateSuccessAction(); // Callback to refresh data in the table
-      onOpenChangeAction(false); // Close the sheet
+      toast({ 
+        title: "Success", 
+        description: `Program updated successfully in ${languages.find(l => l.id === data.locale)?.name || data.locale}!` 
+      });
+      onUpdateSuccessAction();
+      onOpenChangeAction(false);
     } catch (error) {
       console.error("Update failed:", error);
       toast({
@@ -248,80 +282,172 @@ export function ProgramEditSheet({
           >
             {/* Program Details Section */}
             <div className="space-y-4">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Program Details
-              </h3>
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Program Title" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="slug"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Slug</FormLabel>
-                    <FormControl>
-                      <Input placeholder="program-slug" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    {/* Ensure field.value is treated as string for Textarea */}
-                    <FormControl>
-                      <Textarea
-                        placeholder="Program Description"
-                        {...field}
-                        value={field.value ?? ""}
-                        rows={4}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="ageGroup"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Age Group</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Adults, Kids 5-7" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="schedule"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Schedule</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Mon & Wed 6-8 PM" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="flex items-center gap-4">
+                <h3 className="text-sm font-medium text-muted-foreground">
+                  Program Details
+                </h3>
+                <FormField
+                  control={form.control}
+                  name="locale"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <Select
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          setSelectedLocale(value as LanguageId);
+                        }}
+                      >
+                        <SelectTrigger className="w-[140px] ml-auto">
+                          <SelectValue placeholder="Select Language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {languages.map((lang) => (
+                            <SelectItem key={lang.id} value={lang.id}>
+                              {lang.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Shared Fields Section */}
+              <div className="space-y-4 rounded-lg border p-4">
+                <h4 className="text-sm font-medium text-muted-foreground">Shared Properties</h4>
+                <FormField
+                  control={form.control}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Slug</FormLabel>
+                      <FormControl>
+                        <Input placeholder="program-slug" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Translated Fields Section */}
+              <div className="space-y-4 rounded-lg border p-4">
+                <h4 className="text-sm font-medium text-muted-foreground">
+                  Translated Content - {languages.find(l => l.id === selectedLocale)?.name}
+                </h4>
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Program Title" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Program Description"
+                          {...field}
+                          value={field.value ?? ""}
+                          rows={4}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="ageGroup"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Age Group</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Adults, Kids 5-7" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="schedule"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Schedule</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Mon & Wed 6-8 PM" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* SEO Fields */}
+                <div className="space-y-4 rounded-lg border p-4">
+                  <h5 className="text-sm font-medium text-muted-foreground">SEO Details</h5>
+                  <FormField
+                    control={form.control}
+                    name="metaTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Meta Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="SEO Meta Title" {...field} value={field.value ?? ""} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="metaDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Meta Description</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="SEO Meta Description"
+                            {...field}
+                            value={field.value ?? ""}
+                            rows={2}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="keywords"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Keywords</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="comma-separated keywords"
+                            {...field}
+                            value={field.value ?? ""}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
 
             <Separator />

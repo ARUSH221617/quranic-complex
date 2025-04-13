@@ -10,7 +10,7 @@ async function saveFile(
   file: File | null,
   uploadSubDir: string,
   fileNamePrefix: string,
-  currentPath: string | null | undefined
+  currentPath: string | null | undefined,
 ): Promise<string | undefined> {
   if (!file) return undefined; // No new file, return undefined
 
@@ -80,12 +80,12 @@ export async function GET(
   { params }: { params: { slug: string } },
 ) {
   try {
-    const { slug } = params;
+    const { slug: id } = await Promise.resolve(params);
     const locale = request.nextUrl.searchParams.get("locale") || "en";
 
     const program = await prisma.program.findUnique({
       where: {
-        slug: slug,
+        id: id,
       },
       select: {
         id: true,
@@ -218,13 +218,15 @@ export async function PATCH(
       if (imageFile.size > MAX_FILE_SIZE) {
         return NextResponse.json(
           { message: "Image must be less than 5MB" },
-          { status: 400 }
+          { status: 400 },
         );
       }
       if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
         return NextResponse.json(
-          { message: "Invalid image file type. Allowed types: JPEG, PNG, WebP" },
-          { status: 400 }
+          {
+            message: "Invalid image file type. Allowed types: JPEG, PNG, WebP",
+          },
+          { status: 400 },
         );
       }
     }
@@ -232,7 +234,11 @@ export async function PATCH(
     if (removeImage) {
       // Handle image deletion
       if (existingProgram.image) {
-        const oldFilePath = path.join(process.cwd(), "public", existingProgram.image);
+        const oldFilePath = path.join(
+          process.cwd(),
+          "public",
+          existingProgram.image,
+        );
         try {
           await fs.promises.unlink(oldFilePath);
           console.log(`Deleted old image file: ${oldFilePath}`);
@@ -250,7 +256,7 @@ export async function PATCH(
         imageFile,
         "programs",
         "program",
-        existingProgram.image
+        existingProgram.image,
       );
     }
 
