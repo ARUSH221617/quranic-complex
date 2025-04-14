@@ -1,18 +1,21 @@
-import { DataTable } from "@/components/data-table";
+import { NewsDataTable } from "@/components/admin/news/data-table";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { NewsData } from "@/components/admin/news/schema";
 
-// Define a type for the return value of getNews to handle success and error states
 type GetNewsResult =
-  | { success: true; news: any[] }
+  | { success: true; news: NewsData[] }
   | { success: false; error: string };
 
 async function getNews(): Promise<GetNewsResult> {
   try {
-    // Fetch data using a relative path for server-side fetch
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news`, {
-      cache: "no-store", // Ensure fresh data on each request
-    });
+    // Add locale parameter to the request URL
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/news?locale=en`,
+      {
+        cache: "no-store", // Ensure fresh data on each request
+      },
+    );
 
     if (!res.ok) {
       // Log the error details for debugging
@@ -41,11 +44,10 @@ async function getNews(): Promise<GetNewsResult> {
           errorMessage = `Failed to fetch news (Status: ${res.status}). Unable to parse error response.`;
         }
       }
-      return { success: false, error: errorMessage };
+      throw new Error(errorMessage);
     }
 
     const news = await res.json();
-
     return { success: true, news };
   } catch (error) {
     // Handle network errors or other exceptions during fetch/processing
@@ -67,11 +69,12 @@ export default async function Page() {
       <div>
         <h1 className="text-2xl font-bold">News</h1>
         <p className="text-sm text-muted-foreground">
-          Manage news articles here. You can add, edit, or delete news articles as needed.
+          Manage news articles here. You can add, edit, or delete news articles
+          as needed.
         </p>
       </div>
       {result.success ? (
-        <DataTable data={result.news} />
+        <NewsDataTable data={result.news} />
       ) : (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
