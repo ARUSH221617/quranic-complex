@@ -203,9 +203,10 @@ export default async function ProgramDetailPage({
               </h2>
               <div className="mt-4 h-1 w-20 bg-accent"></div>
               <div className="mt-6 space-y-4">
-                <p className="text-gray-700 leading-relaxed">
-                  {program.description}
-                </p>
+                <p
+                  className="text-gray-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: program.description }}
+                />
                 <div className="rounded-lg bg-gray-50 p-6 shadow-md transition-all duration-300 hover:shadow-lg">
                   <h3 className="text-xl font-semibold text-secondary-text">
                     {t("programsTitle")}

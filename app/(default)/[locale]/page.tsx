@@ -199,7 +199,7 @@ export default async function Home() {
               >
                 <div className="relative h-48 w-full">
                   <Image
-                    src={program.image || "/placeholder.svg"}
+                    src={program.image as string}
                     // Use the direct title from the API response
                     alt={program.title}
                     fill
@@ -214,11 +214,10 @@ export default async function Home() {
                 </CardHeader>
                 <CardContent>
                   {/* Use the direct description */}
-                  <p className="line-clamp-3 text-gray-700">
-                    {" "}
-                    {/* Add line-clamp for consistency */}
-                    {program.description}
-                  </p>
+                  <p
+                    className="line-clamp-3 text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: program.description }}
+                  />
                   <div className="mt-4 space-y-2 text-sm text-gray-600">
                     <p>
                       <span className="font-semibold">
