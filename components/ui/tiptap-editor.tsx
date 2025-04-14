@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import UnderlineExtension from "@tiptap/extension-underline"; // Import Underline extension
+import UnderlineExtension from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -11,13 +11,21 @@ import { Button } from "./button";
 import {
   Bold,
   Italic,
-  Underline, // Underline icon
+  Underline,
   Strikethrough,
   Code,
   List,
   ListOrdered,
-  Link as LinkIcon, // Link icon
+  Link as LinkIcon,
   HighlighterIcon,
+  Heading1,
+  Heading2,
+  Heading3,
+  Undo,
+  Redo,
+  MinusSquare,
+  Code2,
+  Keyboard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Toggle } from "./toggle";
@@ -27,7 +35,70 @@ export interface TipTapEditorProps {
   onChangeAction: (value: string) => void;
   placeholder?: string;
   dir?: "ltr" | "rtl";
+  showKeyboardShortcuts?: boolean;
 }
+
+const KeyboardShortcutsDialog = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  if (!isOpen) return null;
+
+  const shortcuts = [
+    { keys: ["Ctrl", "B"], description: "Bold" },
+    { keys: ["Ctrl", "I"], description: "Italic" },
+    { keys: ["Ctrl", "U"], description: "Underline" },
+    { keys: ["Ctrl", "K"], description: "Link" },
+    { keys: ["Ctrl", "Z"], description: "Undo" },
+    { keys: ["Ctrl", "Shift", "Z"], description: "Redo" },
+    { keys: ["Ctrl", "Alt", "1"], description: "Heading 1" },
+    { keys: ["Ctrl", "Alt", "2"], description: "Heading 2" },
+    { keys: ["Ctrl", "Alt", "3"], description: "Heading 3" },
+    { keys: ["Ctrl", "Shift", "L"], description: "Left Align" },
+    { keys: ["Ctrl", "Shift", "E"], description: "Center Align" },
+    { keys: ["Ctrl", "Shift", "R"], description: "Right Align" },
+    { keys: ["Ctrl", "Shift", "J"], description: "Justify" },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Keyboard Shortcuts</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="space-y-2">
+          {shortcuts.map((shortcut, index) => (
+            <div
+              key={index}
+              className="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700"
+            >
+              <span className="text-sm">{shortcut.description}</span>
+              <div className="flex gap-1">
+                {shortcut.keys.map((key, keyIndex) => (
+                  <kbd
+                    key={keyIndex}
+                    className="px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
+                  >
+                    {key}
+                  </kbd>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 /**
  * A rich text editor component using Tiptap and shadcn/ui components.
@@ -37,63 +108,54 @@ export function TipTapEditor({
   onChangeAction,
   placeholder = "Write something...",
   dir = "ltr",
+  showKeyboardShortcuts = true,
 }: TipTapEditorProps) {
+  const [showShortcuts, setShowShortcuts] = React.useState(false);
+
   const editor = useEditor({
-    // Define the extensions (features) the editor should use
     extensions: [
       StarterKit.configure({
-        // Basic text formatting (bold, italic, paragraphs, etc.)
-        // Exclude Strike and Underline from StarterKit if you configure them separately
-        // strike: false, // We configure Strike below
+        heading: {
+          levels: [1, 2, 3],
+        },
       }),
-      UnderlineExtension, // Add the Underline extension
+      UnderlineExtension,
       Link.configure({
-        // Configure the Link extension
-        openOnClick: false, // Don't open links immediately on click in the editor
-        autolink: true, // Automatically detect and create links from URLs
+        openOnClick: false,
+        autolink: true,
         HTMLAttributes: {
-          // Add CSS classes to link elements
           class:
             "text-blue-500 hover:text-blue-700 underline underline-offset-4 cursor-pointer",
-          rel: "noopener noreferrer nofollow", // Security and SEO attributes
-          target: "_blank", // Open links in a new tab
+          rel: "noopener noreferrer nofollow",
+          target: "_blank",
         },
       }),
       Highlight.configure({
-        // Configure the Highlight extension
-        multicolor: true, // Allow multiple highlight colors (though we only use yellow here)
+        multicolor: true,
         HTMLAttributes: {
-          // Add CSS classes to highlight elements
           class: "bg-yellow-200 dark:bg-yellow-800 rounded px-1 py-0.5",
         },
       }),
       Placeholder.configure({
-        // Configure the Placeholder extension
-        placeholder, // Set the placeholder text
-        // Optional: CSS class for the placeholder
-        // placeholderClass: 'text-gray-400 italic',
+        placeholder,
       }),
     ],
-    // Initial content for the editor
     content: value,
-    // Editor properties and attributes
     editorProps: {
       attributes: {
-        // Apply CSS classes to the editable area
         class: cn(
-          "prose prose-sm dark:prose-invert", // Base prose styling
-          "max-w-none min-h-[150px]", // Ensure minimum height and full width
-          "p-3 border-t", // Add padding and top border separating from toolbar
-          "focus:outline-none", // Remove default focus outline
-          "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100", // Background and text colors
-          "rounded-b-md", // Round bottom corners
+          "prose prose-sm dark:prose-invert",
+          "max-w-none min-h-[150px]",
+          "p-3 border-t",
+          "focus:outline-none",
+          "bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100",
+          "rounded-b-md",
         ),
-        dir, // Set text direction (ltr or rtl)
+        dir,
       },
     },
-    // Callback function triggered when the editor content changes
     onUpdate: ({ editor }) => {
-      onChangeAction(editor.getHTML()); // Call the provided onChange function with the new HTML content
+      onChangeAction(editor.getHTML());
     },
   });
 
@@ -102,122 +164,216 @@ export function TipTapEditor({
     if (!editor) return;
 
     const previousUrl = editor.getAttributes("link").href;
-    // Prompt the user for the URL
     const url = window.prompt("URL", previousUrl);
 
-    // If the user cancelled the prompt, do nothing
-    if (url === null) {
-      return;
-    }
+    if (url === null) return;
 
-    // If the user entered an empty URL, remove the link
     if (url === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
 
-    // Otherwise, set or update the link
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   }, [editor]);
 
-  // Render null if the editor instance is not yet available
-  if (!editor) {
-    return null;
-  }
+  if (!editor) return null;
 
-  // Render the editor UI
+  const ToolbarDivider = () => (
+    <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1" />
+  );
+
   return (
     <div className="rounded-md border border-input bg-background" dir={dir}>
-      {/* Toolbar section */}
       <div className="flex flex-wrap items-center gap-1 border-b border-input p-1 bg-gray-50 dark:bg-gray-800 rounded-t-md">
-        {/* Bold Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("bold")}
-          onPressedChange={() => editor.chain().focus().toggleBold().run()}
-          aria-label="Toggle bold"
-        >
-          <Bold className="h-4 w-4" />
-        </Toggle>
-        {/* Italic Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("italic")}
-          onPressedChange={() => editor.chain().focus().toggleItalic().run()}
-          aria-label="Toggle italic"
-        >
-          <Italic className="h-4 w-4" />
-        </Toggle>
-        {/* Underline Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("underline")}
-          onPressedChange={() => editor.chain().focus().toggleUnderline().run()}
-          aria-label="Toggle underline"
-        >
-          <Underline className="h-4 w-4" />
-        </Toggle>
-        {/* Strikethrough Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("strike")}
-          onPressedChange={() => editor.chain().focus().toggleStrike().run()}
-          aria-label="Toggle strikethrough"
-        >
-          <Strikethrough className="h-4 w-4" />
-        </Toggle>
-        {/* Link Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("link")}
-          onPressedChange={setLink}
-          aria-label="Set link"
-        >
-          <LinkIcon className="h-4 w-4" />
-        </Toggle>
-        {/* Code Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("code")}
-          onPressedChange={() => editor.chain().focus().toggleCode().run()}
-          aria-label="Toggle code"
-        >
-          <Code className="h-4 w-4" />
-        </Toggle>
-        {/* Highlight Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("highlight")}
-          onPressedChange={() => editor.chain().focus().toggleHighlight().run()}
-          aria-label="Toggle highlight"
-        >
-          <HighlighterIcon className="h-4 w-4" />
-        </Toggle>
-        {/* Bullet List Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("bulletList")}
-          onPressedChange={() =>
-            editor.chain().focus().toggleBulletList().run()
-          }
-          aria-label="Toggle bullet list"
-        >
-          <List className="h-4 w-4" />
-        </Toggle>
-        {/* Ordered List Toggle Button */}
-        <Toggle
-          size="sm"
-          pressed={editor.isActive("orderedList")}
-          onPressedChange={() =>
-            editor.chain().focus().toggleOrderedList().run()
-          }
-          aria-label="Toggle ordered list"
-        >
-          <ListOrdered className="h-4 w-4" />
-        </Toggle>
+        {/* Text Style Controls */}
+        <div className="flex items-center">
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("bold")}
+            onPressedChange={() => editor.chain().focus().toggleBold().run()}
+            aria-label="Toggle bold"
+          >
+            <Bold className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("italic")}
+            onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+            aria-label="Toggle italic"
+          >
+            <Italic className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("underline")}
+            onPressedChange={() =>
+              editor.chain().focus().toggleUnderline().run()
+            }
+            aria-label="Toggle underline"
+          >
+            <Underline className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("strike")}
+            onPressedChange={() => editor.chain().focus().toggleStrike().run()}
+            aria-label="Toggle strikethrough"
+          >
+            <Strikethrough className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <ToolbarDivider />
+
+        {/* Heading Controls */}
+        <div className="flex items-center">
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("heading", { level: 1 })}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            aria-label="Toggle h1"
+          >
+            <Heading1 className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("heading", { level: 2 })}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            aria-label="Toggle h2"
+          >
+            <Heading2 className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("heading", { level: 3 })}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
+            aria-label="Toggle h3"
+          >
+            <Heading3 className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <ToolbarDivider />
+
+        {/* List Controls */}
+        <div className="flex items-center">
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("bulletList")}
+            onPressedChange={() =>
+              editor.chain().focus().toggleBulletList().run()
+            }
+            aria-label="Toggle bullet list"
+          >
+            <List className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("orderedList")}
+            onPressedChange={() =>
+              editor.chain().focus().toggleOrderedList().run()
+            }
+            aria-label="Toggle ordered list"
+          >
+            <ListOrdered className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <ToolbarDivider />
+
+        {/* Special Formatting */}
+        <div className="flex items-center">
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("link")}
+            onPressedChange={setLink}
+            aria-label="Set link"
+          >
+            <LinkIcon className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("code")}
+            onPressedChange={() => editor.chain().focus().toggleCode().run()}
+            aria-label="Toggle code"
+          >
+            <Code className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("codeBlock")}
+            onPressedChange={() =>
+              editor.chain().focus().toggleCodeBlock().run()
+            }
+            aria-label="Toggle code block"
+          >
+            <Code2 className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={editor.isActive("highlight")}
+            onPressedChange={() =>
+              editor.chain().focus().toggleHighlight().run()
+            }
+            aria-label="Toggle highlight"
+          >
+            <HighlighterIcon className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        <ToolbarDivider />
+
+        {/* History Controls */}
+        <div className="flex items-center">
+          <Toggle
+            size="sm"
+            pressed={false}
+            onPressedChange={() => editor.chain().focus().undo().run()}
+            aria-label="Undo"
+            disabled={!editor.can().undo()}
+          >
+            <Undo className="h-4 w-4" />
+          </Toggle>
+          <Toggle
+            size="sm"
+            pressed={false}
+            onPressedChange={() => editor.chain().focus().redo().run()}
+            aria-label="Redo"
+            disabled={!editor.can().redo()}
+          >
+            <Redo className="h-4 w-4" />
+          </Toggle>
+        </div>
+
+        {showKeyboardShortcuts && (
+          <>
+            <ToolbarDivider />
+            <div className="flex items-center">
+              <Toggle
+                size="sm"
+                pressed={showShortcuts}
+                onPressedChange={() => setShowShortcuts(!showShortcuts)}
+                aria-label="Show keyboard shortcuts"
+              >
+                <Keyboard className="h-4 w-4" />
+              </Toggle>
+            </div>
+          </>
+        )}
       </div>
-      {/* Editor Content Area */}
+
       <EditorContent editor={editor} />
+
+      <KeyboardShortcutsDialog
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
+      />
     </div>
   );
 }
@@ -226,43 +382,45 @@ export function TipTapEditor({
 // This component demonstrates how to use the TipTapEditor
 export default function App() {
   const [editorContent, setEditorContent] = React.useState(
-    "<p>Hello World! 🌎️</p><p>Start typing here...</p>",
+    `<h1>Rich Text Editor Demo</h1>
+    <p>Welcome to our enhanced TipTap editor! Try out these features:</p>
+    <ul>
+      <li>Text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s></li>
+      <li>Text alignment: use the alignment buttons to change text position</li>
+      <li>Headings: H1, H2, H3 options available</li>
+      <li>Lists: both bullet and numbered lists</li>
+      <li>Special formatting: <code>inline code</code>, <mark>highlights</mark>, and <a href="https://example.com">links</a></li>
+    </ul>
+    <p>Press the keyboard icon to see available shortcuts!</p>`,
   );
 
   const handleContentChange = (newContent: string) => {
     setEditorContent(newContent);
-    // You could potentially save the content here, e.g., send it to an API
     console.log("Editor content updated:", newContent);
   };
 
   return (
     <div className="p-4 max-w-4xl mx-auto bg-gray-100 dark:bg-gray-800 min-h-screen">
-      {/* Load Tailwind CSS (ensure this is present in your actual project setup) */}
-      <script src="https://cdn.tailwindcss.com"></script>
-      {/* Load Inter font (optional, but recommended for shadcn/ui) */}
-      <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet"
-      />
-      <style>{`body { font-family: 'Inter', sans-serif; }`}</style>
-
       <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-        Tiptap Editor Example
+        Enhanced TipTap Editor
       </h1>
-      <TipTapEditor
-        value={editorContent}
-        onChangeAction={handleContentChange}
-        placeholder="Enter your text here..."
-      />
 
-      {/* Optional: Display the raw HTML output for debugging/demonstration */}
-      <div className="mt-6 p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
-        <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300">
-          Raw HTML Output:
-        </h2>
-        <pre className="text-xs p-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded overflow-x-auto">
-          <code>{editorContent}</code>
-        </pre>
+      <div className="space-y-4">
+        <TipTapEditor
+          value={editorContent}
+          onChangeAction={handleContentChange}
+          placeholder="Start typing here..."
+          showKeyboardShortcuts={true}
+        />
+
+        <div className="p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
+          <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300">
+            Raw HTML Output:
+          </h2>
+          <pre className="text-xs p-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded overflow-x-auto">
+            <code>{editorContent}</code>
+          </pre>
+        </div>
       </div>
     </div>
   );
