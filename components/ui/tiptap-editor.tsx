@@ -184,7 +184,7 @@ export function TipTapEditor({
 
   return (
     <div className="rounded-md border border-input bg-background" dir={dir}>
-      <div className="flex flex-wrap items-center gap-1 border-b border-input p-1 bg-gray-50 dark:bg-gray-800 rounded-t-md">
+      <div className="flex flex-wrap items-center gap-1 border-b border-input p-1 rounded-t-md">
         {/* Text Style Controls */}
         <div className="flex items-center">
           <Toggle
@@ -374,54 +374,6 @@ export function TipTapEditor({
         isOpen={showShortcuts}
         onClose={() => setShowShortcuts(false)}
       />
-    </div>
-  );
-}
-
-// --- Wrapper App Component for Demonstration ---
-// This component demonstrates how to use the TipTapEditor
-export default function App() {
-  const [editorContent, setEditorContent] = React.useState(
-    `<h1>Rich Text Editor Demo</h1>
-    <p>Welcome to our enhanced TipTap editor! Try out these features:</p>
-    <ul>
-      <li>Text formatting: <strong>bold</strong>, <em>italic</em>, <u>underline</u>, <s>strikethrough</s></li>
-      <li>Text alignment: use the alignment buttons to change text position</li>
-      <li>Headings: H1, H2, H3 options available</li>
-      <li>Lists: both bullet and numbered lists</li>
-      <li>Special formatting: <code>inline code</code>, <mark>highlights</mark>, and <a href="https://example.com">links</a></li>
-    </ul>
-    <p>Press the keyboard icon to see available shortcuts!</p>`,
-  );
-
-  const handleContentChange = (newContent: string) => {
-    setEditorContent(newContent);
-    console.log("Editor content updated:", newContent);
-  };
-
-  return (
-    <div className="p-4 max-w-4xl mx-auto bg-gray-100 dark:bg-gray-800 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-        Enhanced TipTap Editor
-      </h1>
-
-      <div className="space-y-4">
-        <TipTapEditor
-          value={editorContent}
-          onChangeAction={handleContentChange}
-          placeholder="Start typing here..."
-          showKeyboardShortcuts={true}
-        />
-
-        <div className="p-4 border rounded-md bg-gray-50 dark:bg-gray-900">
-          <h2 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-300">
-            Raw HTML Output:
-          </h2>
-          <pre className="text-xs p-2 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded overflow-x-auto">
-            <code>{editorContent}</code>
-          </pre>
-        </div>
-      </div>
     </div>
   );
 }
