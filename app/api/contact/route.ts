@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma"; // Corrected import path
 import { z } from "zod";
 
 // Define the validation schema
@@ -36,6 +36,49 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
+    );
+  }
+}
+
+// Handler for deleting a contact message
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json(
+        { error: "Contact ID is required" },
+        { status: 400 },
+      );
+    }
+
+    // Check if contact exists before deleting
+    const existingContact = await prisma.contact.findUnique({
+      where: { id },
+    });
+
+    if (!existingContact) {
+      return NextResponse.json(
+        { error: "Contact not found" },
+        { status: 404 },
+      );
+    }
+
+    // Delete the contact record
+    await prisma.contact.delete({
+      where: { id },
+    });
+
+    return NextResponse.json(
+      { success: true, message: "Contact message deleted successfully" },
+      { status: 200 }, // Use 200 OK for successful deletion
+    );
+  } catch (error) {
+    console.error("Error deleting contact message:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

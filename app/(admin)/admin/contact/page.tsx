@@ -1,10 +1,11 @@
-import { DataTable } from "@/components/data-table";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ContactDataTable } from "@/components/admin/contact/data-table"; // Import ContactDataTable (no columns needed here)
+import { ContactData } from "@/components/admin/contact/schema"; // Import ContactData type
 
 // Define a type for the return value of getContacts to handle success and error states
 type GetContactsResult =
-  | { success: true; contacts: any[] }
+  | { success: true; contacts: ContactData[] } // Use ContactData type
   | { success: false; error: string };
 
 async function getContacts(): Promise<GetContactsResult> {
@@ -44,7 +45,16 @@ async function getContacts(): Promise<GetContactsResult> {
       return { success: false, error: errorMessage };
     }
 
-    const contacts = await res.json();
+    // Explicitly parse contacts as ContactData[]
+    const contacts: ContactData[] = await res.json();
+
+    // Optional: Validate fetched data with Zod (if needed, requires importing z and contactSchema)
+    // const validationResult = z.array(contactSchema).safeParse(contacts);
+    // if (!validationResult.success) {
+    //   console.error("Fetched contact data validation failed:", validationResult.error);
+    //   return { success: false, error: "Invalid data received from server." };
+    // }
+    // return { success: true, contacts: validationResult.data };
 
     return { success: true, contacts };
   } catch (error) {
@@ -71,7 +81,8 @@ export default async function Page() {
         </p>
       </div>
       {result.success ? (
-        <DataTable data={result.contacts} />
+        // Use ContactDataTable - no need to pass columns
+        <ContactDataTable data={result.contacts} />
       ) : (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
