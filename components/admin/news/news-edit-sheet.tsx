@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { RefreshCwIcon, Trash, Edit } from "lucide-react";
+import { RefreshCwIcon, Trash, Edit, AlertCircle } from "lucide-react"; // Added AlertCircle
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { z } from "zod";
+import { useQuery } from "@tanstack/react-query"; // Import useQuery
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { TipTapEditor } from "@/components/ui/tiptap-editor";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"; // Import Alert components
+import { Skeleton } from "@/components/ui/skeleton"; // Import Skeleton
 import {
   Sheet,
   SheetClose,
@@ -74,7 +77,6 @@ export function NewsEditSheet({
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const [selectedLocale, setSelectedLocale] = React.useState<LanguageId>("en");
 
-  // Ensure form type matches the schema fields
   const form = useForm<EditNewsFormData>({
     mode: "onSubmit",
     defaultValues: {
@@ -90,70 +92,99 @@ export function NewsEditSheet({
     },
   });
 
-  // Function to fetch news data for a specific locale
-  const fetchNewsTranslation = React.useCallback(
-    async (newsId: string, locale: string) => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/news/${newsId}?locale=${locale}`,
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch news translation");
-        }
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error("Error fetching news translation:", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch news translation",
-        });
-        return null;
+  // Fetch news translation using React Query
+  const {
+    data: translatedNews,
+    isLoading: isLoadingTranslation,
+    isError: isTranslationError,
+    error: translationError,
+  } = useQuery<NewsData>({
+    queryKey: ["news", news?.id, selectedLocale],
+    queryFn: async () => {
+      if (!news?.id) {
+        throw new Error("News ID is missing");
       }
-    },
-    [toast],
-  );
-
-  // Effect to load news data when locale changes or news changes
-  React.useEffect(() => {
-    if (news) {
-      const loadTranslation = async () => {
-        const translatedNews = await fetchNewsTranslation(
-          news.id,
-          selectedLocale,
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/news/${news.id}?locale=${selectedLocale}`,
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData?.message || "Failed to fetch news translation",
         );
-        if (translatedNews) {
-          form.reset({
-            locale: selectedLocale,
-            title: translatedNews.title ?? "",
-            slug: translatedNews.slug ?? "",
-            date: new Date(translatedNews.date).toISOString().split('T')[0],
-            excerpt: translatedNews.excerpt ?? "",
-            content: translatedNews.content ?? "",
-            metaTitle: translatedNews.metaTitle ?? null,
-            metaDescription: translatedNews.metaDescription ?? null,
-            keywords: translatedNews.keywords ?? null,
-          });
-        }
-        setImagePreview(news.image || null);
-      };
+      }
+      return response.json();
+    },
+    enabled: isOpen && !!news?.id,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: false,
+  });
 
-      loadTranslation();
-    } else {
-      form.reset({
-        locale: selectedLocale,
-      });
+  // Effect to reset form when translation data loads or news/locale changes
+  React.useEffect(() => {
+    if (isOpen && news) {
+      if (translatedNews) {
+        form.reset({
+          locale: selectedLocale,
+          title: translatedNews.title ?? "",
+          slug: translatedNews.slug ?? news.slug ?? "", // Fallback to original slug
+          date: new Date(translatedNews.date || news.date) // Use translated or original date
+            .toISOString()
+            .split("T")[0],
+          excerpt: translatedNews.excerpt ?? "",
+          content: translatedNews.content ?? "",
+          metaTitle: translatedNews.metaTitle ?? null,
+          metaDescription: translatedNews.metaDescription ?? null,
+          keywords: translatedNews.keywords ?? null,
+        });
+      } else if (!isLoadingTranslation && !isTranslationError) {
+        // Reset with base news data or defaults for the selected locale
+        form.reset({
+          locale: selectedLocale,
+          title: "", // Clear translated fields
+          slug: news.slug ?? "", // Keep shared fields
+          date: new Date(news.date).toISOString().split("T")[0],
+          excerpt: "",
+          content: "",
+          metaTitle: null,
+          metaDescription: null,
+          keywords: null,
+        });
+      }
+      setImagePreview(news.image || null);
+    } else if (!isOpen) {
+      form.reset({ locale: "en", date: new Date().toISOString().split("T")[0] });
       setImageFile(null);
       setImagePreview(null);
     }
 
-    // Reset image file input when sheet closes or news changes
     const fileInput = document.getElementById("image") as HTMLInputElement;
     if (fileInput) {
       fileInput.value = "";
     }
-  }, [news, form, selectedLocale, fetchNewsTranslation, isOpen]); // Add isOpen dependency to reset on reopen
+  }, [
+    news,
+    translatedNews,
+    selectedLocale,
+    isOpen,
+    form,
+    isLoadingTranslation,
+    isTranslationError,
+  ]);
+
+  // Effect to show toast on error
+  React.useEffect(() => {
+    if (isTranslationError && translationError) {
+      toast({
+        variant: "destructive",
+        title: "Error Fetching Translation",
+        description:
+          translationError instanceof Error
+            ? translationError.message
+            : "Could not load data for the selected language.",
+      });
+    }
+  }, [isTranslationError, translationError, toast]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -378,9 +409,42 @@ export function NewsEditSheet({
                   Translated Content -{" "}
                   {languages.find((l) => l.id === selectedLocale)?.name}
                 </h4>
-                <FormField
-                  control={form.control}
-                  name="title"
+                {/* Loading Skeleton */}
+                {isLoadingTranslation && (
+                  <div className="space-y-4">
+                    <Skeleton className="h-10 w-full" /> {/* Title */}
+                    <Skeleton className="h-20 w-full" /> {/* Excerpt */}
+                    <Skeleton className="h-40 w-full" /> {/* Content */}
+                    <div className="space-y-4 rounded-lg border p-4">
+                      <Skeleton className="h-4 w-1/4" /> {/* SEO Title Label */}
+                      <Skeleton className="h-10 w-full" /> {/* SEO Title Input */}
+                      <Skeleton className="h-4 w-1/4" /> {/* SEO Desc Label */}
+                      <Skeleton className="h-16 w-full" /> {/* SEO Desc Textarea */}
+                      <Skeleton className="h-4 w-1/4" /> {/* Keywords Label */}
+                      <Skeleton className="h-10 w-full" /> {/* Keywords Input */}
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {isTranslationError && !isLoadingTranslation && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>
+                      {translationError instanceof Error
+                        ? translationError.message
+                        : "Could not load translation data."}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Form Fields */}
+                {!isLoadingTranslation && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="title"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Title</FormLabel>
@@ -453,13 +517,13 @@ export function NewsEditSheet({
                             value={field.value || ""}
                           />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="metaDescription"
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="metaDescription"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Meta Description</FormLabel>
@@ -471,13 +535,13 @@ export function NewsEditSheet({
                             rows={2}
                           />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="keywords"
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="keywords"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Keywords</FormLabel>
@@ -488,11 +552,13 @@ export function NewsEditSheet({
                             value={field.value || ""}
                           />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 </div>
+                  </>
+                )}
               </div>
             </div>
 

@@ -4,6 +4,7 @@ import "@/styles/tiptap.css";
 import SessionWrapper from "@/components/SessionWrapper";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
+import { QueryProvider } from "@/components/providers/QueryProvider"; // Import QueryProvider
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -22,10 +23,11 @@ export default async function RootLayout({
       <body>
         <Toaster />
         <SessionWrapper>
-          <main>
-            <SidebarProvider>
-              <AppSidebar variant="inset" />
-              <SidebarInset>
+          <QueryProvider> {/* Wrap with QueryProvider */}
+            <main>
+              <SidebarProvider>
+                <AppSidebar variant="inset" />
+                <SidebarInset>
                 <SiteHeader />
                 <div className="flex flex-1 flex-col">
                   <div className="@container/main flex flex-1 flex-col gap-2">
@@ -33,10 +35,11 @@ export default async function RootLayout({
                       {children}
                     </div>
                   </div>
-                </div>
-              </SidebarInset>
-            </SidebarProvider>
-          </main>
+                  </div>
+                </SidebarInset>
+              </SidebarProvider>
+            </main>
+          </QueryProvider> {/* Close QueryProvider */}
         </SessionWrapper>
       </body>
     </html>
