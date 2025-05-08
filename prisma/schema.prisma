@@ -67,6 +67,11 @@ model User {
   loginCode        String?
   loginCodeExpires DateTime?
   status           UserStatus @default(PENDING) // Add status field
+
+  // --- New Relations for Chat Bot ---
+  chats       Chat[]
+  documents   Document[]
+  suggestions Suggestion[] // Relation for suggestions linked to the user (as owner)
 }
 
 enum QuranicStudyLevel {
@@ -213,4 +218,98 @@ model Contact {
 
   @@index([email])
   @@index([createdAt])
+}
+
+// --- Chat Bot Models ---
+
+enum ChatVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum DocumentKind {
+  TEXT
+  CODE
+  IMAGE
+  SHEET
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+  TOOL
+}
+
+model Chat {
+  id         String         @id @default(cuid())
+  createdAt  DateTime       @default(now())
+  title      String
+  userId     String // References User.id (cuid String)
+  visibility ChatVisibility @default(PRIVATE)
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+  votes    Vote[]
+
+  @@index([userId])
+}
+
+model Message {
+  id          String      @id @default(cuid())
+  chatId      String
+  role        MessageRole // Using the new enum
+  parts       Json // Corresponds to Drizzle's 'parts' json
+  attachments Json // Corresponds to Drizzle's 'attachments' json
+  createdAt   DateTime    @default(now())
+
+  chat  Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  votes Vote[]
+
+  @@index([chatId])
+}
+
+model Vote {
+  chatId    String
+  messageId String
+  isUpvoted Boolean
+
+  chat    Chat    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@id([chatId, messageId]) // Composite primary key
+  @@index([messageId])
+}
+
+model Document {
+  id        String       @id @default(cuid())
+  Did       String       @unique
+  createdAt DateTime     @default(now())
+  title     String
+  content   String?
+  kind      DocumentKind @default(TEXT)
+  userId    String // References User.id (cuid String) - Document owner
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  suggestions Suggestion[]
+
+  @@index([userId])
+}
+
+model Suggestion {
+  id                String   @id @default(cuid())
+  documentId        String // References Document.id (cuid String)
+  documentCreatedAt DateTime // Kept for filtering logic as seen in Drizzle queries
+  originalText      String
+  suggestedText     String
+  description       String?
+  isResolved        Boolean  @default(false)
+  userId            String // References User.id (cuid String) - Document owner
+  createdAt         DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relation to the User who owns the document
+
+  @@index([documentId, documentCreatedAt]) // Index for filtering
+  @@index([userId])
 }
