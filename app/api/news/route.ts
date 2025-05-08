@@ -130,13 +130,15 @@ export async function POST(request: NextRequest) {
       if (imageFile.size > MAX_FILE_SIZE) {
         return NextResponse.json(
           { message: "Image must be less than 5MB" },
-          { status: 400 }
+          { status: 400 },
         );
       }
       if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
         return NextResponse.json(
-          { message: "Invalid image file type. Allowed types: JPEG, PNG, WebP" },
-          { status: 400 }
+          {
+            message: "Invalid image file type. Allowed types: JPEG, PNG, WebP",
+          },
+          { status: 400 },
         );
       }
     }
@@ -163,8 +165,10 @@ export async function POST(request: NextRequest) {
 
     if (existingNews) {
       return NextResponse.json(
-        { message: `A news item with slug "${validatedData.slug}" already exists.` },
-        { status: 409 }
+        {
+          message: `A news item with slug "${validatedData.slug}" already exists.`,
+        },
+        { status: 409 },
       );
     }
 
@@ -236,20 +240,20 @@ export async function POST(request: NextRequest) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { message: "Invalid news data", errors: error.errors },
-        { status: 400 }
+        { status: 400 },
       );
     }
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return NextResponse.json(
           { message: "A news item with this slug already exists." },
-          { status: 409 }
+          { status: 409 },
         );
       }
     }
     return NextResponse.json(
       { message: "An error occurred while creating the news item." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -10,9 +10,7 @@ import {
   User,
   Settings,
   LogOut,
-  Bell,
   LucideMenu,
-  LucideX,
   LucideArrowRight,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";

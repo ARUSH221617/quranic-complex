@@ -11,10 +11,13 @@ const DefaultGlobalLoading: React.FC<DefaultGlobalLoadingProps> = ({
   message,
 }) => {
   return (
-    <GlobalLoading
-      className="bg-white text-gray-700"
-      namespace="DefaultLoading"
-    />
+    <>
+      <p>{message}</p>
+      <GlobalLoading
+        className="bg-white text-gray-700"
+        namespace="DefaultLoading"
+      />
+    </>
   );
 };
 

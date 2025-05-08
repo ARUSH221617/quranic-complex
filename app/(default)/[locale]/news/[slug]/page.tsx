@@ -96,18 +96,11 @@ export default async function NewsDetailPage({ params }: Props) {
         <CardHeader>
           <CardTitle className="text-3xl font-bold">{newsItem.title}</CardTitle>
           <p className="text-sm text-gray-500">
-            {new Date(newsItem.date).toLocaleDateString(
-              params.locale === "ar"
-                ? "ar-EG"
-                : params.locale === "fa"
-                  ? "fa-IR"
-                  : "en-US",
-              {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              },
-            )}
+            {new Date(newsItem.date).toLocaleDateString("fa-IR", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </p>
         </CardHeader>
         <CardContent className="prose max-w-none lg:prose-lg dark:prose-invert">

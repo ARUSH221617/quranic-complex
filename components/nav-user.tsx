@@ -25,7 +25,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
-import Link from "next/link";
 
 export const persianToEnglish: Record<string, string> = {
   ا: "a",

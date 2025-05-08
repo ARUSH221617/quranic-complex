@@ -1,9 +1,16 @@
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth, { AuthOptions, DefaultSession } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
+import { JWT } from "next-auth/jwt";
 
-import bcrypt from "bcryptjs"; // Needed if re-enabling password check
+interface ExtendedSession extends DefaultSession {
+  user: {
+    id: string;
+    role?: string;
+  } & DefaultSession["user"];
+}
 
 const prisma = new PrismaClient();
 
@@ -158,7 +165,7 @@ export const authOptions: AuthOptions = {
     //   }
     //   return token
     // },
-    async session({ session, token /* user */ }) {
+    async session({ session, token }: { session: ExtendedSession; token: JWT }) {
       // Using JWT strategy, user object might not be passed directly here.
       // We rely on the token which gets info from authorize() and jwt callback.
       if (token && session.user) {
@@ -170,7 +177,7 @@ export const authOptions: AuthOptions = {
       return session;
     },
     // JWT callback is needed with JWT strategy to persist custom data (like role)
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user: any }) {
       // On sign in, 'user' object is passed from authorize()
       if (user) {
         token.sub = user.id; // Persist user id
@@ -187,7 +194,7 @@ export const authOptions: AuthOptions = {
     // verifyRequest: '/auth/verify-request', // Page shown after requesting email verification (built-in provider) - Not needed for our custom flow
   },
   session: {
-    strategy: "jwt", // Use JWT strategy
+    strategy: "jwt" as const, // Fix the session strategy type
     maxAge: 30 * 24 * 60 * 60, // 30 days session expiry
   },
   jwt: {
@@ -198,5 +205,4 @@ export const authOptions: AuthOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

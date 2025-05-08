@@ -66,7 +66,10 @@ const updateNewsSchema = z.object({
   title: z.string().optional(),
   content: z.string().optional(),
   excerpt: z.string().optional(),
-  date: z.string().optional().transform((str) => str ? new Date(str) : undefined),
+  date: z
+    .string()
+    .optional()
+    .transform((str) => (str ? new Date(str) : undefined)),
   metaTitle: z.string().optional().nullable(),
   metaDescription: z.string().optional().nullable(),
   keywords: z.string().optional().nullable(),
@@ -82,7 +85,7 @@ export async function GET(
 
     const news = await prisma.news.findUnique({
       where: {
-        id: id,
+        slug: id,
       },
       select: {
         id: true,
@@ -282,32 +285,38 @@ export async function PATCH(
     }
 
     // --- 5. Prepare Translation Data for Upsert ---
-    const translationUpdateData: Prisma.NewsTranslationUpdateWithoutNewsInput = {};
-    const translationFieldsToUpdate: (keyof Prisma.NewsTranslationUpdateWithoutNewsInput)[] = [
-      "title",
-      "content",
-      "excerpt",
-      "metaTitle",
-      "metaDescription",
-      "keywords",
-    ];
+    const translationUpdateData: Prisma.NewsTranslationUpdateWithoutNewsInput =
+      {};
+    const translationFieldsToUpdate: (keyof Prisma.NewsTranslationUpdateWithoutNewsInput)[] =
+      [
+        "title",
+        "content",
+        "excerpt",
+        "metaTitle",
+        "metaDescription",
+        "keywords",
+      ];
     let hasTranslationChanges = false;
 
     translationFieldsToUpdate.forEach((field) => {
       if (validatedData[field] !== undefined) {
-        const newValue = ["metaTitle", "metaDescription", "keywords"].includes(field)
+        const newValue = ["metaTitle", "metaDescription", "keywords"].includes(
+          field,
+        )
           ? validatedData[field] || undefined
           : (validatedData[field] ?? "");
 
         if (
           !existingTranslation ||
-          newValue !== existingTranslation[field as keyof typeof existingTranslation]
+          newValue !==
+            existingTranslation[field as keyof typeof existingTranslation]
         ) {
           translationUpdateData[field] = newValue;
           hasTranslationChanges = true;
         } else if (
           existingTranslation &&
-          newValue === existingTranslation[field as keyof typeof existingTranslation]
+          newValue ===
+            existingTranslation[field as keyof typeof existingTranslation]
         ) {
           hasTranslationChanges = true;
         }
@@ -315,15 +324,16 @@ export async function PATCH(
     });
 
     // Prepare data for the 'create' part of upsert
-    const translationCreateData: Prisma.NewsTranslationCreateWithoutNewsInput = {
-      locale: locale,
-      title: validatedData.title ?? "",
-      content: validatedData.content ?? "",
-      excerpt: validatedData.excerpt ?? "",
-      metaTitle: validatedData.metaTitle || null,
-      metaDescription: validatedData.metaDescription || null,
-      keywords: validatedData.keywords || null,
-    };
+    const translationCreateData: Prisma.NewsTranslationCreateWithoutNewsInput =
+      {
+        locale: locale,
+        title: validatedData.title ?? "",
+        content: validatedData.content ?? "",
+        excerpt: validatedData.excerpt ?? "",
+        metaTitle: validatedData.metaTitle || null,
+        metaDescription: validatedData.metaDescription || null,
+        keywords: validatedData.keywords || null,
+      };
 
     // --- 6. Perform Update ---
     const isCreatingTranslation = !existingTranslation && hasTranslationChanges;
@@ -436,7 +446,9 @@ export async function PATCH(
     console.error("Error updating news:", error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
-        const target = (error.meta as { target?: string[] })?.target?.join(", ");
+        const target = (error.meta as { target?: string[] })?.target?.join(
+          ", ",
+        );
         const message = target
           ? `A unique constraint violation occurred on field(s): ${target}. The value might already be in use.`
           : "A unique constraint violation occurred. The slug might already be in use.";

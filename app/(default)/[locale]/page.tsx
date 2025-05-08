@@ -12,6 +12,7 @@ import {
 // Remove direct Program import if no longer needed elsewhere, keep News if used
 import type { News } from "@prisma/client";
 import { getLocale, getTranslations } from "next-intl/server";
+import { cn } from "@/lib/utils";
 
 // Define the expected structure for a program returned by the API
 interface FeaturedProgram {
@@ -276,20 +277,22 @@ export default async function Home() {
                 key={item.id}
                 className="overflow-hidden transition-all duration-300 hover:shadow-xl"
               >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={item.image || "/placeholder.svg"}
-                    alt={item.title} // Use direct title
-                    fill
-                    className="object-cover"
-                    // Add sizes attribute for optimization
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
+                {item.image && (
+                  <div className="relative h-48 w-full">
+                    <Image
+                      src={item.image}
+                      alt={item.title} // Use direct title
+                      fill
+                      className="object-cover"
+                      // Add sizes attribute for optimization
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </div>
+                )}
                 <CardHeader>
                   <CardTitle className="line-clamp-2">{item.title}</CardTitle>
                   <p className="text-sm text-gray-500">
-                    {new Date(item.date).toLocaleDateString(locale, {
+                    {new Date(item.date).toLocaleDateString("fa-IR", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",

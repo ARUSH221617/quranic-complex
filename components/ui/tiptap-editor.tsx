@@ -7,7 +7,6 @@ import UnderlineExtension from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Highlight from "@tiptap/extension-highlight";
 import Placeholder from "@tiptap/extension-placeholder";
-import { Button } from "./button";
 import {
   Bold,
   Italic,
@@ -23,7 +22,6 @@ import {
   Heading3,
   Undo,
   Redo,
-  MinusSquare,
   Code2,
   Keyboard,
 } from "lucide-react";

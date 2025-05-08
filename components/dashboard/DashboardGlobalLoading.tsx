@@ -11,10 +11,13 @@ const DashboardGlobalLoading: React.FC<DashboardGlobalLoadingProps> = ({
   message,
 }) => {
   return (
-    <GlobalLoading
-      className="bg-gray-100 text-gray-900"
-      namespace="DashboardLoading"
-    />
+    <>
+      <p>{message}</p>
+      <GlobalLoading
+        className="bg-gray-100 text-gray-900"
+        namespace="DashboardLoading"
+      />
+    </>
   );
 };
 
