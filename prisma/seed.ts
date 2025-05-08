@@ -11,16 +11,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log(`Start seeding ...`);
 
-  const apassword = await hash("amir1386", 10); // Hash a default password
-  const admin = await prisma.user.update({
-    where: { email: "arush221617@gmail.com" },
-    data: {
-      role: UserRole.ADMIN,
-      password: apassword,
-      status: UserStatus.APPROVED, // Set admin status to APPROVED
-    },
-  });
-
   // --- Seed Users (Remains the same) ---
   // Note: User model doesn't have translated fields in this schema version
   const password = await hash("amir1386", 10); // Hash a default password
@@ -31,6 +21,8 @@ async function main() {
       email: "arush221617@gmail.com",
       name: "Admin User",
       role: UserRole.ADMIN,
+      password: password,
+      status: UserStatus.APPROVED,
       nationalCode: "0000000001", // Ensure uniqueness
       dateOfBirth: new Date("1990-01-01T00:00:00Z"),
       quranicStudyLevel: QuranicStudyLevel.ADVANCED,
@@ -45,6 +37,7 @@ async function main() {
       email: "student@example.com",
       name: "Student User",
       role: UserRole.STUDENT,
+      password: password,
       nationalCode: "0000000002", // Ensure uniqueness
       dateOfBirth: new Date("1995-05-15T00:00:00Z"),
       quranicStudyLevel: QuranicStudyLevel.INTERMEDIATE,
@@ -58,6 +51,7 @@ async function main() {
     create: {
       email: "user@example.com",
       name: "Regular User",
+      password: password,
       role: UserRole.USER,
       nationalCode: "0000000003", // Ensure uniqueness
       dateOfBirth: new Date("2000-10-20T00:00:00Z"),
@@ -274,7 +268,7 @@ async function main() {
   });
 
   console.log(
-    `Created gallery items with translations: ${galleryItem1.id}, ${galleryItem2.id}`
+    `Created gallery items with translations: ${galleryItem1.id}, ${galleryItem2.id}`,
   );
 
   // --- Seed Contacts (Remains the same, no translations) ---
