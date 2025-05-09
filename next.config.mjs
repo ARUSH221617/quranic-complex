@@ -1,4 +1,6 @@
 import createNextIntlPlugin from "next-intl/plugin";
+import path from "path";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -28,12 +30,15 @@ const nextConfig = {
     // Ensure single instance of @codemirror/state
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@codemirror/state': require.resolve('@codemirror/state'),
+      "@codemirror/state": path.resolve("node_modules/@codemirror/state"),
     };
 
     // Optimize module resolution
-    config.resolve.modules = ['node_modules', ...config.resolve.modules || []];
-    config.resolve.mainFields = ['browser', 'module', 'main'];
+    config.resolve.modules = [
+      "node_modules",
+      ...(config.resolve.modules || []),
+    ];
+    config.resolve.mainFields = ["browser", "module", "main"];
 
     // Add specific handling for CodeMirror, ProseMirror, and TipTap packages
     config.module.rules.push({
@@ -53,15 +58,17 @@ const nextConfig = {
     // Ensure single instances of key packages
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@codemirror/state': require.resolve('@codemirror/state'),
-      '@codemirror/view': require.resolve('@codemirror/view'),
-      '@codemirror/commands': require.resolve('@codemirror/commands'),
-      '@codemirror/language': require.resolve('@codemirror/language'),
-      '@codemirror/search': require.resolve('@codemirror/search'),
-      '@codemirror/autocomplete': require.resolve('@codemirror/autocomplete'),
-      'prosemirror-state': require.resolve('prosemirror-state'),
-      'prosemirror-view': require.resolve('prosemirror-view'),
-      'prosemirror-model': require.resolve('prosemirror-model'),
+      "@codemirror/state": path.resolve("node_modules/@codemirror/state"),
+      "@codemirror/view": path.resolve("node_modules/@codemirror/view"),
+      "@codemirror/commands": path.resolve("node_modules/@codemirror/commands"),
+      "@codemirror/language": path.resolve("node_modules/@codemirror/language"),
+      "@codemirror/search": path.resolve("node_modules/@codemirror/search"),
+      "@codemirror/autocomplete": path.resolve(
+        "node_modules/@codemirror/autocomplete",
+      ),
+      "prosemirror-state": path.resolve("node_modules/prosemirror-state"),
+      "prosemirror-view": path.resolve("node_modules/prosemirror-view"),
+      "prosemirror-model": path.resolve("node_modules/prosemirror-model"),
     };
 
     return config;
