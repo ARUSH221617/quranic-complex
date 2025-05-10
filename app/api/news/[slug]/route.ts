@@ -463,3 +463,66 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { slug: string } },
+) {
+  try {
+    const { slug } = params;
+
+    // First find the news item to get its image path (if any)
+    const newsItem = await prisma.news.findUnique({
+      where: { slug },
+      select: {
+        id: true,
+        image: true,
+      },
+    });
+
+    if (!newsItem) {
+      return NextResponse.json(
+        { message: "News item not found" },
+        { status: 404 },
+      );
+    }
+
+    // If there's an associated image, delete it
+    if (newsItem.image) {
+      const imagePath = path.join(process.cwd(), "public", newsItem.image);
+      try {
+        await fs.promises.unlink(imagePath);
+        console.log(`Deleted image file: ${imagePath}`);
+      } catch (err: any) {
+        // Only log error if file exists but couldn't be deleted
+        if (err.code !== "ENOENT") {
+          console.error(`Error deleting image file ${imagePath}:`, err);
+        }
+      }
+    }
+
+    // Delete the news item (this will cascade delete translations due to Prisma schema)
+    await prisma.news.delete({
+      where: { id: newsItem.id },
+    });
+
+    return NextResponse.json(
+      { message: "News item deleted successfully" },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("Error deleting news:", error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      // Handle any specific Prisma errors if needed
+      return NextResponse.json(
+        { message: "Database error while deleting news item" },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json(
+      { message: "An error occurred while deleting the news item" },
+      { status: 500 },
+    );
+  }
+}

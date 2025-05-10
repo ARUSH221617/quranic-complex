@@ -117,8 +117,9 @@ export const columns: ColumnDef<NewsData>[] = [
     cell: ({ row, table }) => {
       const news = row.original;
       // Access the meta property correctly
-      const { openEditSheet } = table.options.meta as {
+      const { openEditSheet, deleteNews } = table.options.meta as {
         openEditSheet: (news: NewsData) => void;
+        deleteNews: (news: NewsData) => void;
       };
 
       return (
@@ -138,7 +139,9 @@ export const columns: ColumnDef<NewsData>[] = [
               Edit
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => deleteNews(news)}>
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -220,6 +223,42 @@ export function NewsDataTable({ data: initialData }: DataTableProps) {
     setIsEditOpen(true);
   };
 
+  const deleteNews = async (news: NewsData) => {
+    setIsLoading(true);
+    toast({ title: "Deleting news...", description: "Please wait." });
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/news/${news.slug}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (!res.ok) {
+        let errorMsg = "Failed to delete news";
+        try {
+          const errorBody = await res.json();
+          errorMsg = errorBody.message || errorMsg;
+        } catch (e) {
+          /* ignore json parse error */
+        }
+        throw new Error(errorMsg);
+      }
+      toast({
+        title: "Success",
+        description: "News have been deleted!",
+      });
+    } catch (error) {
+      console.error("Delete failed:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error instanceof Error ? error.message : "Delete failed",
+      });
+    } finally {
+      await refetchNews();
+    }
+  };
+
   const table = useReactTable({
     data: news, // Use internal state for data
     columns, // Use the new columns definition
@@ -246,6 +285,7 @@ export function NewsDataTable({ data: initialData }: DataTableProps) {
     // Pass meta data to columns (e.g., the function to open the sheet)
     meta: {
       openEditSheet,
+      deleteNews,
     },
   });
 
