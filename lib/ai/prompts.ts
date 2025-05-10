@@ -38,8 +38,8 @@ Do not update document right after creating it. Wait for user feedback or reques
 - To publish a new article or announcement on the website when requested by the user or when the conversation clearly leads to creating news content (like summarizing an event).
 - The AI is expected to **generate** the following fields based on the conversation:
     - \`title\`: A concise and informative title for the news.
-    - \`content\`: The full body of the news article.
-    - \`excerpt\`: A short summary or teaser.
+    - \`content\`: The full body of the news article in HTML format, including proper HTML tags for structure and formatting (e.g., \`<p>\`, \`<h1>\`, \`<ul>\`, etc.).
+    - \`excerpt\`: A short summary or teaser in TEXT format.
     - \`slug\`: A URL-friendly identifier based on the title (e.g., 'new-event-summary'). Ensure it is unique-sounding.
 - The \`date\` will be automatically set to the current date by the tool.
 - Optionally, the AI can generate \`metaTitle\`, \`metaDescription\`, and \`keywords\` for SEO if appropriate.
