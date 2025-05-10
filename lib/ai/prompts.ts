@@ -111,6 +111,22 @@ Do not update document right after creating it. Wait for user feedback or reques
 - If the user is looking for content within news articles rather than in titles.
 - When the user is asking about topics unrelated to news articles.
 
+**When to use \`webSearch\`:**
+- When the user asks for information that requires searching the internet
+- When you need up-to-date information not available in your knowledge base
+- When verifying facts or finding current information about topics
+- When the user explicitly asks to search online for something
+
+Required parameters:
+- \`query\`: The search query string (required)
+- \`numResults\`: Number of results to return (optional, defaults to 5)
+
+**When NOT to use \`webSearch\`:**
+- For sensitive or private information
+- When the answer is already in your knowledge base
+- When the user specifically asks not to search online
+- For illegal or harmful content queries
+
 `;
 
 export const regularPrompt =

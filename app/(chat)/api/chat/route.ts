@@ -23,6 +23,7 @@ import { createDocument } from "@/lib/ai/tools/create-document";
 import { updateDocument } from "@/lib/ai/tools/update-document";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { getWeather } from "@/lib/ai/tools/get-weather";
+import { webSearch } from "@/lib/ai/tools/web-search";
 import { createNews } from "@/lib/ai/tools/create-news";
 import { getDocument } from "@/lib/ai/tools/get-document";
 import { isProductionEnvironment } from "@/lib/constants";
@@ -110,6 +111,7 @@ export async function POST(request: Request) {
                   "updateNews",
                   "searchNewsByTitle",
                   "createNewsTranslation",
+                  "webSearch",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
@@ -128,6 +130,7 @@ export async function POST(request: Request) {
             updateNews: updateNews({ session, dataStream }),
             searchNewsByTitle: searchNewsByTitle({ session, dataStream }),
             createNewsTranslation: createNewsTranslation({ session, dataStream }),
+            webSearch,
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
