@@ -20,5 +20,6 @@ export const myProvider = customProvider({
       model: google("gemini-2.5-pro-exp-03-25"),
       middleware: extractReasoningMiddleware({ tagName: "think" }),
     }),
+    "image-model": google("gemini-2.0-flash-preview-image-generation"),
   },
 });
