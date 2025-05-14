@@ -36,11 +36,13 @@ export const artifactDefinitions = [
   imageArtifact,
   sheetArtifact,
 ];
-export type ArtifactKind = (typeof artifactDefinitions)[number]["kind"];
+export type ArtifactKind = (typeof artifactDefinitions)[number]["kind"] | "NEWS";
 
 export interface UIArtifact {
   title: string;
   documentId: string;
+  itemId?: string; // For news items, uses slug
+  itemLocale?: string; // For news items, stores locale
   kind: ArtifactKind;
   content: string;
   isVisible: boolean;

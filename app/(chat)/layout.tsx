@@ -50,7 +50,7 @@ export default async function RootLayout({
               <SidebarInset>
                 <SidebarProvider defaultOpen={defaultOpen}>
                   <AppSidebarWrapper user={session?.user} />
-                  {children}
+                  <div className="flex-1">{children}</div>
                 </SidebarProvider>
               </SidebarInset>
             </ThemeProvider>

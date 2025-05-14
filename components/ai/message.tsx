@@ -17,6 +17,7 @@ import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 import { MessageEditor } from "./message-editor";
 import { DocumentPreview } from "./document-preview";
+import { NewsCard } from "./NewsCard";
 import { MessageReasoning } from "./message-reasoning";
 import { UseChatHelpers } from "@ai-sdk/react";
 
@@ -54,7 +55,7 @@ const PurePreviewMessage = ({
             {
               "w-full": mode === "edit",
               "group-data-[role=user]/message:w-fit": mode !== "edit",
-            }
+            },
           )}
         >
           {message.role === "assistant" && (
@@ -176,6 +177,11 @@ const PurePreviewMessage = ({
                           args={args}
                           isReadonly={isReadonly}
                         />
+                      ) : toolName === "createNews" ? (
+                        <NewsCard
+                          isReadonly={isReadonly}
+                          args={{ ...args, toolName }}
+                        />
                       ) : null}
                     </div>
                   );
@@ -205,6 +211,16 @@ const PurePreviewMessage = ({
                           result={result}
                           isReadonly={isReadonly}
                         />
+                      ) : toolName === "createNews" ||
+                        toolName === "getNewsBySlug" ||
+                        toolName === "getLatestNews" ||
+                        toolName === "updateNews" ||
+                        toolName === "searchNewsByTitle" ||
+                        toolName === "createNewsTranslation" ? (
+                        <NewsCard
+                          isReadonly={isReadonly}
+                          result={{ ...result, toolName }}
+                        />
                       ) : (
                         <pre>{JSON.stringify(result, null, 2)}</pre>
                       )}
@@ -212,6 +228,7 @@ const PurePreviewMessage = ({
                   );
                 }
               }
+              return null;
             })}
 
             {!isReadonly && (
@@ -239,7 +256,7 @@ export const PreviewMessage = memo(
     if (!equal(prevProps.vote, nextProps.vote)) return false;
 
     return true;
-  }
+  },
 );
 
 export const ThinkingMessage = () => {
@@ -258,7 +275,7 @@ export const ThinkingMessage = () => {
           "flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl",
           {
             "group-data-[role=user]/message:bg-muted": true,
-          }
+          },
         )}
       >
         <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
