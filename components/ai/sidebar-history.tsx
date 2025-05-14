@@ -48,10 +48,9 @@ const groupChatsByDate = (chats: Chat[]): GroupedChats => {
   const oneWeekAgo = subWeeks(now, 1);
   const oneMonthAgo = subMonths(now, 1);
 
-  return chats.reduce(
+  const groups = chats.reduce(
     (groups, chat) => {
       const chatDate = new Date(chat.createdAt);
-
       if (isToday(chatDate)) {
         groups.today.push(chat);
       } else if (isYesterday(chatDate)) {
@@ -63,7 +62,6 @@ const groupChatsByDate = (chats: Chat[]): GroupedChats => {
       } else {
         groups.older.push(chat);
       }
-
       return groups;
     },
     {
@@ -74,6 +72,25 @@ const groupChatsByDate = (chats: Chat[]): GroupedChats => {
       older: [],
     } as GroupedChats,
   );
+
+  // Sort each group by creation date (most recent first)
+  groups.today.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  groups.yesterday.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  groups.lastWeek.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  groups.lastMonth.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+  groups.older.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  );
+
+  return groups;
 };
 
 export function getChatHistoryPaginationKey(
@@ -144,7 +161,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     setShowDeleteDialog(false);
 
     if (deleteId === id) {
-      router.push("/");
+      router.push("/chat");
     }
   };
 
