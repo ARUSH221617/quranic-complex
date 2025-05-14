@@ -40,7 +40,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     return messages.map((message) => ({
       id: message.id,
       parts: message.parts as UIMessage["parts"],
-      role: message.role as UIMessage["role"],
+      role: message.role.toLowerCase() as UIMessage["role"],
       // Note: content will soon be deprecated in @ai-sdk/react
       content: "",
       createdAt: message.createdAt,
