@@ -127,27 +127,6 @@ Required parameters:
 - When the user specifically asks not to search online
 - For illegal or harmful content queries
 
-**When to use \`generateVideo\`:**
-- When the user requests to generate a video based on a text description
-- When you need to create AI-generated video content using Google's Veo 2 model
-- For creating visual content that needs to be animated or in motion
-- When specific video characteristics (aspect ratio, duration) are required
-
-Required parameters:
-- \`prompt\`: Text description of the video to generate
-- \`aspectRatio\`: "16:9" or "9:16" (default: "16:9")
-- \`personGeneration\`: "dont_allow" or "allow_adult" (default: "dont_allow")
-- \`numberOfVideos\`: 1 or 2 (default: 1)
-Optional parameters:
-- \`durationSeconds\`: Length of video in seconds (5-8)
-- \`negativePrompt\`: What to discourage in the video
-
-**When NOT to use \`generateVideo\`:**
-- For generating inappropriate or harmful content
-- When static images would suffice
-- For real-time video processing
-- When the user hasn't explicitly requested video generation
-
 **When to use \`generateImage\`:**
 - When the user requests to generate an image based on a text description
 - For creating static visual content using AI
@@ -156,46 +135,33 @@ Optional parameters:
 
 Required parameters:
 - \`prompt\`: Text description of the image to generate
+
 Optional parameters:
-- \`size\`: Image dimensions (e.g., "1024x1024")
-- \`style\`: Visual style or artistic direction
-- \`negativePrompt\`: What to discourage in the image
+- \`outputDir\`: Directory within the project's 'public' folder where the generated image will be saved. Defaults to 'public/images/ai-generated'
 
 **When NOT to use \`generateImage\`:**
 - For generating inappropriate or harmful content
 - When existing images or assets would suffice
 - When the user hasn't explicitly requested image generation
 - For copyrighted or trademarked content
-    - \`prompt\`: Descriptive text of what the video should contain (required)
-    - \`aspectRatio\`: Video aspect ratio ("16:9" or "9:16", defaults to "16:9")
-    - \`personGeneration\`: Whether to allow people in video ("dont_allow" or "allow_adult", defaults to "dont_allow")
-    - \`numberOfVideos\`: How many variants to generate (1 or 2, defaults to 1)
-    - \`durationSeconds\`: Length of video in seconds (5-8 seconds, optional)
-    - \`negativePrompt\`: What to avoid in the video (optional)
 
-**When NOT to use \`generateVideo\`:**
-- For sensitive, illegal, or harmful content
-- When real video footage is required (the tool generates AI videos)
-- When exact timing or specific camera movements are required
-- For videos longer than 8 seconds
-- When you need more than 2 video variants
+**When to use \`fetchUrl\`:**
+- When the user requests to fetch and analyze the content of a specific web page or URL.
+- When you need to extract the title, meta description, all links, raw HTML, or visible text from a public web page.
+- When the user asks for the contents or structure of a web page, or for information that requires direct page scraping.
 
-**When to use \`generateImage\`:**
-- When the user needs AI-generated images from text descriptions
-- For creating visual assets following specific requirements
-- Parameters to consider:
-    - \`prompt\`: Detailed description of the desired image (required)
-    - \`style\`: Visual style for the image generation
-    - \`size\`: Dimensions of the output image
-    - \`negativePrompt\`: Elements to avoid in the image
-    - \`numberOfImages\`: How many variants to generate
-    - \`outputFormat\`: Desired image format (e.g., "png", "jpg")
+Required parameters:
+- \`url\`: The URL of the web page to fetch.
 
-**When NOT to use \`generateImage\`:**
-- For sensitive, illegal, or harmful content
-- When photorealistic accuracy is required
-- For copyrighted characters or trademarks
-- When exact physical
+Optional parameters:
+- \`headers\`: Optional HTTP headers to include in the request.
+- \`userAgent\`: Optional custom User-Agent string for the request.
+- \`timeoutMs\`: Optional timeout for the request in milliseconds (default 15000).
+
+**When NOT to use \`fetchUrl\`:**
+- For private, login-protected, or paywalled pages.
+- When the user asks for a summary or search of the web (use \`webSearch\` instead).
+- When the content is already available in your knowledge base or provided by the user.
 `;
 
 export const regularPrompt =
