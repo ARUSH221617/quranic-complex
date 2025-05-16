@@ -2,16 +2,14 @@ import { Session } from "next-auth";
 import { tool } from "ai";
 import { z } from "zod";
 import { DataStreamWriter } from "ai";
-import { GoogleGenAI } from "@google/genai";
-import { createWriteStream } from "fs";
-import { Readable } from "stream";
-import * as path from "path";
-import * as fs from "fs";
+import generateVideo, { VideoGenerationError } from "../../ai-video";
 
 // Tool parameter schema
 const generateVideoSchema = z.object({
   prompt: z
     .string()
+    .min(1)
+    .max(1000)
     .describe("The text prompt describing the video to generate."),
   aspectRatio: z
     .enum(["16:9", "9:16"])
@@ -23,18 +21,21 @@ const generateVideoSchema = z.object({
     .describe("Whether to allow people in the video."),
   numberOfVideos: z
     .number()
+    .int()
     .min(1)
     .max(2)
     .default(1)
     .describe("Number of videos to generate (1 or 2)."),
   durationSeconds: z
     .number()
+    .int()
     .min(5)
     .max(8)
     .optional()
     .describe("Length of each video in seconds (5-8)."),
   negativePrompt: z
     .string()
+    .max(1000)
     .optional()
     .describe("Describe what you want to discourage in the video."),
   outputDir: z
@@ -43,162 +44,88 @@ const generateVideoSchema = z.object({
     .describe("Directory where to save the generated videos."),
 });
 
-interface VideoGenerationConfig {
-  aspectRatio?: "16:9" | "9:16";
-  personGeneration?: "dont_allow" | "allow_adult";
-  numberOfVideos?: number;
-  durationSeconds?: number;
-  negativePrompt?: string;
-}
-
-async function downloadVideo(
-  videoUri: string,
-  apiKey: string,
-  outputPath: string,
-): Promise<void> {
-  const resp = await fetch(`${videoUri}&key=${apiKey}`);
-  if (!resp.ok) {
-    throw new Error(`Failed to download video: ${resp.statusText}`);
-  }
-
-  const writer = createWriteStream(outputPath);
-  // @ts-ignore - Readable.fromWeb is available in Node.js but TypeScript doesn't recognize it
-  Readable.fromWeb(resp.body).pipe(writer);
-
-  return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
-}
-
 interface GenerateVideoProps {
   session: Session;
   dataStream: DataStreamWriter;
 }
 
-export const generateVideo = ({ session, dataStream }: GenerateVideoProps) =>
+export const generateVideoTool = ({
+  session,
+  dataStream,
+}: GenerateVideoProps) =>
   tool({
     description:
-      "Generate a video using Google's Veo 2 model. Provide a descriptive prompt and configuration.",
+      "Generate a video using Google's Veo model. Provide a descriptive prompt and configuration.",
     parameters: generateVideoSchema,
-    execute: async ({
-      prompt,
-      aspectRatio = "16:9",
-      personGeneration = "dont_allow",
-      numberOfVideos = 1,
-      durationSeconds,
-      negativePrompt,
-      outputDir,
-    }) => {
-      const apiKey = process.env.GOOGLE_API_KEY;
-      if (!apiKey) {
-        throw new Error("GOOGLE_API_KEY environment variable is not set.");
-      }
-
-      const ai = new GoogleGenAI({ apiKey });
-
-      // Create output directory if it doesn't exist
-      const fullOutputDir = path.join(process.cwd(), outputDir);
-      await fs.promises.mkdir(fullOutputDir, { recursive: true });
-
-      // Stream start
-      dataStream.writeData({
-        type: "video_generation_status",
-        content: "Starting video generation with Veo 2...",
-      });
-
-      // Prepare configuration
-      const config: VideoGenerationConfig = {
-        aspectRatio,
-        personGeneration,
-        numberOfVideos,
-        ...(durationSeconds && { durationSeconds }),
-        ...(negativePrompt && { negativePrompt }),
-      };
-
+    execute: async (params) => {
       try {
-        let operation = await ai.models.generateVideos({
-          model: "veo-2.0-generate-001",
-          prompt,
-          config,
+        console.log('Starting video generation with parameters:', params);
+        
+        dataStream.writeData({
+          type: "video_generation_status",
+          content: "Starting video generation with Veo...",
         });
 
-        // Poll for completion
-        while (!operation.done) {
+        dataStream.writeData({
+          type: "video_generation_status",
+          content: "This may take 2-3 minutes to complete...",
+        });
+
+        const result = await generateVideo(params);
+
+        // Send progress updates for each video
+        result.videos.forEach((video, idx) => {
           dataStream.writeData({
-            type: "video_generation_status",
-            content:
-              "Video generation in progress... This may take 2-3 minutes.",
+            type: "video_generated",
+            content: JSON.stringify({
+              index: idx,
+              path: video.path,
+            }),
           });
-          await new Promise((resolve) => setTimeout(resolve, 10000));
-          operation = await ai.operations.getVideosOperation({ operation });
-        }
-
-        if (!operation.response?.generatedVideos?.length) {
-          dataStream.writeData({
-            type: "video_generation_status",
-            content: "No video was generated. Please try again.",
-          });
-          return { success: false, message: "No video generated." };
-        }
-
-        // Download and save videos
-        const savedVideos = await Promise.all(
-          operation.response.generatedVideos.map(async (video, idx) => {
-            if (!video.video?.uri) {
-              throw new Error(`No URI found for video ${idx + 1}`);
-            }
-
-            const timestamp = Date.now();
-            const filename = `video_${timestamp}_${idx + 1}.mp4`;
-            const outputPath = path.join(fullOutputDir, filename);
-
-            await downloadVideo(video.video.uri, apiKey, outputPath);
-
-            const relativePath = path
-              .join("/", outputDir, filename)
-              .replace(/\\/g, "/");
-
-            dataStream.writeData({
-              type: "video_generated",
-              content: JSON.stringify({
-                index: idx,
-                path: relativePath,
-              }),
-            });
-
-            return {
-              path: relativePath,
-              uri: video.video.uri,
-            };
-          }),
-        );
+        });
 
         dataStream.writeData({
           type: "video_generation_complete",
-          content: "All videos generated and saved successfully!",
+          content: `Successfully generated ${result.videos.length} video(s)`,
         });
-
-        dataStream.writeData({ type: "finish", content: "" });
 
         return {
           success: true,
-          message: `Generated ${savedVideos.length} video(s) successfully.`,
-          videos: savedVideos,
+          message: `Generated ${result.videos.length} video(s) successfully.`,
+          videos: result.videos,
         };
       } catch (error) {
         console.error("Error generating video:", error);
+        let errorMessage = "Unknown error occurred";
+        
+        if (error instanceof VideoGenerationError) {
+          errorMessage = error.message;
+          if (error.cause) {
+            console.error("Error cause:", error.cause);
+            errorMessage += ` (Cause: ${error.cause instanceof Error ? error.cause.message : String(error.cause)})`;
+          }
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        
+        dataStream.writeData({
+          type: "video_generation_status",
+          content: `Error: ${errorMessage}`,
+        });
+
         dataStream.writeData({
           type: "video_generation_error",
-          content:
-            error instanceof Error ? error.message : "Unknown error occurred",
+          content: errorMessage,
         });
+
         return {
           success: false,
           message: "Failed to generate video",
-          error:
-            error instanceof Error ? error.message : "Unknown error occurred",
+          error: errorMessage,
+          details: error instanceof VideoGenerationError ? error.cause : undefined,
         };
+      } finally {
+        dataStream.writeData({ type: "finish", content: "" });
       }
     },
   });
