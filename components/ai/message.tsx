@@ -11,6 +11,8 @@ import { Markdown } from "./markdown";
 import { MessageActions } from "./message-actions";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
+import { VideoPreview } from "./VideoPreview";
+import { ImagePreview } from "./ImagePreview";
 import equal from "fast-deep-equal";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
@@ -150,11 +152,9 @@ const PurePreviewMessage = ({
 
               if (type === "tool-invocation") {
                 const { toolInvocation } = part;
-                const { toolName, toolCallId, state } = toolInvocation;
+                const { toolName, toolCallId, state, args } = toolInvocation;
 
                 if (state === "call") {
-                  const { args } = toolInvocation;
-
                   return (
                     <div
                       key={toolCallId}
@@ -185,6 +185,10 @@ const PurePreviewMessage = ({
                         />
                       ) : toolName === "webSearch" ? (
                         <WebSearchCard isLoading={true} />
+                      ) : toolName === "generateVideo" ? (
+                        <VideoPreview isLoading={true} args={args} />
+                      ) : toolName === "generateImage" ? (
+                        <ImagePreview isLoading={true} args={args} />
                       ) : null}
                     </div>
                   );
@@ -226,6 +230,16 @@ const PurePreviewMessage = ({
                         />
                       ) : toolName === "webSearch" ? (
                         <WebSearchCard result={result} />
+                      ) : toolName === "generateVideo" ? (
+                        <VideoPreview
+                          result={result}
+                          args={toolInvocation.args}
+                        />
+                      ) : toolName === "generateImage" ? (
+                        <ImagePreview
+                          result={result}
+                          args={toolInvocation.args}
+                        />
                       ) : (
                         <pre>{JSON.stringify(result, null, 2)}</pre>
                       )}
