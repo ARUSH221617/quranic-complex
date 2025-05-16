@@ -1103,6 +1103,25 @@ export const ImageIcon = ({ size = 16 }: { size?: number }) => {
   );
 };
 
+export const FileVideoIcon = ({ size = 16 }: { size?: number }) => {
+  return (
+    <svg
+      height={size}
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width={size}
+      style={{ color: 'currentcolor' }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M2 1h12a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm0 1.5v11h12v-11H2zm3.5 2.5a.5.5 0 0 0-.5.5v4a.5.5 0 0 0 .724.447l3.5-2a.5.5 0 0 0 0-.894l-3.5-2A.5.5 0 0 0 5.5 5z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
 export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
   <svg
     height={size}
