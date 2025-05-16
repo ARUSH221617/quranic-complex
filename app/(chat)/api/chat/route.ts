@@ -24,6 +24,7 @@ import { updateDocument } from "@/lib/ai/tools/update-document";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { getWeather } from "@/lib/ai/tools/get-weather";
 import { webSearch } from "@/lib/ai/tools/web-search";
+import { fetchUrl } from "@/lib/ai/tools/fetch-url";
 import { createNews } from "@/lib/ai/tools/create-news";
 import { getDocument } from "@/lib/ai/tools/get-document";
 import { isProductionEnvironment } from "@/lib/constants";
@@ -35,7 +36,6 @@ import { getNewsBySlug } from "@/lib/ai/tools/get-news-by-slug";
 import { updateNews } from "@/lib/ai/tools/update-news";
 import { searchNewsByTitle } from "@/lib/ai/tools/search-news-by-title";
 import { createNewsTranslation } from "@/lib/ai/tools/create-news-translation";
-import { generateVideo } from "@/lib/ai/tools/generate-video";
 import { generateImageTool } from "@/lib/ai/tools/generate-image";
 
 export const maxDuration = 60;
@@ -113,9 +113,9 @@ export async function POST(request: Request) {
                   "updateNews",
                   "searchNewsByTitle",
                   "createNewsTranslation",
-                  "generateVideo",
                   "generateImage",
                   "webSearch",
+                  "fetchUrl",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
@@ -137,9 +137,9 @@ export async function POST(request: Request) {
               session,
               dataStream,
             }),
-            generateVideo: generateVideo({ session, dataStream }),
             generateImage: generateImageTool({ session, dataStream }),
             webSearch,
+            fetchUrl,
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
