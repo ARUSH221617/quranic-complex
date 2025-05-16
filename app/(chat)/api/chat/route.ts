@@ -35,6 +35,8 @@ import { getNewsBySlug } from "@/lib/ai/tools/get-news-by-slug";
 import { updateNews } from "@/lib/ai/tools/update-news";
 import { searchNewsByTitle } from "@/lib/ai/tools/search-news-by-title";
 import { createNewsTranslation } from "@/lib/ai/tools/create-news-translation";
+import { generateVideo } from "@/lib/ai/tools/generate-video";
+import { generateImageTool } from "@/lib/ai/tools/generate-image";
 
 export const maxDuration = 60;
 
@@ -97,7 +99,7 @@ export async function POST(request: Request) {
           messages,
           maxSteps: 5,
           experimental_activeTools:
-            selectedChatModel === "chat-model-reasoning"
+            selectedChatModel === "chat-model"
               ? []
               : [
                   "getWeather",
@@ -111,6 +113,8 @@ export async function POST(request: Request) {
                   "updateNews",
                   "searchNewsByTitle",
                   "createNewsTranslation",
+                  "generateVideo",
+                  "generateImage",
                   "webSearch",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
@@ -129,7 +133,12 @@ export async function POST(request: Request) {
             getNewsBySlug: getNewsBySlug({ session, dataStream }),
             updateNews: updateNews({ session, dataStream }),
             searchNewsByTitle: searchNewsByTitle({ session, dataStream }),
-            createNewsTranslation: createNewsTranslation({ session, dataStream }),
+            createNewsTranslation: createNewsTranslation({
+              session,
+              dataStream,
+            }),
+            generateVideo: generateVideo({ session, dataStream }),
+            generateImage: generateImageTool({ session, dataStream }),
             webSearch,
           },
           onFinish: async ({ response }) => {

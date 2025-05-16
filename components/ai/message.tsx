@@ -163,29 +163,29 @@ const PurePreviewMessage = ({
                       })}
                     >
                       {toolName === "getWeather" ? (
-                              <Weather />
-                            ) : toolName === "createDocument" ? (
-                              <DocumentPreview isReadonly={isReadonly} args={args} />
-                            ) : toolName === "updateDocument" ? (
-                              <DocumentToolCall
-                                type="update"
-                                args={args}
-                                isReadonly={isReadonly}
-                              />
-                            ) : toolName === "requestSuggestions" ? (
-                              <DocumentToolCall
-                                type="request-suggestions"
-                                args={args}
-                                isReadonly={isReadonly}
-                              />
-                            ) : toolName === "createNews" ? (
-                              <NewsCard
-                                isReadonly={isReadonly}
-                                args={{ ...args, toolName }}
-                              />
-                            ) : toolName === "webSearch" ? (
-                              <WebSearchCard isLoading={true} />
-                            ) : null}
+                        <Weather />
+                      ) : toolName === "createDocument" ? (
+                        <DocumentPreview isReadonly={isReadonly} args={args} />
+                      ) : toolName === "updateDocument" ? (
+                        <DocumentToolCall
+                          type="update"
+                          args={args}
+                          isReadonly={isReadonly}
+                        />
+                      ) : toolName === "requestSuggestions" ? (
+                        <DocumentToolCall
+                          type="request-suggestions"
+                          args={args}
+                          isReadonly={isReadonly}
+                        />
+                      ) : toolName === "createNews" ? (
+                        <NewsCard
+                          isReadonly={isReadonly}
+                          args={{ ...args, toolName }}
+                        />
+                      ) : toolName === "webSearch" ? (
+                        <WebSearchCard isLoading={true} />
+                      ) : null}
                     </div>
                   );
                 }
@@ -196,39 +196,39 @@ const PurePreviewMessage = ({
                   return (
                     <div key={toolCallId}>
                       {toolName === "getWeather" ? (
-                              <Weather weatherAtLocation={result} />
-                            ) : toolName === "createDocument" ? (
-                              <DocumentPreview
-                                isReadonly={isReadonly}
-                                result={result}
-                              />
-                            ) : toolName === "updateDocument" ? (
-                              <DocumentToolResult
-                                type="update"
-                                result={result}
-                                isReadonly={isReadonly}
-                              />
-                            ) : toolName === "requestSuggestions" ? (
-                              <DocumentToolResult
-                                type="request-suggestions"
-                                result={result}
-                                isReadonly={isReadonly}
-                              />
-                            ) : toolName === "createNews" ||
-                              toolName === "getNewsBySlug" ||
-                              toolName === "getLatestNews" ||
-                              toolName === "updateNews" ||
-                              toolName === "searchNewsByTitle" ||
-                              toolName === "createNewsTranslation" ? (
-                              <NewsCard
-                                isReadonly={isReadonly}
-                                result={{ ...result, toolName }}
-                              />
-                            ) : toolName === "webSearch" ? (
-                              <WebSearchCard result={result} />
-                            ) : (
-                              <pre>{JSON.stringify(result, null, 2)}</pre>
-                            )}
+                        <Weather weatherAtLocation={result} />
+                      ) : toolName === "createDocument" ? (
+                        <DocumentPreview
+                          isReadonly={isReadonly}
+                          result={result}
+                        />
+                      ) : toolName === "updateDocument" ? (
+                        <DocumentToolResult
+                          type="update"
+                          result={result}
+                          isReadonly={isReadonly}
+                        />
+                      ) : toolName === "requestSuggestions" ? (
+                        <DocumentToolResult
+                          type="request-suggestions"
+                          result={result}
+                          isReadonly={isReadonly}
+                        />
+                      ) : toolName === "createNews" ||
+                        toolName === "getNewsBySlug" ||
+                        toolName === "getLatestNews" ||
+                        toolName === "updateNews" ||
+                        toolName === "searchNewsByTitle" ||
+                        toolName === "createNewsTranslation" ? (
+                        <NewsCard
+                          isReadonly={isReadonly}
+                          result={{ ...result, toolName }}
+                        />
+                      ) : toolName === "webSearch" ? (
+                        <WebSearchCard result={result} />
+                      ) : (
+                        <pre>{JSON.stringify(result, null, 2)}</pre>
+                      )}
                     </div>
                   );
                 }

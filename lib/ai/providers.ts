@@ -4,22 +4,17 @@ import {
   wrapLanguageModel,
 } from "ai";
 import { google } from "@ai-sdk/google";
+import { xai } from "@ai-sdk/xai";
 
 export const myProvider = customProvider({
   languageModels: {
+    "agent-model": google("gemini-2.5-flash-preview-04-17"),
     "chat-model": wrapLanguageModel({
-      model: google("gemini-2.5-pro-exp-03-25"),
+      model: xai("grok-3-mini-beta"),
       middleware: extractReasoningMiddleware({ tagName: "think" }),
     }),
-    "chat-model-reasoning": wrapLanguageModel({
-      model: google("gemini-2.0-flash-thinking-exp-01-21"),
-      middleware: extractReasoningMiddleware({ tagName: "think" }),
-    }),
-    "title-model": google("gemini-2.0-flash-001"),
-    "artifact-model": wrapLanguageModel({
-      model: google("gemini-2.5-pro-exp-03-25"),
-      middleware: extractReasoningMiddleware({ tagName: "think" }),
-    }),
+    "title-model": google("gemini-1.5-flash"),
+    "artifact-model": google("gemini-2.5-pro-exp-03-25"),
     "image-model": google("gemini-2.0-flash-preview-image-generation"),
     "search-model": google("gemini-2.0-flash-exp", {
       useSearchGrounding: true,

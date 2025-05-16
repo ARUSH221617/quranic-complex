@@ -1,4 +1,4 @@
-export const DEFAULT_CHAT_MODEL: string = "chat-model";
+export const DEFAULT_CHAT_MODEL: string = "agent-model";
 
 interface ChatModel {
   id: string;
@@ -8,13 +8,13 @@ interface ChatModel {
 
 export const chatModels: Array<ChatModel> = [
   {
-    id: "chat-model",
-    name: "Chat model",
-    description: "Primary model for all-purpose chat",
+    id: "agent-model",
+    name: "Agent model",
+    description: "AI agent that can take actions to accomplish tasks",
   },
   {
-    id: "chat-model-reasoning",
-    name: "Reasoning model",
-    description: "Uses advanced reasoning",
+    id: "chat-model",
+    name: "Chat model",
+    description: "Language model optimized for conversation and dialogue",
   },
 ];

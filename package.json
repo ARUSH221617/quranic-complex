@@ -19,6 +19,7 @@
   "dependencies": {
     "@ai-sdk/google": "^1.2.13",
     "@ai-sdk/react": "^1.2.9",
+    "@ai-sdk/xai": "^1.2.16",
     "@auth/core": "latest",
     "@auth/prisma-adapter": "^2.8.0",
     "@codemirror/autocomplete": "^6.18.6",
