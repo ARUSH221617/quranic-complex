@@ -5,7 +5,7 @@ export const BotIcon = () => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -25,7 +25,7 @@ export const UserIcon = () => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -44,7 +44,7 @@ export const AttachmentIcon = () => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -63,7 +63,7 @@ export const VercelIcon = ({ size = 17 }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -82,7 +82,7 @@ export const GitIcon = () => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width="16"
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <g clipPath="url(#clip0_872_3147)">
         <path
@@ -108,7 +108,7 @@ export const BoxIcon = ({ size = 16 }: { size: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -127,7 +127,7 @@ export const HomeIcon = ({ size = 16 }: { size: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -146,7 +146,7 @@ export const GPSIcon = ({ size = 16 }: { size: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         d="M1 6L15 1L10 15L7.65955 8.91482C7.55797 8.65073 7.34927 8.44203 7.08518 8.34045L1 6Z"
@@ -167,7 +167,7 @@ export const InvoiceIcon = ({ size = 16 }: { size: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -186,7 +186,7 @@ export const LogoOpenAI = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         d="M14.9449 6.54871C15.3128 5.45919 15.1861 4.26567 14.5978 3.27464C13.7131 1.75461 11.9345 0.972595 10.1974 1.3406C9.42464 0.481584 8.3144 -0.00692594 7.15045 7.42132e-05C5.37487 -0.00392587 3.79946 1.1241 3.2532 2.79113C2.11256 3.02164 1.12799 3.72615 0.551837 4.72468C-0.339497 6.24071 -0.1363 8.15175 1.05451 9.45178C0.686626 10.5413 0.813308 11.7348 1.40162 12.7258C2.28637 14.2459 4.06498 15.0279 5.80204 14.6599C6.5743 15.5189 7.68504 16.0074 8.849 15.9999C10.6256 16.0044 12.2015 14.8754 12.7478 13.2069C13.8884 12.9764 14.873 12.2718 15.4491 11.2733C16.3394 9.75728 16.1357 7.84774 14.9454 6.54771L14.9449 6.54871ZM8.85001 14.9544C8.13907 14.9554 7.45043 14.7099 6.90468 14.2604C6.92951 14.2474 6.97259 14.2239 7.00046 14.2069L10.2293 12.3668C10.3945 12.2743 10.4959 12.1008 10.4949 11.9133V7.42173L11.8595 8.19925C11.8742 8.20625 11.8838 8.22025 11.8858 8.23625V11.9558C11.8838 13.6099 10.5263 14.9509 8.85001 14.9544ZM2.32133 12.2028C1.9651 11.5958 1.8369 10.8843 1.95902 10.1938C1.98284 10.2078 2.02489 10.2333 2.05479 10.2503L5.28366 12.0903C5.44733 12.1848 5.65003 12.1848 5.81421 12.0903L9.75604 9.84429V11.3993C9.75705 11.4153 9.74945 11.4308 9.73678 11.4408L6.47295 13.3004C5.01915 14.1264 3.1625 13.6354 2.32184 12.2028H2.32133ZM1.47155 5.24819C1.82626 4.64017 2.38619 4.17516 3.05305 3.93366C3.05305 3.96116 3.05152 4.00966 3.05152 4.04366V7.72424C3.05051 7.91124 3.15186 8.08475 3.31654 8.17725L7.25838 10.4228L5.89376 11.2003C5.88008 11.2093 5.86285 11.2108 5.84765 11.2043L2.58331 9.34327C1.13255 8.51426 0.63494 6.68272 1.47104 5.24869L1.47155 5.24819ZM12.6834 7.82274L8.74157 5.57669L10.1062 4.79968C10.1199 4.79068 10.1371 4.78918 10.1523 4.79568L13.4166 6.65522C14.8699 7.48373 15.3681 9.31827 14.5284 10.7523C14.1732 11.3593 13.6138 11.8243 12.9474 12.0663V8.27575C12.9489 8.08875 12.8481 7.91574 12.6839 7.82274H12.6834ZM14.0414 5.8057C14.0176 5.7912 13.9756 5.7662 13.9457 5.7492L10.7168 3.90916C10.5531 3.81466 10.3504 3.81466 10.1863 3.90916L6.24442 6.15521V4.60017C6.2434 4.58417 6.251 4.56867 6.26367 4.55867L9.52751 2.70063C10.9813 1.87311 12.84 2.36563 13.6781 3.80066C14.0323 4.40667 14.1605 5.11618 14.0404 5.8057H14.0414ZM5.50257 8.57726L4.13744 7.79974C4.12275 7.79274 4.11312 7.77874 4.11109 7.76274V4.04316C4.11211 2.38713 5.47368 1.0451 7.15197 1.0461C7.86189 1.0461 8.54902 1.2921 9.09476 1.74011C9.06993 1.75311 9.02737 1.77661 8.99899 1.79361L5.77012 3.63365C5.60493 3.72615 5.50358 3.89916 5.50459 4.08666L5.50257 8.57626V8.57726ZM6.24391 7.00022L7.99972 5.9997L9.75553 6.99972V9.00027L7.99972 10.0003L6.24391 9.00027V7.00022Z"
@@ -204,7 +204,7 @@ export const LogoGoogle = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         d="M8.15991 6.54543V9.64362H12.4654C12.2763 10.64 11.709 11.4837 10.8581 12.0509L13.4544 14.0655C14.9671 12.6692 15.8399 10.6182 15.8399 8.18188C15.8399 7.61461 15.789 7.06911 15.6944 6.54552L8.15991 6.54543Z"
@@ -234,7 +234,7 @@ export const LogoAnthropic = () => {
       x="0px"
       y="0px"
       viewBox="0 0 92.2 65"
-      style={{ color: 'currentcolor', fill: 'currentcolor' }}
+      style={{ color: "currentcolor", fill: "currentcolor" }}
       width="18px"
       height="18px"
     >
@@ -253,7 +253,7 @@ export const RouteIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -272,7 +272,7 @@ export const FileIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -291,7 +291,7 @@ export const LoaderIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <g clipPath="url(#clip0_2393_1490)">
         <path d="M8 0V4" stroke="currentColor" strokeWidth="1.5" />
@@ -367,7 +367,7 @@ export const UploadIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -386,7 +386,7 @@ export const MenuIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -405,7 +405,7 @@ export const PencilEditIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -424,7 +424,7 @@ export const CheckedSquare = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -443,7 +443,7 @@ export const UncheckedSquare = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <rect
         x="1"
@@ -465,7 +465,7 @@ export const MoreIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -484,7 +484,7 @@ export const TrashIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -503,7 +503,7 @@ export const InfoIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -522,7 +522,7 @@ export const ArrowUpIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -540,7 +540,7 @@ export const StopIcon = ({ size = 16 }: { size?: number }) => {
       height={size}
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -559,7 +559,7 @@ export const PaperclipIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
       className="-rotate-45"
     >
       <path
@@ -579,7 +579,7 @@ export const MoreHorizontalIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -598,7 +598,7 @@ export const MessageIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -616,7 +616,7 @@ export const CrossIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -633,7 +633,7 @@ export const CrossSmallIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -650,7 +650,7 @@ export const UndoIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -667,7 +667,7 @@ export const RedoIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -684,7 +684,7 @@ export const DeltaIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -701,7 +701,7 @@ export const PenIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -718,7 +718,7 @@ export const SummarizeIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -735,7 +735,7 @@ export const SidebarLeftIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -752,7 +752,7 @@ export const PlusIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -763,22 +763,47 @@ export const PlusIcon = ({ size = 16 }: { size?: number }) => (
   </svg>
 );
 
-export const CopyIcon = ({ size = 16 }: { size?: number }) => (
-  <svg
-    height={size}
-    strokeLinejoin="round"
-    viewBox="0 0 16 16"
-    width={size}
-    style={{ color: 'currentcolor' }}
-  >
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M2.75 0.5C1.7835 0.5 1 1.2835 1 2.25V9.75C1 10.7165 1.7835 11.5 2.75 11.5H3.75H4.5V10H3.75H2.75C2.61193 10 2.5 9.88807 2.5 9.75V2.25C2.5 2.11193 2.61193 2 2.75 2H8.25C8.38807 2 8.5 2.11193 8.5 2.25V3H10V2.25C10 1.2835 9.2165 0.5 8.25 0.5H2.75ZM7.75 4.5C6.7835 4.5 6 5.2835 6 6.25V13.75C6 14.7165 6.7835 15.5 7.75 15.5H13.25C14.2165 15.5 15 14.7165 15 13.75V6.25C15 5.2835 14.2165 4.5 13.25 4.5H7.75ZM7.5 6.25C7.5 6.11193 7.61193 6 7.75 6H13.25C13.3881 6 13.5 6.11193 13.5 6.25V13.75C13.5 13.8881 13.3881 14 13.25 14H7.75C7.61193 14 7.5 13.8881 7.5 13.75V6.25Z"
-      fill="currentColor"
-    />
-  </svg>
-);
+export function CopyIcon({ copied }: { copied: boolean }) {
+  return copied ? (
+    // Checkmark icon
+    <svg
+      className="w-4 h-4 text-green-500"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  ) : (
+    // Copy icon
+    <svg
+      className="w-4 h-4 text-zinc-500 dark:text-zinc-400"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+    >
+      <rect
+        x="9"
+        y="9"
+        width="13"
+        height="13"
+        rx="2"
+        ry="2"
+        stroke="currentColor"
+        strokeWidth={2}
+        fill="none"
+      />
+      <path
+        d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+        stroke="currentColor"
+        strokeWidth={2}
+        fill="none"
+      />
+    </svg>
+  );
+}
 
 export const ThumbUpIcon = ({ size = 16 }: { size?: number }) => (
   <svg
@@ -786,7 +811,7 @@ export const ThumbUpIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -803,7 +828,7 @@ export const ThumbDownIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -820,7 +845,7 @@ export const ChevronDownIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -837,7 +862,7 @@ export const SparklesIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       d="M2.5 0.5V0H3.5V0.5C3.5 1.60457 4.39543 2.5 5.5 2.5H6V3V3.5H5.5C4.39543 3.5 3.5 4.39543 3.5 5.5V6H3H2.5V5.5C2.5 4.39543 1.60457 3.5 0.5 3.5H0V3V2.5H0.5C1.60457 2.5 2.5 1.60457 2.5 0.5Z"
@@ -861,7 +886,7 @@ export const CheckCircleFillIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -880,7 +905,7 @@ export const GlobeIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -899,7 +924,7 @@ export const LockIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -918,7 +943,7 @@ export const EyeIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -937,7 +962,7 @@ export const ShareIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -956,7 +981,7 @@ export const CodeIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -975,7 +1000,7 @@ export const PlayIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -994,7 +1019,7 @@ export const PythonIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         d="M7.90474 0.00013087C7.24499 0.00316291 6.61494 0.0588153 6.06057 0.15584C4.42745 0.441207 4.13094 1.0385 4.13094 2.14002V3.59479H7.9902V4.07971H4.13094H2.68259C1.56099 4.07971 0.578874 4.7465 0.271682 6.01496C-0.0826597 7.4689 -0.0983767 8.37619 0.271682 9.89434C0.546012 11.0244 1.20115 11.8296 2.32276 11.8296H3.64966V10.0856C3.64966 8.82574 4.75179 7.71441 6.06057 7.71441H9.91533C10.9884 7.71441 11.845 6.84056 11.845 5.77472V2.14002C11.845 1.10556 10.9626 0.328487 9.91533 0.15584C9.25237 0.046687 8.56448 -0.00290121 7.90474 0.00013087ZM5.81768 1.17017C6.21631 1.17017 6.54185 1.49742 6.54185 1.89978C6.54185 2.30072 6.21631 2.62494 5.81768 2.62494C5.41761 2.62494 5.09351 2.30072 5.09351 1.89978C5.09351 1.49742 5.41761 1.17017 5.81768 1.17017Z"
@@ -1015,7 +1040,7 @@ export const TerminalWindowIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -1034,7 +1059,7 @@ export const TerminalIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -1053,7 +1078,7 @@ export const ClockRewind = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -1072,7 +1097,7 @@ export const LogsIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -1091,7 +1116,7 @@ export const ImageIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -1110,7 +1135,7 @@ export const FileVideoIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
@@ -1128,7 +1153,7 @@ export const FullscreenIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -1145,7 +1170,7 @@ export const DownloadIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fillRule="evenodd"
@@ -1162,7 +1187,7 @@ export const LineChartIcon = ({ size = 16 }: { size?: number }) => (
     strokeLinejoin="round"
     viewBox="0 0 16 16"
     width={size}
-    style={{ color: 'currentcolor' }}
+    style={{ color: "currentcolor" }}
   >
     <path
       fill="currentColor"
@@ -1180,12 +1205,31 @@ export const WarningIcon = ({ size = 16 }: { size?: number }) => {
       strokeLinejoin="round"
       viewBox="0 0 16 16"
       width={size}
-      style={{ color: 'currentcolor' }}
+      style={{ color: "currentcolor" }}
     >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M8.55846 0.5C9.13413 0.5 9.65902 0.829456 9.90929 1.34788L15.8073 13.5653C16.1279 14.2293 15.6441 15 14.9068 15H1.09316C0.355835 15 -0.127943 14.2293 0.192608 13.5653L6.09065 1.34787C6.34092 0.829454 6.86581 0.5 7.44148 0.5H8.55846ZM8.74997 4.75V5.5V8V8.75H7.24997V8V5.5V4.75H8.74997ZM7.99997 12C8.55226 12 8.99997 11.5523 8.99997 11C8.99997 10.4477 8.55226 10 7.99997 10C7.44769 10 6.99997 10.4477 6.99997 11C6.99997 11.5523 7.44769 12 7.99997 12Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
+
+export const LinkIcon = ({ size = 16 }: { size?: number }) => {
+  return (
+    <svg
+      height={size}
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width={size}
+      style={{ color: "currentcolor" }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7.5547 2.82843L8.97912 1.40401C10.7402 -0.356975 13.5799 -0.356975 15.341 1.40401C17.102 3.165 17.102 5.99139 15.341 7.75237L13.9166 9.17679L14.9873 10.2475L16.4117 8.82306C18.5595 6.67522 18.5595 3.47788 16.4117 1.33004C14.2639 -0.817804 11.0665 -0.817804 8.91869 1.33004L7.49427 2.75446C7.10375 3.14499 7.10375 3.77815 7.49427 4.16868L8.56066 5.23504L9.62702 4.16868C10.0175 3.77815 10.0175 3.14499 9.62702 2.75446L9.09669 2.22413L7.5547 2.82843ZM6.22842 6.03504L7.29478 7.10139L8.3649 6.03128L7.29854 4.96492L6.22842 6.03504ZM8.82843 7.5547L9.09669 7.82295L8.49239 9.36494L8.02502 8.89757C7.63449 8.50705 6.99793 8.50192 6.61157 8.88828L5.54143 9.95842L4.47507 8.89207L5.54521 7.82193C5.93157 7.43557 5.93669 6.79901 5.54617 6.40848L5.0788 5.94111L6.62079 5.33681L6.88904 5.60506L7.95917 4.53492L6.89281 3.46857L5.82268 4.53871C5.43632 4.92507 4.79976 4.92994 4.40923 4.53942L3.94186 4.07205L3.33756 5.61404L3.60581 5.88229L2.53945 6.94865L1.47309 5.88229L2.53945 4.81593L2.80771 5.08419L3.4097 3.54552C3.40985 3.54552 3.40955 3.54552 3.4097 3.54552L3.94003 3.0152L2.82843 1.90359C0.680583 4.05144 0.680584 7.24878 2.82843 9.39663L4.25284 10.8211C4.64337 11.2116 5.27653 11.2116 5.66706 10.8211L6.73719 9.75093L7.80355 10.8173L6.73342 11.8874C6.34706 12.2738 6.34218 12.9103 6.73271 13.3009L7.19676 13.765L5.65477 14.3693L5.38651 14.101L4.32015 15.1674L5.38651 16.2337L6.45664 15.1636C6.843 14.7772 7.47956 14.7724 7.87009 15.1629L8.33746 15.6303L8.94176 14.0883L8.67351 13.82L9.73987 12.7537L10.8062 13.82L9.73609 14.8902C9.34973 15.2765 9.34485 15.9131 9.73538 16.3036L10.2027 16.771L10.8047 15.2323L10.5365 14.9641L11.6028 13.8977L12.6692 14.9641L11.6028 16.0304L11.3346 15.7622L10.7325 17.3009L11.2629 17.8312C11.6534 18.2217 12.2866 18.2217 12.6771 17.8312L14.1015 16.4068C16.2494 14.2589 16.2494 11.0616 14.1015 8.91373L12.677 7.48915C12.2865 7.09863 11.6533 7.09863 11.2628 7.48916L10.1927 8.55931L9.12632 7.49295L10.1965 6.42281C10.5828 6.03645 10.5877 5.39989 10.1972 5.00936L9.73314 4.54529L11.2751 3.94099L11.5434 4.20924L12.6097 3.14288L11.5434 2.07652L10.4732 3.14666C10.0869 3.53301 9.45031 3.53789 9.05978 3.14737L8.59241 2.67999L7.98811 4.22198L8.25637 4.49024L7.19001 5.5566L6.12365 4.49024L7.19001 3.42388L6.92176 3.15562L7.5547 2.82843ZM3.60581 8.22834L4.67594 9.2947L3.60581 10.3648L2.53945 9.2947L3.60581 8.22834ZM11.3346 8.36881L12.401 7.30245L13.4673 8.36881L12.401 9.43517L11.3346 8.36881Z"
         fill="currentColor"
       />
     </svg>
