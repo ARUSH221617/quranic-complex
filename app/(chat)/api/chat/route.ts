@@ -4,6 +4,7 @@ import {
   createDataStreamResponse,
   smoothStream,
   streamText,
+  tool,
 } from "ai";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { systemPrompt } from "@/lib/ai/prompts";
@@ -24,7 +25,7 @@ import { updateDocument } from "@/lib/ai/tools/update-document";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { getWeather } from "@/lib/ai/tools/get-weather";
 import { webSearch } from "@/lib/ai/tools/web-search";
-import { fetchUrl } from "@/lib/ai/tools/fetch-url";
+import { fetchUrl as fetchUrlTool } from "@/lib/ai/tools/fetch-url";
 import { createNews } from "@/lib/ai/tools/create-news";
 import { getDocument } from "@/lib/ai/tools/get-document";
 import { isProductionEnvironment } from "@/lib/constants";
@@ -139,7 +140,7 @@ export async function POST(request: Request) {
             }),
             generateImage: generateImageTool({ session, dataStream }),
             webSearch,
-            fetchUrl,
+            fetchUrl: fetchUrlTool({ session, dataStream }),
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
