@@ -21,6 +21,7 @@ import { MessageEditor } from "./message-editor";
 import { DocumentPreview } from "./document-preview";
 import { NewsCard } from "./NewsCard";
 import WebSearchCard from "./WebSearchCard";
+import { FetchUrlCard } from "./FetchUrlCard"; // Import the new card component
 import { MessageReasoning } from "./message-reasoning";
 import { UseChatHelpers } from "@ai-sdk/react";
 
@@ -230,6 +231,8 @@ const PurePreviewMessage = ({
                         />
                       ) : toolName === "webSearch" ? (
                         <WebSearchCard result={result} />
+                      ) : toolName === "fetchUrl" ? ( // Add condition for fetchUrl
+                        <FetchUrlCard result={result} /> // Render the FetchUrlCard
                       ) : toolName === "generateVideo" ? (
                         <VideoPreview
                           result={result}
