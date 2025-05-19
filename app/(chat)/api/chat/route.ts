@@ -38,6 +38,9 @@ import { updateNews } from "@/lib/ai/tools/update-news";
 import { searchNewsByTitle } from "@/lib/ai/tools/search-news-by-title";
 import { createNewsTranslation } from "@/lib/ai/tools/create-news-translation";
 import { generateImageTool } from "@/lib/ai/tools/generate-image";
+import { generateChartTool } from "@/lib/ai/tools/generate-chart";
+import { generateMarkmapTool } from "@/lib/ai/tools/generate-markmap";
+import { generateCurrencyPriceTool } from "@/lib/ai/tools/generate-currency-price";
 
 export const maxDuration = 60;
 
@@ -115,8 +118,11 @@ export async function POST(request: Request) {
                   "searchNewsByTitle",
                   "createNewsTranslation",
                   "generateImage",
+                  "generateChart",
+                  "generateCurrencyPrice",
                   "webSearch",
                   "fetchUrl",
+                  "generateMarkmap",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
@@ -139,8 +145,14 @@ export async function POST(request: Request) {
               dataStream,
             }),
             generateImage: generateImageTool({ session, dataStream }),
+            generateChart: generateChartTool({ session, dataStream }),
+            generateCurrencyPrice: generateCurrencyPriceTool({
+              session,
+              dataStream,
+            }),
             webSearch,
             fetchUrl: fetchUrlTool({ session, dataStream }),
+            generateMarkmap: generateMarkmapTool({ session, dataStream }),
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
