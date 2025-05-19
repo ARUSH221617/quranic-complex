@@ -21,7 +21,10 @@ import { MessageEditor } from "./message-editor";
 import { DocumentPreview } from "./document-preview";
 import { NewsCard } from "./NewsCard";
 import WebSearchCard from "./WebSearchCard";
-import { FetchUrlCard } from "./FetchUrlCard"; // Import the new card component
+import { FetchUrlCard } from "./FetchUrlCard";
+import { CurrencyPriceCard } from "./CurrencyPriceCard";
+import { ChartPreview } from "./ChartPreview";
+import { MarkmapPreview } from "./MarkmapPreview"; // Import the MarkmapPreview component
 import { MessageReasoning } from "./message-reasoning";
 import { UseChatHelpers } from "@ai-sdk/react";
 
@@ -231,8 +234,14 @@ const PurePreviewMessage = ({
                         />
                       ) : toolName === "webSearch" ? (
                         <WebSearchCard result={result} />
-                      ) : toolName === "fetchUrl" ? ( // Add condition for fetchUrl
-                        <FetchUrlCard result={result} /> // Render the FetchUrlCard
+                      ) : toolName === "fetchUrl" ? (
+                        <FetchUrlCard result={result} />
+                      ) : toolName === "generateCurrencyPrice" ? (
+                        <CurrencyPriceCard result={result} />
+                      ) : toolName === "generateChart" ? (
+                        <ChartPreview result={result} />
+                      ) : toolName === "generateMarkmap" ? ( // Add case for generateMarkmap
+                        <MarkmapPreview result={result} />
                       ) : toolName === "generateVideo" ? (
                         <VideoPreview
                           result={result}
