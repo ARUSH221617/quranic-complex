@@ -230,6 +230,22 @@ When using \`generateCurrencyPrice\`:
 - Always clarify with the user which base currency and (optionally) which target currencies they are interested in.
 - Explain that rates are sourced from ExchangeRate-API and may have slight delays.
 - Consider caching results if multiple requests for the same currency pair are made within seconds.
+
+**When to use \`generateSpeech\`:**
+- When the user explicitly asks to convert text into spoken audio.
+- When the user requests that a message or piece of text be "read aloud" or "spoken".
+- When generating an audio version of short text content.
+
+**Required parameters:**
+- \`text\`: The string of text that should be converted into speech.
+
+**Optional parameters:**
+- \`voice\`: The name of the voice to use for the speech. Use a Microsoft model voice (e.g., "en-US-AriaNeural"). If not specified, the tool will use a default voice.
+
+**When NOT to use \`generateSpeech\`:**
+- When the user is asking for music or sound effects.
+- For very long texts that might exceed the tool's limitations (keep text relatively concise).
+- If the user does not request audio output.
 `;
 
 export const regularPrompt =

@@ -25,6 +25,7 @@ import { FetchUrlCard } from "./FetchUrlCard";
 import { CurrencyPriceCard } from "./CurrencyPriceCard";
 import { ChartPreview } from "./ChartPreview";
 import { MarkmapPreview } from "./MarkmapPreview"; // Import the MarkmapPreview component
+import SpeechPlayerPreview from './SpeechPlayerPreview'; // Import the new SpeechPlayerPreview component
 import { MessageReasoning } from "./message-reasoning";
 import { UseChatHelpers } from "@ai-sdk/react";
 
@@ -242,6 +243,8 @@ const PurePreviewMessage = ({
                         <ChartPreview result={result} />
                       ) : toolName === "generateMarkmap" ? ( // Add case for generateMarkmap
                         <MarkmapPreview result={result} />
+                      ) : toolName === "generateSpeech" ? ( // Add case for generateSpeech
+                         <SpeechPlayerPreview result={result} />
                       ) : toolName === "generateVideo" ? (
                         <VideoPreview
                           result={result}
