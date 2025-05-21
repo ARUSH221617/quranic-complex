@@ -21,6 +21,7 @@ import {
 } from "@/lib/utils";
 import { generateTitleFromUserMessage } from "../../actions";
 import { createDocument } from "@/lib/ai/tools/create-document";
+import { generateSpeechTool } from "@/lib/ai/tools/generate-speech";
 import { updateDocument } from "@/lib/ai/tools/update-document";
 import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
 import { getWeather } from "@/lib/ai/tools/get-weather";
@@ -123,6 +124,7 @@ export async function POST(request: Request) {
                   "webSearch",
                   "fetchUrl",
                   "generateMarkmap",
+                  "generateSpeech",
                 ],
           experimental_transform: smoothStream({ chunking: "word" }),
           experimental_generateMessageId: generateUUID,
@@ -153,6 +155,7 @@ export async function POST(request: Request) {
             webSearch,
             fetchUrl: fetchUrlTool({ session, dataStream }),
             generateMarkmap: generateMarkmapTool({ session, dataStream }),
+            generateSpeech: generateSpeechTool({ session, dataStream }),
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
