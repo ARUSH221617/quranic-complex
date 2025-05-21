@@ -18,6 +18,7 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  transpilePackages: ["@lobehub/tts"],
   turbopack: {
     rules: {
       "*.svg": {
