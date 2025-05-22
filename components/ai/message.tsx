@@ -23,6 +23,7 @@ import { NewsCard } from "./NewsCard";
 import WebSearchCard from "./WebSearchCard";
 import { FetchUrlCard } from "./FetchUrlCard";
 import { CurrencyPriceCard } from "./CurrencyPriceCard";
+import { CryptoPriceCard } from "./CryptoPriceCard";
 import { ChartPreview } from "./ChartPreview";
 import { MarkmapPreview } from "./MarkmapPreview"; // Import the MarkmapPreview component
 import SpeechPlayerPreview from './SpeechPlayerPreview'; // Import the new SpeechPlayerPreview component
@@ -239,6 +240,8 @@ const PurePreviewMessage = ({
                         <FetchUrlCard result={result} />
                       ) : toolName === "generateCurrencyPrice" ? (
                         <CurrencyPriceCard result={result} />
+                      ) : toolName === "generateCryptoPrice" ? (
+                        <CryptoPriceCard result={result} />
                       ) : toolName === "generateChart" ? (
                         <ChartPreview result={result} />
                       ) : toolName === "generateMarkmap" ? ( // Add case for generateMarkmap

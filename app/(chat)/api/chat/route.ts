@@ -42,6 +42,7 @@ import { generateImageTool } from "@/lib/ai/tools/generate-image";
 import { generateChartTool } from "@/lib/ai/tools/generate-chart";
 import { generateMarkmapTool } from "@/lib/ai/tools/generate-markmap";
 import { generateCurrencyPriceTool } from "@/lib/ai/tools/generate-currency-price";
+import { generateCryptoPriceTool } from "@/lib/ai/tools/generateCryptoPrice";
 
 export const maxDuration = 60;
 
@@ -121,6 +122,7 @@ export async function POST(request: Request) {
                   "generateImage",
                   "generateChart",
                   "generateCurrencyPrice",
+                  "generateCryptoPrice",
                   "webSearch",
                   "fetchUrl",
                   "generateMarkmap",
@@ -149,6 +151,10 @@ export async function POST(request: Request) {
             generateImage: generateImageTool({ session, dataStream }),
             generateChart: generateChartTool({ session, dataStream }),
             generateCurrencyPrice: generateCurrencyPriceTool({
+              session,
+              dataStream,
+            }),
+            generateCryptoPrice: generateCryptoPriceTool({
               session,
               dataStream,
             }),

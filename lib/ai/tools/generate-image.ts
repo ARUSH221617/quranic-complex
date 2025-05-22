@@ -13,12 +13,12 @@ const generateImageSchema = z.object({
   prompt: z
     .string()
     .describe("The text prompt describing the image to generate."),
-  outputDir: z
+  filenamePrefix: z
     .string()
     .optional()
-    .default("public/images/ai-generated")
+    .default("ai-generated")
     .describe(
-      "Optional: Directory within the project's 'public' folder where the generated image will be saved. Defaults to 'public/generated'.",
+      "Optional: prefix for the generated image filename. Defaults to 'ai-generated'."
     ),
 });
 
@@ -30,9 +30,9 @@ interface GenerateImageProps {
 export const generateImageTool = ({ dataStream }: GenerateImageProps) =>
   tool({
     description:
-      "Generate an image based on a text prompt using an AI model. The image will be saved to a specified directory within the public folder.",
+      "Generate an image based on a text prompt using an AI model. The image will be saved to Vercel Blob storage.",
     parameters: generateImageSchema,
-    execute: async ({ prompt, outputDir }) => {
+    execute: async ({ prompt, filenamePrefix }) => {
       dataStream.writeData({
         type: "image_generation_status",
         content: "Starting image generation...",
@@ -41,7 +41,7 @@ export const generateImageTool = ({ dataStream }: GenerateImageProps) =>
       try {
         const result: ImageGenerationResult = await generateImage({
           prompt,
-          outputDir, // Pass the potentially undefined outputDir to generateImage
+          filenamePrefix,
         });
 
         dataStream.writeData({
@@ -52,7 +52,7 @@ export const generateImageTool = ({ dataStream }: GenerateImageProps) =>
         dataStream.writeData({
           type: "image_generated",
           content: JSON.stringify({
-            imagePath: result.imagePath, // This is the public URL path
+            imageUrl: result.imageUrl,
           }),
         });
 
@@ -61,7 +61,7 @@ export const generateImageTool = ({ dataStream }: GenerateImageProps) =>
           success: true,
           message: "Image generated successfully.",
           image: {
-            path: result.imagePath, // This is the public URL path
+            url: result.imageUrl,
             modelResponse: result.modelResponse,
           },
         };

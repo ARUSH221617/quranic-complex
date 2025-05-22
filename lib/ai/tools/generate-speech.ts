@@ -7,23 +7,6 @@ import { Session } from "next-auth";
 
 // Define valid Gemini voices (preset options)
 const validVoices = ["Zephyr", "Puck", "Lapetus"] as const;
-type VoiceName = (typeof validVoices)[number];
-
-// Define types for stream messages
-type StreamMessage = {
-  type:
-    | "speech_status"
-    | "speech_generated"
-    | "speech_generation_error"
-    | "finish";
-  content: string;
-};
-
-interface WavConversionOptions {
-  numChannels: number;
-  sampleRate: number;
-  bitsPerSample: number;
-}
 
 // Define the parameter schema for the generateSpeech tool
 const generateSpeechSchema = z.object({
@@ -41,64 +24,6 @@ const generateSpeechSchema = z.object({
 interface GenerateSpeechProps {
   session: Session;
   dataStream: DataStreamWriter;
-}
-
-// Convert raw audio data to WAV format
-function convertToWav(rawData: string, mimeType: string) {
-  const options = parseMimeType(mimeType);
-  const wavHeader = createWavHeader(rawData.length, options);
-  const buffer = Buffer.from(rawData, "base64");
-  return Buffer.concat([wavHeader, buffer]);
-}
-
-function parseMimeType(mimeType: string) {
-  const [fileType, ...params] = mimeType.split(";").map((s) => s.trim());
-  const [_, format] = fileType.split("/");
-
-  const options: Partial<WavConversionOptions> = {
-    numChannels: 1,
-    sampleRate: 44100, // Default sample rate if not specified
-    bitsPerSample: 16, // Default bits per sample if not specified
-  };
-
-  if (format && format.startsWith("L")) {
-    const bits = parseInt(format.slice(1), 10);
-    if (!isNaN(bits)) {
-      options.bitsPerSample = bits;
-    }
-  }
-
-  for (const param of params) {
-    const [key, value] = param.split("=").map((s) => s.trim());
-    if (key === "rate") {
-      options.sampleRate = parseInt(value, 10);
-    }
-  }
-
-  return options as WavConversionOptions;
-}
-
-function createWavHeader(dataLength: number, options: WavConversionOptions) {
-  const { numChannels, sampleRate, bitsPerSample } = options;
-  const byteRate = (sampleRate * numChannels * bitsPerSample) / 8;
-  const blockAlign = (numChannels * bitsPerSample) / 8;
-  const buffer = Buffer.alloc(44);
-
-  buffer.write("RIFF", 0); // ChunkID
-  buffer.writeUInt32LE(36 + dataLength, 4); // ChunkSize
-  buffer.write("WAVE", 8); // Format
-  buffer.write("fmt ", 12); // Subchunk1ID
-  buffer.writeUInt32LE(16, 16); // Subchunk1Size (PCM)
-  buffer.writeUInt16LE(1, 20); // AudioFormat (1 = PCM)
-  buffer.writeUInt16LE(numChannels, 22); // NumChannels
-  buffer.writeUInt32LE(sampleRate, 24); // SampleRate
-  buffer.writeUInt32LE(byteRate, 28); // ByteRate
-  buffer.writeUInt16LE(blockAlign, 32); // BlockAlign
-  buffer.writeUInt16LE(bitsPerSample, 34); // BitsPerSample
-  buffer.write("data", 36); // Subchunk2ID
-  buffer.writeUInt32LE(dataLength, 40); // Subchunk2Size
-
-  return buffer;
 }
 
 // Create the generateSpeech tool factory function
@@ -205,16 +130,9 @@ export const generateSpeechTool = ({
           throw new Error("No audio data received from Gemini API");
         }
 
-        // Convert audio to WAV if needed
-        let buffer: Buffer;
-        let fileExtension = mime.getExtension(audioMimeType);
-
-        if (!fileExtension) {
-          fileExtension = "wav";
-          buffer = convertToWav(audioData, audioMimeType);
-        } else {
-          buffer = Buffer.from(audioData, "base64");
-        }
+        // Use the audio data as is
+        const fileExtension = mime.getExtension(audioMimeType) || "mp3";
+        const buffer = Buffer.from(audioData, "base64");
 
         // Generate a unique filename
         const filename = `speech-${Date.now()}-${Math.random()

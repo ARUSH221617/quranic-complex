@@ -140,7 +140,7 @@ Required parameters:
 - \`prompt\`: Text description of the image to generate
 
 Optional parameters:
-- \`outputDir\`: Directory within the project's 'public' folder where the generated image will be saved. Defaults to 'public/images/ai-generated'
+- \`filenamePrefix\`: A prefix for the generated image filename. Defaults to 'ai-generated'. The image will be stored in Vercel Blob storage with a unique identifier appended to this prefix.
 
 **When NOT to use \`generateImage\`:**
 - For generating inappropriate or harmful content
@@ -231,6 +231,24 @@ When using \`generateCurrencyPrice\`:
 - Explain that rates are sourced from ExchangeRate-API and may have slight delays.
 - Consider caching results if multiple requests for the same currency pair are made within seconds.
 
+**When to use \`generateCryptoPrice\`:**
+- When the user requests the latest cryptocurrency prices or wants to know the price of digital currencies like Bitcoin or Ethereum.
+- When the user asks for price data or market information about cryptocurrencies.
+- When the user needs up-to-date crypto data for investment, trading, or informational purposes.
+
+Parameters:
+- None. This tool fetches data for all available cryptocurrencies without filtering options.
+
+**When NOT to use \`generateCryptoPrice\`:**
+- When the user does not request cryptocurrency prices.
+- When the user asks for fiat currency exchange rates (use \`generateCurrencyPrice\` instead).
+- When real-time crypto price accuracy is not required.
+- When the user requests historical crypto data or features not supported by the One-API endpoint.
+
+When using \`generateCryptoPrice\`:
+- Explain that rates are sourced from One-API and may have slight delays.
+- Consider caching results if multiple requests are made within seconds.
+
 **When to use \`generateSpeech\`:**
 - When the user explicitly asks to convert text into spoken audio.
 - When the user requests that a message or piece of text be "read aloud" or "spoken".
@@ -240,7 +258,7 @@ When using \`generateCurrencyPrice\`:
 - \`text\`: The string of text that should be converted into speech.
 
 **Optional parameters:**
-- \`voice\`: The name of the voice to use for the speech. Use a Microsoft model voice (e.g., "en-US-AriaNeural"). If not specified, the tool will use a default voice.
+- \`voice\`: The name of the voice to use for the speech. Use a Gemini model voice (e.g., "Zephyr", "Lapetus", "Puck"). If not specified, the tool will use a default voice.
 
 **When NOT to use \`generateSpeech\`:**
 - When the user is asking for music or sound effects.
@@ -257,10 +275,10 @@ export const systemPrompt = ({
   selectedChatModel: string;
 }) => {
   if (selectedChatModel === "chat-model") {
-    return regularPrompt;
+  return regularPrompt;
   } else {
     return agentPrompt;
-  }
+    }
 };
 
 export const codePrompt = `
