@@ -6,7 +6,7 @@ import { put } from "@vercel/blob";
 import { Session } from "next-auth";
 
 // Define valid Gemini voices (preset options)
-const validVoices = ["Zephyr", "Puck", "Lapetus"] as const;
+const validVoices = ["Zephyr", "Puck", "Iapetus"] as const;
 
 // Define the parameter schema for the generateSpeech tool
 const generateSpeechSchema = z.object({
@@ -14,9 +14,9 @@ const generateSpeechSchema = z.object({
   voice: z
     .enum(validVoices)
     .optional()
-    .default("Lapetus")
+    .default("Iapetus")
     .describe(
-      "Optional: The name of the voice to use. Must be one of: Lapetus or Puck"
+      "Optional: The name of the voice to use. Must be one of: Iapetus or Puck"
     ),
 });
 
@@ -36,7 +36,7 @@ export const generateSpeechTool = ({
       "Convert text into speech audio using the Google Gemini TTS model. Generates an MP3 audio file and returns its public URL.",
     parameters: generateSpeechSchema,
     execute: async (args) => {
-      const { text, voice = "Lapetus" } = args;
+      const { text, voice = "Iapetus" } = args;
 
       // Validate input text
       if (!text || text.trim().length === 0) {
