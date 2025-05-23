@@ -26,7 +26,7 @@ import { CurrencyPriceCard } from "./CurrencyPriceCard";
 import { CryptoPriceCard } from "./CryptoPriceCard";
 import { ChartPreview } from "./ChartPreview";
 import { MarkmapPreview } from "./MarkmapPreview"; // Import the MarkmapPreview component
-import SpeechPlayerPreview from './SpeechPlayerPreview'; // Import the new SpeechPlayerPreview component
+import SpeechPlayerPreview from "./SpeechPlayerPreview"; // Import the new SpeechPlayerPreview component
 import { MessageReasoning } from "./message-reasoning";
 import { UseChatHelpers } from "@ai-sdk/react";
 
@@ -64,7 +64,7 @@ const PurePreviewMessage = ({
             {
               "w-full": mode === "edit",
               "group-data-[role=user]/message:w-fit": mode !== "edit",
-            },
+            }
           )}
         >
           {message.role === "assistant" && (
@@ -195,6 +195,8 @@ const PurePreviewMessage = ({
                         <VideoPreview isLoading={true} args={args} />
                       ) : toolName === "generateImage" ? (
                         <ImagePreview isLoading={true} args={args} />
+                      ) : toolName === "generateSpeech" ? (
+                        <SpeechPlayerPreview isLoading={true} result={null} />
                       ) : null}
                     </div>
                   );
@@ -247,7 +249,7 @@ const PurePreviewMessage = ({
                       ) : toolName === "generateMarkmap" ? ( // Add case for generateMarkmap
                         <MarkmapPreview result={result} />
                       ) : toolName === "generateSpeech" ? ( // Add case for generateSpeech
-                         <SpeechPlayerPreview result={result} />
+                        <SpeechPlayerPreview result={result} />
                       ) : toolName === "generateVideo" ? (
                         <VideoPreview
                           result={result}
@@ -293,7 +295,7 @@ export const PreviewMessage = memo(
     if (!equal(prevProps.vote, nextProps.vote)) return false;
 
     return true;
-  },
+  }
 );
 
 export const ThinkingMessage = () => {
@@ -312,7 +314,7 @@ export const ThinkingMessage = () => {
           "flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl",
           {
             "group-data-[role=user]/message:bg-muted": true,
-          },
+          }
         )}
       >
         <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">

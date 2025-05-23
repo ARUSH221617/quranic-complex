@@ -16,11 +16,13 @@ interface GenerateSpeechToolResult {
 }
 
 interface SpeechPlayerPreviewProps {
-  result: GenerateSpeechToolResult | any; // Allow any for flexibility but prefer defined type
+  result: GenerateSpeechToolResult | any;
+  isLoading?: boolean;
 }
 
 const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
   result,
+  isLoading,
 }) => {
   // Extract audioUrl and status from the tool result
   const audioUrl = result?.audioUrl as string | undefined;
@@ -34,18 +36,52 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
     src: audioUrl || "",
   });
 
-  // Determine if we have valid audio properties to pass to AudioPlayer.
-  // audioProps will be an empty object ({}) if src is null/empty when useAudioPlayer is called.
-  // Check if audioProps is not empty AND has a valid 'audio' object property, typical for the hook's output
-  const hasAudioProps =
-    Object.keys(audioProps).length > 0 && (audioProps as any).audio;
-
   const containerStyle = {
     marginTop: "16px",
     borderRadius: "8px",
     overflow: "hidden", // Ensure content doesn't bleed out of the rounded corners.
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Subtle shadow for depth.
   };
+
+  // Show loading spinner if isLoading is true (tool call state)
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          ...containerStyle,
+          padding: "16px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center", // Center horizontally
+        }}
+      >
+        <div
+          style={{
+            border: "4px solid #f3f3f3",
+            borderTop: "4px solid #3498db", // A more modern blue color
+            borderRadius: "50%",
+            width: "24px", // Slightly larger spinner
+            height: "24px",
+            animation: "spin 1s linear infinite",
+            marginRight: "12px", // Increased spacing
+          }}
+        />
+        <span style={{ color: "#555", fontSize: "16px" }}>
+          Generating audio...
+        </span>
+        <style jsx>{`
+          @keyframes spin {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   // Render based on the state of the tool result and audio loading.
   if (success === false) {
