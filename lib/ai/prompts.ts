@@ -258,7 +258,7 @@ When using \`generateCryptoPrice\`:
 - \`text\`: The string of text that should be converted into speech.
 
 **Optional parameters:**
-- \`voice\`: The name of the voice to use for the speech. Use a Gemini model voice (e.g., "Zephyr", "Lapetus", "Puck"). If not specified, the tool will use a default voice.
+- \`voice\`: The name of the voice to use for the speech. Use a Gemini model voice (e.g., "Zephyr", "Iapetus", "Puck"). If not specified, the tool will use a default voice.
 
 **When NOT to use \`generateSpeech\`:**
 - When the user is asking for music or sound effects.
