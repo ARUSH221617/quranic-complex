@@ -8,7 +8,7 @@ interface ImageGenerationResult {
   success: boolean;
   message: string;
   image?: {
-    path: string;
+    url: string;
     modelResponse?: any;
   };
   errorDetails?: string;
@@ -62,11 +62,11 @@ export function ImagePreview({ isLoading, result, args }: ImagePreviewProps) {
         <div className="font-medium">{result.success ? "Generated Image" : "Generation Failed"}</div>
       </div>
       <div className="p-4 bg-muted dark:bg-muted/50">
-        {result.success && result.image?.path && (
+        {result.success && result.image?.url && (
           <div className="w-full">
             <div className="relative group">
               <img
-                src={result.image.path}
+                src={result.image.url}
                 alt={args?.prompt || "Generated image"}
                 className="w-full rounded-lg bg-background object-contain"
               />
@@ -78,9 +78,9 @@ export function ImagePreview({ isLoading, result, args }: ImagePreviewProps) {
                       variant="secondary"
                       className="h-8 w-8"
                       onClick={() => {
-                        if (result.image?.path) {
+                        if (result.image?.url) {
                           const link = document.createElement('a');
-                          link.href = result.image.path;
+                          link.href = result.image.url;
                           link.download = `generated-image-${Date.now()}.png`;
                           document.body.appendChild(link);
                           link.click();
