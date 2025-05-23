@@ -3,8 +3,9 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import path from "path";
-import fs from "fs";
+// import path from "path"; // No longer needed
+// import fs from "fs"; // No longer needed
+import { put } from '@vercel/blob';
 
 // Schema for request validation
 const createNewsSchema = z.object({
@@ -19,7 +20,8 @@ const createNewsSchema = z.object({
   locale: z.enum(["en", "fa", "ar"]).default("en"),
 });
 
-// Helper function to handle file saving
+// Helper function to handle file saving (now handled by Vercel Blob)
+/*
 async function saveFile(
   file: File | null,
   uploadSubDir: string,
@@ -42,6 +44,7 @@ async function saveFile(
   console.log(`Saved new file: ${filePath} (relative: ${relativePath})`);
   return relativePath;
 }
+*/
 
 export async function createNews(data: FormData) {
   try {
@@ -85,13 +88,36 @@ export async function createNews(data: FormData) {
     }
 
     // Save image if provided
-    const imagePath = imageFile ? await saveFile(imageFile, "news", "news") : null;
+    let imagePath: string | null = null;
+    if (imageFile) {
+      if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        console.error('BLOB_READ_WRITE_TOKEN is not set.');
+        return {
+          success: false,
+          error: 'Missing Blob storage configuration. Cannot upload image.',
+        };
+      }
+      try {
+        const blob = await put(`news/${Date.now()}-${imageFile.name}`, imageFile, {
+          access: 'public',
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        });
+        imagePath = blob.url; // Store the URL from Vercel Blob
+        console.log(`Uploaded to Vercel Blob: ${imagePath}`);
+      } catch (uploadError: any) {
+        console.error('Error uploading to Vercel Blob:', uploadError);
+        return {
+          success: false,
+          error: `Failed to upload image: ${uploadError.message || 'Unknown error'}`,
+        };
+      }
+    }
 
     // Create news with translation
     const news = await prisma.news.create({
       data: {
         slug: validatedData.slug,
-        image: imagePath,
+        image: imagePath, // This will be the blob URL or null
         date: validatedData.date,
         translations: {
           create: {

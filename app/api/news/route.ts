@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import path from "path";
-import fs from "fs";
+// import path from "path"; // No longer needed
+// import fs from "fs"; // No longer needed
+import { put } from '@vercel/blob';
 
-// Helper function to handle file saving
+// Helper function to handle file saving (now handled by Vercel Blob)
+/*
 async function saveFile(
   file: File | null,
   uploadSubDir: string,
@@ -29,6 +31,7 @@ async function saveFile(
   console.log(`Saved new file: ${filePath} (relative: ${relativePath})`);
   return relativePath;
 }
+*/
 
 // Schema for POST request validation
 const createNewsSchema = z.object({
@@ -173,15 +176,36 @@ export async function POST(request: NextRequest) {
     }
 
     // Save image if provided
-    const imagePath = imageFile
-      ? await saveFile(imageFile, "news", "news")
-      : null;
+    let imagePath: string | null = null;
+    if (imageFile) {
+      if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        console.error('BLOB_READ_WRITE_TOKEN is not set.');
+        return NextResponse.json(
+          { message: 'Missing Blob storage configuration.' },
+          { status: 500 }
+        );
+      }
+      try {
+        const blob = await put(`news/${Date.now()}-${imageFile.name}`, imageFile, {
+          access: 'public',
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        });
+        imagePath = blob.url; // Store the URL from Vercel Blob
+        console.log(`Uploaded to Vercel Blob: ${imagePath}`);
+      } catch (uploadError) {
+        console.error('Error uploading to Vercel Blob:', uploadError);
+        return NextResponse.json(
+          { message: 'Failed to upload image.' },
+          { status: 500 }
+        );
+      }
+    }
 
     // Create news with translation
     const news = await prisma.news.create({
       data: {
         slug: validatedData.slug,
-        image: imagePath,
+        image: imagePath, // This will be the blob URL or null
         date: validatedData.date,
         translations: {
           create: {
