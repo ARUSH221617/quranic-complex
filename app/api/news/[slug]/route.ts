@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import path from "path";
-import fs from "fs";
+// import path from "path"; // No longer needed
+// import fs from "fs"; // No longer needed
+import { put, del } from '@vercel/blob';
 
-// Helper function to handle file saving and old file deletion
+// Helper function to handle file saving and old file deletion (now handled by Vercel Blob)
+/*
 async function saveFile(
   file: File | null,
   uploadSubDir: string,
@@ -44,6 +46,7 @@ async function saveFile(
   console.log(`Saved new file: ${filePath} (relative: ${relativePath})`);
   return relativePath; // Return the relative path for DB storage
 }
+*/
 
 // Define the type for the final formatted output
 interface FormattedNews {
@@ -203,7 +206,15 @@ export async function PATCH(
 
     const imageFile = formData.get("image") as File | null;
     const removeImage = formData.get("remove_image") === "true";
-    let newImageUrl: string | null | undefined = undefined;
+    let newImageUrl: string | null | undefined = undefined; // undefined means no change in image
+
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      console.error('BLOB_READ_WRITE_TOKEN is not set.');
+      return NextResponse.json(
+        { message: 'Missing Blob storage configuration.' },
+        { status: 500 }
+      );
+    }
 
     if (imageFile) {
       // Validate image file if provided
@@ -221,35 +232,50 @@ export async function PATCH(
           { status: 400 },
         );
       }
-    }
 
-    if (removeImage) {
-      // Handle image deletion
+      // New image provided, delete old one from Blob if it exists
       if (existingNews.image) {
-        const oldFilePath = path.join(
-          process.cwd(),
-          "public",
-          existingNews.image,
-        );
         try {
-          await fs.promises.unlink(oldFilePath);
-          console.log(`Deleted old image file: ${oldFilePath}`);
-        } catch (err: any) {
-          // Only log error if file exists but couldn't be deleted
-          if (err.code !== "ENOENT") {
-            console.error(`Error deleting old image file ${oldFilePath}:`, err);
-          }
+          await del(existingNews.image, { token: process.env.BLOB_READ_WRITE_TOKEN });
+          console.log(`Deleted old blob: ${existingNews.image}`);
+        } catch (e: any) {
+          // Log error but continue, as replacing is the main goal
+          console.error("Failed to delete old blob, continuing with upload:", e.message);
         }
       }
-      newImageUrl = null;
-    } else if (imageFile) {
-      // Save new image and get its path
-      newImageUrl = await saveFile(
-        imageFile,
-        "news",
-        "news",
-        existingNews.image,
-      );
+      // Upload new image to Blob
+      try {
+        const blob = await put(`news/${Date.now()}-${imageFile.name}`, imageFile, {
+          access: 'public',
+          token: process.env.BLOB_READ_WRITE_TOKEN,
+        });
+        newImageUrl = blob.url;
+        console.log(`Uploaded new blob: ${newImageUrl}`);
+      } catch (e: any) {
+        console.error("Failed to upload new blob:", e.message);
+        return NextResponse.json(
+          { message: `Failed to upload new image: ${e.message}` },
+          { status: 500 },
+        );
+      }
+    } else if (removeImage) {
+      // remove_image flag is true, delete existing image from Blob if it exists
+      if (existingNews.image) {
+        try {
+          await del(existingNews.image, { token: process.env.BLOB_READ_WRITE_TOKEN });
+          console.log(`Deleted blob due to remove_image flag: ${existingNews.image}`);
+          newImageUrl = null; // Explicitly set to null for DB update
+        } catch (e: any) {
+          console.error("Failed to delete blob on removal:", e.message);
+          // Depending on policy, you might want to return an error or just log
+          return NextResponse.json(
+            { message: `Failed to delete image: ${e.message}` },
+            { status: 500 },
+          );
+        }
+      } else {
+        newImageUrl = null; // No existing image, but remove_image was true, ensure it's null
+      }
     }
 
     // --- 4. Prepare News Data (Slug & Image) ---
@@ -487,16 +513,22 @@ export async function DELETE(
       );
     }
 
-    // If there's an associated image, delete it
+    // If there's an associated image (Vercel Blob URL), delete it from Blob
     if (newsItem.image) {
-      const imagePath = path.join(process.cwd(), "public", newsItem.image);
-      try {
-        await fs.promises.unlink(imagePath);
-        console.log(`Deleted image file: ${imagePath}`);
-      } catch (err: any) {
-        // Only log error if file exists but couldn't be deleted
-        if (err.code !== "ENOENT") {
-          console.error(`Error deleting image file ${imagePath}:`, err);
+      if (!process.env.BLOB_READ_WRITE_TOKEN) {
+        console.error('BLOB_READ_WRITE_TOKEN is not set. Cannot delete blob.');
+        // Decide if this should be a hard error or just a warning
+        // For now, log and proceed with DB deletion
+      } else {
+        try {
+          await del(newsItem.image, { token: process.env.BLOB_READ_WRITE_TOKEN });
+          console.log(`Deleted blob from Vercel Blob: ${newsItem.image}`);
+        } catch (e: any) {
+          // Log the error but proceed with deleting the news item from DB
+          // as the primary operation is to delete the news record.
+          console.error(`Error deleting blob ${newsItem.image} from Vercel Blob: ${e.message}`);
+          // Optionally, you could return an error if blob deletion is critical
+          // return NextResponse.json({ message: `Failed to delete image from storage: ${e.message}` }, { status: 500 });
         }
       }
     }
