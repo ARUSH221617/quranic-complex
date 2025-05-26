@@ -2,7 +2,6 @@ import "@/app/globals.css";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import SessionWrapper from "@/components/SessionWrapper";
-import DashboardLayoutClient from "./DashboardLayoutClient";
 import type { Metadata } from "next";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -25,9 +24,7 @@ export default async function RootLayout({
       <body>
         <Toaster />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <SessionWrapper>
-            <DashboardLayoutClient>{children}</DashboardLayoutClient>
-          </SessionWrapper>
+          <SessionWrapper>{children}</SessionWrapper>
         </NextIntlClientProvider>
       </body>
     </html>
