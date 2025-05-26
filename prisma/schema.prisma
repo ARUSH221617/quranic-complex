@@ -72,6 +72,10 @@ model User {
   chats       Chat[]
   documents   Document[]
   suggestions Suggestion[] // Relation for suggestions linked to the user (as owner)
+
+  StudentCourseProgress StudentCourseProgress[] @relation("UserCourseProgresses")
+
+  Course Course[] @relation("UserStudentCourses")
 }
 
 enum QuranicStudyLevel {
@@ -312,4 +316,110 @@ model Suggestion {
 
   @@index([documentId, documentCreatedAt]) // Index for filtering
   @@index([userId])
+}
+
+// --- Student Dashboard Models ---
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum CourseType {
+  ONLINE
+  OFFLINE
+}
+
+enum CourseVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+model Course {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String?
+  userId      String
+  user        User             @relation("UserStudentCourses", fields: [userId], references: [id], onDelete: Cascade)
+  lessons     CourseLesson[]
+  status      CourseStatus     @default(DRAFT)
+  type        CourseType       @default(OFFLINE)
+  visibility  CourseVisibility @default(PUBLIC)
+
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  studentCourseProgress StudentCourseProgress? @relation("CourseProgress") // Renamed for clarity and consistency
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([visibility])
+}
+
+model CourseLesson {
+  id       String   @id @default(cuid())
+  topic    String
+  date     DateTime
+  time     String // e.g., "10:00 AM"
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+}
+
+model DashboardAnnouncement {
+  id        String   @id @default(cuid())
+  title     String
+  content   String? // Optional longer content
+  date      DateTime // Date of announcement or event it refers to
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Future consideration: target specific users or courses
+  // userId String?
+  // user   User? @relation(fields: [userId], references: [id])
+  // @@index([userId])
+}
+
+// --- Student Progress Models ---
+
+model StudentCourseProgress {
+  id                   String   @id @default(cuid())
+  completionPercentage Int
+  lastUpdatedAt        DateTime @updatedAt
+
+  userId String
+  user   User   @relation("UserCourseProgresses", fields: [userId], references: [id], onDelete: Cascade)
+
+  studentCourseId String @unique // A student has only one progress entry per course
+  studentCourse   Course @relation("CourseProgress", fields: [studentCourseId], references: [id], onDelete: Cascade)
+
+  completedItems StudentProgressItem[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, studentCourseId], name: "userCourse") // Ensure a user has only one progress object per course
+  @@index([userId])
+  @@index([studentCourseId])
+}
+
+model StudentProgressItem {
+  id          String    @id @default(cuid())
+  itemName    String // e.g., "Lesson 1: Introduction", "Quiz 2: Basics"
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+  grade       String? // e.g., "A+", "85%", or a numeric score as string
+
+  courseProgressId String
+  courseProgress   StudentCourseProgress @relation(fields: [courseProgressId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseProgressId])
 }
