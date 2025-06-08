@@ -4,7 +4,6 @@ import {
   createDataStreamResponse,
   smoothStream,
   streamText,
-  tool,
 } from "ai";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { systemPrompt } from "@/lib/ai/prompts";
