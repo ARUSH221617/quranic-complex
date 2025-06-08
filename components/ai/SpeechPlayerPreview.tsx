@@ -1,18 +1,13 @@
 "use client";
 
-import {
-  AudioPlayer,
-  useAudioPlayer,
-  AudioVisualizer,
-} from "@lobehub/tts/react";
-import React from "react"; // Import React if needed for JSX transformation
+import { AudioPlayer, useAudioPlayer } from "@lobehub/tts/react";
+import React, { memo } from "react";
 
-// Define the expected type for the result prop based on the generateSpeech tool's return
 interface GenerateSpeechToolResult {
   success: boolean;
   message: string;
-  audioUrl?: string; // URL of the generated audio file on success
-  errorDetails?: string; // Error message on failure
+  audioUrl?: string;
+  errorDetails?: string;
 }
 
 interface SpeechPlayerPreviewProps {
@@ -24,14 +19,10 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
   result,
   isLoading,
 }) => {
-  // Extract audioUrl and status from the tool result
   const audioUrl = result?.audioUrl as string | undefined;
   const success = result?.success;
   const errorDetails = result?.errorDetails;
 
-  // Use the useAudioPlayer hook with the URL provided by the tool result.
-  // Pass the URL within an options object as required by the hook's type definition.
-  // If audioUrl is undefined, pass an empty string to avoid type issues.
   const { isLoading: audioLoading, ...audioProps } = useAudioPlayer({
     src: audioUrl || "",
   });
@@ -39,11 +30,10 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
   const containerStyle = {
     marginTop: "16px",
     borderRadius: "8px",
-    overflow: "hidden", // Ensure content doesn't bleed out of the rounded corners.
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)", // Subtle shadow for depth.
+    overflow: "hidden",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   };
 
-  // Show loading spinner if isLoading is true (tool call state)
   if (isLoading) {
     return (
       <div
@@ -52,18 +42,18 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
           padding: "16px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center", // Center horizontally
+          justifyContent: "center",
         }}
       >
         <div
           style={{
             border: "4px solid #f3f3f3",
-            borderTop: "4px solid #3498db", // A more modern blue color
+            borderTop: "4px solid #3498db",
             borderRadius: "50%",
-            width: "24px", // Slightly larger spinner
+            width: "24px",
             height: "24px",
             animation: "spin 1s linear infinite",
-            marginRight: "12px", // Increased spacing
+            marginRight: "12px",
           }}
         />
         <span style={{ color: "#555", fontSize: "16px" }}>
@@ -83,15 +73,13 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
     );
   }
 
-  // Render based on the state of the tool result and audio loading.
   if (success === false) {
-    // Enhanced error message with an icon for better UX.
     return (
       <div
         style={{
           ...containerStyle,
           backgroundColor: "#ffe6e6",
-          color: "#8B0000", // Darker red for better readability
+          color: "#8B0000",
           padding: "12px",
           display: "flex",
           alignItems: "center",
@@ -106,9 +94,7 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
     );
   }
 
-  // If successful and audioUrl is available, render the player
   if (success === true && audioUrl) {
-    // If audio is still loading even after getting the URL, show a loading indicator
     if (audioLoading) {
       return (
         <div
@@ -117,18 +103,18 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
             padding: "16px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center", // Center horizontally
+            justifyContent: "center",
           }}
         >
           <div
             style={{
               border: "4px solid #f3f3f3",
-              borderTop: "4px solid #3498db", // A more modern blue color
+              borderTop: "4px solid #3498db",
               borderRadius: "50%",
-              width: "24px", // Slightly larger spinner
+              width: "24px",
               height: "24px",
               animation: "spin 1s linear infinite",
-              marginRight: "12px", // Increased spacing
+              marginRight: "12px",
             }}
           />
           <span style={{ color: "#555", fontSize: "16px" }}>
@@ -148,30 +134,25 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
       );
     }
 
-    // If successful and audio is loaded, show the player
     return (
       <div style={containerStyle}>
-        {/* Pass the collected audio properties and the hook's loading state */}
         <AudioPlayer
+          key={audioUrl}
           audio={audioProps}
-          isLoading={audioLoading} // Pass loading state from hook (though player might have its own)
+          isLoading={audioLoading}
           style={{ width: "100%" }}
-          autoplay={true} // Autoplay the generated speech
-          allowPause={true} // Allow user to pause playback
-          showSlider={true} // Show progress slider
-          showDonload={true} // Allow downloading the audio
-          showTime={true} // Show current and total time
+          autoplay={true}
+          allowPause={true}
+          showSlider={true}
+          showDonload={true}
+          showTime={true}
           timeStyle={{ color: "#333" }}
         />
       </div>
     );
   }
 
-  // Handle intermediate states (loading, waiting for URL).
-  // If success is still undefined, it means the tool is likely still running or streaming data.
-  // This block now handles the initial generation loading.
   if (success === undefined) {
-    // Show a centered loading message with a simple spinner effect.
     return (
       <div
         style={{
@@ -179,18 +160,18 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
           padding: "16px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center", // Center horizontally
+          justifyContent: "center",
         }}
       >
         <div
           style={{
             border: "4px solid #f3f3f3",
-            borderTop: "4px solid #3498db", // A more modern blue color
+            borderTop: "4px solid #3498db",
             borderRadius: "50%",
-            width: "24px", // Slightly larger spinner
+            width: "24px",
             height: "24px",
             animation: "spin 1s linear infinite",
-            marginRight: "12px", // Increased spacing
+            marginRight: "12px",
           }}
         />
         <span style={{ color: "#555", fontSize: "16px" }}>
@@ -210,14 +191,12 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
     );
   }
 
-  // Fallback for cases where success is true but audioUrl is missing or not validly processed
-  // This state should ideally be rare if the tool result structure is consistent.
   return (
     <div
       style={{
         ...containerStyle,
         backgroundColor: "#fff4e6",
-        color: "#cc7a00", // A more appropriate orange tone
+        color: "#cc7a00",
         padding: "12px",
         display: "flex",
         alignItems: "center",
@@ -229,4 +208,4 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
   );
 };
 
-export default SpeechPlayerPreview;
+export default memo(SpeechPlayerPreview);
