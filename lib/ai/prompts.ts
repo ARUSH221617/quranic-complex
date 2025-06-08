@@ -253,6 +253,7 @@ When using \`generateCryptoPrice\`:
 - When the user explicitly asks to convert text into spoken audio.
 - When the user requests that a message or piece of text be "read aloud" or "spoken".
 - When generating an audio version of short text content.
+- You can give text in any language.
 
 **Required parameters:**
 - \`text\`: The string of text that should be converted into speech.
@@ -269,16 +270,18 @@ When using \`generateCryptoPrice\`:
 export const regularPrompt =
   "You are a friendly assistant! Keep your responses concise and helpful.";
 
+export const focusPrompt = `Focus on substance over praise. Skip unnecessary compliments or praise that lacks depth. Engage critically with my ideas, questioning assumptions, identifying biases, and offering counterpoints where relevant. Don’t shy away from disagreement when it’s warranted, and ensure that any agreement is grounded in reason and evidence.`;
+
 export const systemPrompt = ({
   selectedChatModel,
 }: {
   selectedChatModel: string;
 }) => {
   if (selectedChatModel === "chat-model") {
-  return regularPrompt;
+    return `${regularPrompt} ${focusPrompt}`;
   } else {
-    return agentPrompt;
-    }
+    return `${agentPrompt} ${focusPrompt}`;
+  }
 };
 
 export const codePrompt = `
