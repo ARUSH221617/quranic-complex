@@ -1235,3 +1235,28 @@ export const LinkIcon = ({ size = 16 }: { size?: number }) => {
     </svg>
   );
 };
+
+export const MicrophoneIcon = ({
+  size = 16,
+  color = "currentcolor",
+}: {
+  size?: number;
+  color?: string;
+}) => {
+  return (
+    <svg
+      height={size}
+      strokeLinejoin="round"
+      viewBox="0 0 16 16"
+      width={size}
+      style={{ color }}
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M8 0.5C6.61929 0.5 5.5 1.61929 5.5 3V8C5.5 9.38071 6.61929 10.5 8 10.5C9.38071 10.5 10.5 9.38071 10.5 8V3C10.5 1.61929 9.38071 0.5 8 0.5ZM4 8V3C4 0.790861 5.79086 -1 8 -1C10.2091 -1 12 0.790861 12 3V8C12 10.2091 10.2091 12 8 12C5.79086 12 4 10.2091 4 8ZM2.5 7.25V8C2.5 11.0376 4.96243 13.5 8 13.5C11.0376 13.5 13.5 11.0376 13.5 8V7.25H15V8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8V7.25H2.5Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+};
