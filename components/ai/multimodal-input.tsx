@@ -387,6 +387,8 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
   }, []);
 
   useEffect(() => {
+    toast.info("Listening...");
+    toast.loading(text);
     if (text && text.length > 0) {
       setInput(text);
     }
