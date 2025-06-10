@@ -362,9 +362,11 @@ const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
 
 function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
   const { text, start, stop, isLoading, formattedTime, url } =
-    useSpeechRecognition("en-US", {
-      autoStop: true,
-    });
+    useSpeechRecognition("en-US", {});
+
+  console.log(text);
+  console.log(formattedTime);
+  console.log(url);
 
   const [micPermission, setMicPermission] = useState<
     "granted" | "denied" | "prompt" | null
