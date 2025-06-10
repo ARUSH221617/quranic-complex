@@ -361,9 +361,10 @@ const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
 });
 
 function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
-  const { text, start, stop, isLoading } = useSpeechRecognition("en-US", {
-    autoStop: true,
-  });
+  const { text, start, stop, isLoading, formattedTime, url } =
+    useSpeechRecognition("en-US", {
+      autoStop: true,
+    });
 
   const [micPermission, setMicPermission] = useState<
     "granted" | "denied" | "prompt" | null
@@ -387,8 +388,8 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
   }, []);
 
   useEffect(() => {
-    toast.info("Listening...");
-    toast.loading(text);
+    console.debug("Listening...");
+    console.debug(text);
     if (text && text.length > 0) {
       setInput(text);
     }
@@ -407,34 +408,42 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
       return;
     }
     // If permission is prompt or unknown, request it
-    if (
-      (micPermission === "prompt" || micPermission === null) &&
-      navigator.mediaDevices?.getUserMedia
-    ) {
-      try {
-        await navigator.mediaDevices.getUserMedia({ audio: true });
-        setMicPermission("granted");
-        start();
-      } catch (err) {
-        setMicPermission("denied");
-        toast.error(
-          "Microphone access denied. Please allow microphone access in your browser settings.",
-        );
+    if (micPermission === "prompt" || micPermission === null) {
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.mediaDevices &&
+        navigator.mediaDevices.getUserMedia
+      ) {
+        try {
+          await navigator.mediaDevices.getUserMedia({ audio: true });
+          setMicPermission("granted");
+          start();
+        } catch (err) {
+          setMicPermission("denied");
+          toast.error(
+            "Microphone access denied. Please allow microphone access in your browser settings.",
+          );
+        }
+        return;
+      } else {
+        toast.error("Microphone access is not supported in this browser.");
+        return;
       }
-      return;
     }
     // If permission granted, start recognition
     start();
   };
 
   return (
-    <Button
-      data-testid="voice-button"
-      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
-      onClick={handleVoiceClick}
-    >
-      <MicrophoneIcon size={14} color={isLoading ? "red" : undefined} />
-    </Button>
+    <>
+      <Button
+        data-testid="voice-button"
+        className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+        onClick={handleVoiceClick}
+      >
+        <MicrophoneIcon size={14} color={isLoading ? "red" : undefined} />
+      </Button>
+    </>
   );
 }
 
