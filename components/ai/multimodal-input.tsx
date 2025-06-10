@@ -388,12 +388,10 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
   }, []);
 
   useEffect(() => {
-    console.debug("Listening...");
-    console.debug(text);
     if (text && text.length > 0) {
       setInput(text);
     }
-  }, [text, setInput]);
+  }, [text]);
 
   const handleVoiceClick = async (event: React.MouseEvent) => {
     event.preventDefault();
@@ -417,6 +415,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
         try {
           await navigator.mediaDevices.getUserMedia({ audio: true });
           setMicPermission("granted");
+          console.debug("Listening...");
           start();
         } catch (err) {
           setMicPermission("denied");
@@ -431,6 +430,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
       }
     }
     // If permission granted, start recognition
+    console.debug("Listening...");
     start();
   };
 
