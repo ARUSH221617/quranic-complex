@@ -361,12 +361,13 @@ const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
 });
 
 function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
-  const { text, start, stop, isLoading, formattedTime, url } =
+  const { text, start, stop, isLoading, formattedTime, url, response } =
     useSpeechRecognition("en-US", {});
 
   console.log(text);
   console.log(formattedTime);
   console.log(url);
+  console.log(response);
 
   const [micPermission, setMicPermission] = useState<
     "granted" | "denied" | "prompt" | null
@@ -419,11 +420,20 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
           setMicPermission("granted");
           console.debug("Listening...");
           start();
-        } catch (err) {
+        } catch (err: any) {
           setMicPermission("denied");
-          toast.error(
-            "Microphone access denied. Please allow microphone access in your browser settings.",
-          );
+          if (
+            err.name === "NotFoundError" ||
+            err.name === "DevicesNotFoundError"
+          ) {
+            toast.error(
+              "No microphone was found. Please connect a microphone and try again.",
+            );
+          } else {
+            toast.error(
+              "Microphone access denied. Please allow microphone access in your browser settings.",
+            );
+          }
         }
         return;
       } else {
