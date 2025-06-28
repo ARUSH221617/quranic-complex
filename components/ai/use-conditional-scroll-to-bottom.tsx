@@ -6,7 +6,16 @@ export function useConditionalScrollToBottom<T extends HTMLElement>(
   const containerRef = useRef<T>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
+  const [hasScrolledOnMount, setHasScrolledOnMount] = useState(false);
   const userScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Effect for initial scroll on mount
+  useEffect(() => {
+    if (endRef.current) {
+      endRef.current.scrollIntoView({ behavior: "instant" });
+      setHasScrolledOnMount(true);
+    }
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -41,10 +50,15 @@ export function useConditionalScrollToBottom<T extends HTMLElement>(
   }, []);
 
   useEffect(() => {
-    if (shouldScroll && !isUserScrolling && endRef.current) {
+    if (
+      shouldScroll &&
+      !isUserScrolling &&
+      hasScrolledOnMount &&
+      endRef.current
+    ) {
       endRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [shouldScroll, isUserScrolling]);
+  }, [shouldScroll, isUserScrolling, hasScrolledOnMount]);
 
   return [containerRef, endRef] as const;
 }
