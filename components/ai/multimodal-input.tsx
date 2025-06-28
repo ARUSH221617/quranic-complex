@@ -16,9 +16,9 @@ import {
 import { toast } from "sonner";
 import { useLocalStorage, useWindowSize } from "usehooks-ts";
 import { ArrowUpIcon, PaperclipIcon, StopIcon, MicrophoneIcon } from "./icons";
-import { useSpeechRecognition } from "@lobehub/tts/react";
 import { PreviewAttachment } from "./preview-attachment";
 import { Button } from "./ui/button";
+import { useCustomSpeechRecognition } from "./use-custom-speech-recognition";
 import { Textarea } from "./ui/textarea";
 import { SuggestedActions } from "./suggested-actions";
 import equal from "fast-deep-equal";
@@ -253,17 +253,21 @@ function PureMultimodalInput({
       </div>
 
       <div className="absolute bottom-0 right-0 p-2 w-fit flex flex-row justify-end">
-        {status === "submitted" ? (
-          <StopButton stop={stop} setMessages={setMessages} />
-        ) : input.length === 0 ? (
-          <VoiceButton setInput={setInput} />
-        ) : (
-          <SendButton
-            input={input}
-            submitForm={submitForm}
-            uploadQueue={uploadQueue}
-          />
-        )}
+        <div className="flex items-center space-x-2">
+          <div className={status !== "submitted" ? "hidden" : ""}>
+            <StopButton stop={stop} setMessages={setMessages} />
+          </div>
+          <div className={input.length !== 0 ? "hidden" : ""}>
+            <VoiceButton setInput={setInput} />
+          </div>
+          <div className={input.length === 0 ? "hidden" : ""}>
+            <SendButton
+              input={input}
+              submitForm={submitForm}
+              uploadQueue={uploadQueue}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -361,13 +365,13 @@ const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
 });
 
 function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
-  const { text, start, stop, isLoading, formattedTime, url, response } =
-    useSpeechRecognition("en-US", {});
-
-  console.log(text);
-  console.log(formattedTime);
-  console.log(url);
-  console.log(response);
+  const {
+    isListening,
+    text,
+    error: speechError,
+    start,
+    stop,
+  } = useCustomSpeechRecognition("en-US");
 
   const [micPermission, setMicPermission] = useState<
     "granted" | "denied" | "prompt" | null
@@ -394,20 +398,30 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
     if (text && text.length > 0) {
       setInput(text);
     }
-  }, [text]);
+  }, [text, setInput]);
+
+  // Show toast error if there's a speech recognition error
+  useEffect(() => {
+    if (speechError) {
+      toast.error(`Speech recognition error: ${speechError}`);
+    }
+  }, [speechError]);
 
   const handleVoiceClick = async (event: React.MouseEvent) => {
     event.preventDefault();
-    if (isLoading) {
+
+    if (isListening) {
       stop();
       return;
     }
+
     if (micPermission === "denied") {
       toast.error(
         "Microphone access denied. Please allow microphone access in your browser settings.",
       );
       return;
     }
+
     // If permission is prompt or unknown, request it
     if (micPermission === "prompt" || micPermission === null) {
       if (
@@ -441,6 +455,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
         return;
       }
     }
+
     // If permission granted, start recognition
     console.debug("Listening...");
     start();
@@ -453,7 +468,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
         className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
         onClick={handleVoiceClick}
       >
-        <MicrophoneIcon size={14} color={isLoading ? "red" : undefined} />
+        <MicrophoneIcon size={14} color={isListening ? "red" : undefined} />
       </Button>
     </>
   );
