@@ -1,7 +1,8 @@
 "use client";
 
 import { AudioPlayer, useAudioPlayer } from "@lobehub/tts/react";
-import React, { memo } from "react";
+import React, { memo, useMemo } from "react";
+import equal from "fast-deep-equal";
 
 interface GenerateSpeechToolResult {
   success: boolean;
@@ -11,7 +12,7 @@ interface GenerateSpeechToolResult {
 }
 
 interface SpeechPlayerPreviewProps {
-  result: GenerateSpeechToolResult | any;
+  result: GenerateSpeechToolResult | null;
   isLoading?: boolean;
 }
 
@@ -22,6 +23,11 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
   const audioUrl = result?.audioUrl as string | undefined;
   const success = result?.success;
   const errorDetails = result?.errorDetails;
+
+  // Create a stable key that only changes when audioUrl actually changes
+  const stableKey = useMemo(() => {
+    return audioUrl ? `audio-player-${audioUrl}` : "no-audio";
+  }, [audioUrl]);
 
   const { isLoading: audioLoading, ...audioProps } = useAudioPlayer({
     src: audioUrl || "",
@@ -127,7 +133,6 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
               }
               100% {
                 transform: rotate(360deg);
-              }
             }
           `}</style>
         </div>
@@ -137,11 +142,11 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
     return (
       <div style={containerStyle}>
         <AudioPlayer
-          key={audioUrl}
+          key={stableKey}
           audio={audioProps}
           isLoading={audioLoading}
           style={{ width: "100%" }}
-          autoplay={true}
+          autoplay={false}
           allowPause={true}
           showSlider={true}
           showDonload={true}
@@ -208,4 +213,9 @@ const SpeechPlayerPreview: React.FC<SpeechPlayerPreviewProps> = ({
   );
 };
 
-export default memo(SpeechPlayerPreview);
+export default memo(SpeechPlayerPreview, (prevProps, nextProps) => {
+  return (
+    prevProps.isLoading === nextProps.isLoading &&
+    equal(prevProps.result, nextProps.result)
+  );
+});
