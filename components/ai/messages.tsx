@@ -1,6 +1,6 @@
 import type { UIMessage } from "ai";
 import { PreviewMessage, ThinkingMessage } from "./message";
-import { useScrollToBottom } from "./use-scroll-to-bottom";
+import { useConditionalScrollToBottom } from "./use-conditional-scroll-to-bottom";
 import { Greeting } from "./greeting";
 import { memo } from "react";
 import type { Vote } from "@prisma/client";
@@ -27,8 +27,9 @@ function PureMessages({
   reload,
   isReadonly,
 }: MessagesProps) {
+  const shouldAutoScroll = status === "streaming" || status === "submitted";
   const [messagesContainerRef, messagesEndRef] =
-    useScrollToBottom<HTMLDivElement>();
+    useConditionalScrollToBottom<HTMLDivElement>(shouldAutoScroll);
 
   return (
     <div
