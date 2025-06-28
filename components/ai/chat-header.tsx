@@ -34,7 +34,7 @@ function PureChatHeader({
 }) {
   const router = useRouter();
   // State for controlling dialog visibility
-  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  // const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [isGuideDialogOpen, setIsGuideDialogOpen] = useState(false);
   const { open } = useSidebar();
 
@@ -68,16 +68,16 @@ function PureChatHeader({
           className="order-1 md:order-2"
         />
       )}
-      {!isReadonly && (
+      {/* {!isReadonly && (
         <VisibilitySelector
           chatId={chatId}
           selectedVisibilityType={selectedVisibilityType}
           className="order-1 md:order-3"
         />
-      )}
+      )} */}
 
       {/* Settings Button and Dialog */}
-      <Dialog
+      {/* <Dialog
         open={isSettingsDialogOpen}
         onOpenChange={setIsSettingsDialogOpen}
       >
@@ -100,7 +100,7 @@ function PureChatHeader({
           </DialogHeader>
           <SettingsDialogContent />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* Guide Button and Dialog */}
       <Dialog open={isGuideDialogOpen} onOpenChange={setIsGuideDialogOpen}>
