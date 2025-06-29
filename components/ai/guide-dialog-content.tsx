@@ -1,7 +1,16 @@
 import React from "react";
 import { Separator } from "@/components/ui/separator";
+import { LanguageSelector } from "./language-selector";
 
-export function GuideDialogContent() {
+interface GuideDialogContentProps {
+  selectedLanguage: string;
+  onLanguageChange: (language: string) => void;
+}
+
+export function GuideDialogContent({
+  selectedLanguage,
+  onLanguageChange,
+}: GuideDialogContentProps) {
   return (
     <div className="space-y-6 max-h-[70vh] overflow-y-auto px-1">
       <div>
@@ -13,6 +22,20 @@ export function GuideDialogContent() {
           help you interact effectively.
         </p>
       </div>
+      <Separator />
+      <section>
+        <h4 className="text-md font-semibold mb-1">
+          Voice Recognition Settings
+        </h4>
+        <p className="text-sm text-muted-foreground mb-4">
+          Select the language for microphone input here.
+        </p>
+        <LanguageSelector
+          selectedLanguage={selectedLanguage}
+          onLanguageChange={onLanguageChange}
+          className="w-full"
+        />
+      </section>
       <Separator />
       <section>
         <h4 className="text-md font-semibold mb-1">AI Modes & Personas</h4>

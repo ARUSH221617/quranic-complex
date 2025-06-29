@@ -37,6 +37,7 @@ function PureMultimodalInput({
   append,
   handleSubmit,
   className,
+  selectedVoiceLanguage,
 }: {
   chatId: string;
   input: UseChatHelpers["input"];
@@ -50,6 +51,7 @@ function PureMultimodalInput({
   append: UseChatHelpers["append"];
   handleSubmit: UseChatHelpers["handleSubmit"];
   className?: string;
+  selectedVoiceLanguage: string;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -258,7 +260,10 @@ function PureMultimodalInput({
             <StopButton stop={stop} setMessages={setMessages} />
           </div>
           <div className={input.length !== 0 ? "hidden" : ""}>
-            <VoiceButton setInput={setInput} />
+            <VoiceButton
+              setInput={setInput}
+              selectedVoiceLanguage={selectedVoiceLanguage}
+            />
           </div>
           <div className={input.length === 0 ? "hidden" : ""}>
             <SendButton
@@ -364,7 +369,13 @@ const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
   return true;
 });
 
-function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
+function PureVoiceButton({
+  setInput,
+  selectedVoiceLanguage,
+}: {
+  setInput: (value: string) => void;
+  selectedVoiceLanguage: string;
+}) {
   const {
     isListening,
     text,
@@ -372,7 +383,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
     start,
     stop,
     reset,
-  } = useCustomSpeechRecognition("en-US");
+  } = useCustomSpeechRecognition(selectedVoiceLanguage);
 
   const [micPermission, setMicPermission] = useState<
     "granted" | "denied" | "prompt" | null

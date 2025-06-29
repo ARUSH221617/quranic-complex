@@ -26,11 +26,15 @@ function PureChatHeader({
   selectedModelId,
   selectedVisibilityType,
   isReadonly,
+  selectedVoiceLanguage,
+  onVoiceLanguageChange,
 }: {
   chatId: string;
   selectedModelId: string;
   selectedVisibilityType: VisibilityType;
   isReadonly: boolean;
+  selectedVoiceLanguage: string;
+  onVoiceLanguageChange: (languageCode: string) => void;
 }) {
   const router = useRouter();
   // State for controlling dialog visibility
@@ -121,7 +125,10 @@ function PureChatHeader({
           <DialogHeader>
             <DialogTitle>AI Chat Guide</DialogTitle>
           </DialogHeader>
-          <GuideDialogContent />
+          <GuideDialogContent
+            selectedLanguage={selectedVoiceLanguage}
+            onLanguageChange={onVoiceLanguageChange}
+          />
         </DialogContent>
       </Dialog>
     </header>
@@ -129,5 +136,8 @@ function PureChatHeader({
 }
 
 export const ChatHeader = memo(PureChatHeader, (prevProps, nextProps) => {
-  return prevProps.selectedModelId === nextProps.selectedModelId;
+  return (
+    prevProps.selectedModelId === nextProps.selectedModelId &&
+    prevProps.selectedVoiceLanguage === nextProps.selectedVoiceLanguage
+  );
 });

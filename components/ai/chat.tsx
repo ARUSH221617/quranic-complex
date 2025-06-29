@@ -15,6 +15,7 @@ import { useArtifactSelector } from "@/hooks/use-artifact";
 import { toast } from "sonner";
 import { unstable_serialize } from "swr/infinite";
 import { getChatHistoryPaginationKey } from "@/components/ai/sidebar-history";
+import { useLocalStorage } from "usehooks-ts";
 
 export function Chat({
   id,
@@ -30,6 +31,8 @@ export function Chat({
   isReadonly: boolean;
 }) {
   const { mutate } = useSWRConfig();
+  const [voiceRecognitionLanguage, setVoiceRecognitionLanguage] =
+    useLocalStorage("voice-recognition-language", "en-US");
 
   const {
     messages,
@@ -58,7 +61,7 @@ export function Chat({
 
   const { data: votes } = useSWR<Array<Vote>>(
     messages.length >= 2 ? `/api/vote?chatId=${id}` : null,
-    fetcher
+    fetcher,
   );
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
@@ -72,6 +75,8 @@ export function Chat({
           selectedModelId={selectedChatModel}
           selectedVisibilityType={selectedVisibilityType}
           isReadonly={isReadonly}
+          selectedVoiceLanguage={voiceRecognitionLanguage}
+          onVoiceLanguageChange={setVoiceRecognitionLanguage}
         />
 
         <Messages
@@ -99,6 +104,7 @@ export function Chat({
               messages={messages}
               setMessages={setMessages}
               append={append}
+              selectedVoiceLanguage={voiceRecognitionLanguage}
             />
           )}
         </form>

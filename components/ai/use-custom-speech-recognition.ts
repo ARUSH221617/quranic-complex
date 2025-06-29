@@ -139,6 +139,24 @@ export const useCustomSpeechRecognition = (
     const SpeechRecognitionConstructor = getSpeechRecognition();
 
     if (SpeechRecognitionConstructor) {
+      // Stop and clean up any existing recognition instance before creating a new one
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort(); // Use abort to ensure it stops immediately
+          console.debug(
+            "Aborted previous speech recognition instance due to config change.",
+          );
+        } catch (e: unknown) {
+          const errorMessage =
+            e instanceof Error ? e.message : "Unknown error occurred";
+          console.warn(
+            "Error aborting previous recognition instance:",
+            errorMessage,
+          );
+        }
+        recognitionRef.current = null; // Clear the ref
+      }
+
       recognitionRef.current = new SpeechRecognitionConstructor();
       recognitionRef.current.continuous = continuous;
       recognitionRef.current.interimResults = interimResults;
@@ -148,30 +166,35 @@ export const useCustomSpeechRecognition = (
         isListeningRef.current = true;
         setIsListening(true);
         setError(null);
+        setText("");
         console.debug("Speech recognition started.");
       };
 
       recognitionRef.current.onresult = (
         event: SpeechRecognitionEvent,
       ): void => {
-        let interimTranscript = "";
-        let finalTranscript = "";
-
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-          const result: SpeechRecognitionResult = event.results[i];
-          const transcript: string = result[0].transcript;
-          if (result.isFinal) {
-            finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
-          }
+        let currentOverallTranscript = "";
+        // Accumulate all recognized text from the current event's results
+        for (let i = 0; i < event.results.length; ++i) {
+          currentOverallTranscript += event.results[i][0].transcript;
         }
 
-        // Update text with final transcript, or interim if no final is available
-        if (finalTranscript) {
-          setText((prev: string) => prev + finalTranscript);
-        } else if (interimResults && interimTranscript) {
-          setText((prev: string) => prev + interimTranscript);
+        if (continuous) {
+          // In continuous mode, if the last result is final, append it.
+          // Otherwise, for interim results, update the text to reflect the ongoing recognition.
+          // This ensures that new segments are added while the current segment's interim text is updated.
+          if (event.results[event.results.length - 1].isFinal) {
+            setText((prev: string) => prev + currentOverallTranscript);
+          } else if (interimResults) {
+            // For continuous interim updates, we overwrite with the current full text
+            // up to this point, to avoid double appending within a single ongoing utterance.
+            setText(currentOverallTranscript);
+          }
+        } else {
+          // In non-continuous mode, each onresult event refines the *single* utterance.
+          // Therefore, we always replace the text with the current best transcription
+          // for the entire utterance.
+          setText(currentOverallTranscript);
         }
       };
 
