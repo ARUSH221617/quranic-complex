@@ -371,6 +371,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
     error: speechError,
     start,
     stop,
+    reset,
   } = useCustomSpeechRecognition("en-US");
 
   const [micPermission, setMicPermission] = useState<
@@ -395,7 +396,7 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
   }, []);
 
   useEffect(() => {
-    if (text && text.length > 0) {
+    if (text) {
       setInput(text);
     }
   }, [text, setInput]);
@@ -421,6 +422,9 @@ function PureVoiceButton({ setInput }: { setInput: (value: string) => void }) {
       );
       return;
     }
+
+    setInput("");
+    reset();
 
     // If permission is prompt or unknown, request it
     if (micPermission === "prompt" || micPermission === null) {
