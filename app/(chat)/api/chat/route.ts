@@ -42,6 +42,11 @@ import { generateChartTool } from "@/lib/ai/tools/generate-chart";
 import { generateMarkmapTool } from "@/lib/ai/tools/generate-markmap";
 import { generateCurrencyPriceTool } from "@/lib/ai/tools/generate-currency-price";
 import { generateCryptoPriceTool } from "@/lib/ai/tools/generateCryptoPrice";
+import { createProgram } from "@/lib/ai/tools/create-program";
+import { createProgramTranslation } from "@/lib/ai/tools/create-program-translation";
+import { getProgramBySlug } from "@/lib/ai/tools/get-program-by-slug";
+import { updateProgram } from "@/lib/ai/tools/update-program";
+import { searchProgramByTitle } from "@/lib/ai/tools/search-program-by-title";
 
 export const maxDuration = 60;
 
@@ -118,6 +123,11 @@ export async function POST(request: Request) {
                   "updateNews",
                   "searchNewsByTitle",
                   "createNewsTranslation",
+                  "createProgram",
+                  "createProgramTranslation",
+                  "getProgramBySlug",
+                  "updateProgram",
+                  "searchProgramByTitle",
                   "generateImage",
                   "generateChart",
                   "generateCurrencyPrice",
@@ -144,6 +154,17 @@ export async function POST(request: Request) {
             updateNews: updateNews({ session, dataStream }),
             searchNewsByTitle: searchNewsByTitle({ session, dataStream }),
             createNewsTranslation: createNewsTranslation({
+              session,
+              dataStream,
+            }),
+            createProgram: createProgram({ session, dataStream }),
+            createProgramTranslation: createProgramTranslation({
+              session,
+              dataStream,
+            }),
+            getProgramBySlug: getProgramBySlug({ session, dataStream }),
+            updateProgram: updateProgram({ session, dataStream }),
+            searchProgramByTitle: searchProgramByTitle({
               session,
               dataStream,
             }),

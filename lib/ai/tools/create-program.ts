@@ -2,32 +2,33 @@ import { tool } from "ai";
 import { z } from "zod";
 import { Session } from "next-auth";
 import { DataStreamWriter } from "ai";
-import { createNews as createNewsAction } from "../actions/create-news";
+import { createProgram as createProgramAction } from "../actions/create-program";
 import generateImage from "@/lib/ai-image";
 
-interface CreateNewsProps {
+interface CreateProgramProps {
   session: Session;
   dataStream: DataStreamWriter;
 }
 
-export const createNews = ({ session, dataStream }: CreateNewsProps) =>
+export const createProgram = ({ session, dataStream }: CreateProgramProps) =>
   tool({
-    description: "Create a new news item on the website.",
+    description: "Create a new program item on the website.",
     parameters: z.object({
       slug: z
         .string()
-        .describe("A unique identifier for the news item, used in the URL."),
-      title: z.string().describe("The main title of the news item."),
-      content: z
+        .describe("A unique identifier for the program item, used in the URL."),
+      title: z.string().describe("The main title of the program item."),
+      description: z
         .string()
-        .describe("The full content of the news item (can be in HTML)."),
-      excerpt: z.string().describe("A short summary of the news item."),
+        .describe("The full description of the program item (can be in HTML)."),
+      ageGroup: z.string().describe("The age group for the program."),
+      schedule: z.string().describe("The schedule details for the program."),
       locale: z
         .enum(["en", "fa", "ar"])
         .optional()
         .default("en")
         .describe(
-          "The locale for the news translation (must be one of: 'en', 'fa', 'ar'). Defaults to 'en'.",
+          "The locale for the program translation (must be one of: 'en', 'fa', 'ar'). Defaults to 'en'.",
         ),
       metaTitle: z
         .string()
@@ -48,22 +49,20 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
         .boolean()
         .optional()
         .default(false)
-        .describe("Whether to generate an AI thumbnail for the news item."),
+        .describe("Whether to generate an AI thumbnail for the program item."),
     }),
     execute: async ({
       slug,
       title,
-      content,
-      excerpt,
+      description,
+      ageGroup,
+      schedule,
       locale = "en",
       metaTitle,
       metaDescription,
       keywords,
       generateThumbnail = false,
     }) => {
-      // Automatically set the date to the current date in YYYY-MM-DD format
-      const date = new Date().toISOString().split("T")[0];
-
       let thumbnailUrl: string | undefined;
 
       // Generate thumbnail if requested
@@ -74,14 +73,14 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
         });
 
         try {
-          // Create an AI prompt based on the news content
-          const thumbnailPrompt = `Create a professional news thumbnail image that represents: ${title}. ${
-            excerpt ? `Context: ${excerpt}.` : ""
-          } Style: Modern, professional news website thumbnail, high quality, clear composition.`;
+          // Create an AI prompt based on the program content
+          const thumbnailPrompt = `Create a professional program thumbnail image that represents: ${title}. ${
+            description ? `Context: ${description}.` : ""
+          } Style: Modern, professional program website thumbnail, high quality, clear composition.`;
 
           const imageResult = await generateImage({
             prompt: thumbnailPrompt,
-            filenamePrefix: `news-${slug}-thumbnail`,
+            filenamePrefix: `program-${slug}-thumbnail`,
           });
 
           thumbnailUrl = imageResult.imageUrl;
@@ -107,49 +106,57 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
 
       // Stream the AI-generated parameters back to the user before making the API call
       dataStream.writeData({
-        type: "creating_news_item",
-        content: "Preparing to create a news item...",
+        type: "creating_program_item",
+        content: "Preparing to create a program item...",
       });
-      dataStream.writeData({ type: "news_param", name: "slug", content: slug });
       dataStream.writeData({
-        type: "news_param",
+        type: "program_param",
+        name: "slug",
+        content: slug,
+      });
+      dataStream.writeData({
+        type: "program_param",
         name: "title",
         content: title,
       });
-      dataStream.writeData({ type: "news_param", name: "date", content: date });
       dataStream.writeData({
-        type: "news_param",
+        type: "program_param",
         name: "locale",
         content: locale,
       });
+      dataStream.writeData({
+        type: "program_param",
+        name: "ageGroup",
+        content: ageGroup,
+      });
+      dataStream.writeData({
+        type: "program_param",
+        name: "schedule",
+        content: schedule,
+      });
+
       // Include other parameters if they are expected to be streamed
-      if (excerpt)
-        dataStream.writeData({
-          type: "news_param",
-          name: "excerpt",
-          content: excerpt,
-        });
       if (metaTitle)
         dataStream.writeData({
-          type: "news_param",
+          type: "program_param",
           name: "metaTitle",
           content: metaTitle,
         });
       if (metaDescription)
         dataStream.writeData({
-          type: "news_param",
+          type: "program_param",
           name: "metaDescription",
           content: metaDescription,
         });
       if (keywords)
         dataStream.writeData({
-          type: "news_param",
+          type: "program_param",
           name: "keywords",
           content: keywords,
         });
       if (thumbnailUrl)
         dataStream.writeData({
-          type: "news_param",
+          type: "program_param",
           name: "thumbnailUrl",
           content: thumbnailUrl,
         });
@@ -159,9 +166,9 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
         const formData = new FormData();
         formData.append("slug", slug);
         formData.append("title", title);
-        formData.append("content", content);
-        formData.append("excerpt", excerpt);
-        formData.append("date", date);
+        formData.append("description", description);
+        formData.append("ageGroup", ageGroup);
+        formData.append("schedule", schedule);
         formData.append("locale", locale);
         if (metaTitle !== undefined && metaTitle !== null)
           formData.append("metaTitle", metaTitle);
@@ -176,9 +183,13 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
             // Fetch the image from the URL
             const response = await fetch(thumbnailUrl);
             const blob = await response.blob();
-            const imageFile = new File([blob], `news-thumbnail-${slug}.png`, {
-              type: "image/png",
-            });
+            const imageFile = new File(
+              [blob],
+              `program-thumbnail-${slug}.png`,
+              {
+                type: "image/png",
+              },
+            );
             formData.append("image", imageFile);
           } catch (error) {
             console.error("Error fetching or processing thumbnail:", error);
@@ -192,33 +203,32 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
         }
 
         // Call the server action
-        const result = await createNewsAction(formData);
+        const result = await createProgramAction(formData);
 
         if (!result.success || !result.data) {
           console.error("Server Action Error:", result.error);
           dataStream.writeData({
-            type: "news_creation_status",
+            type: "program_creation_status",
             content: `Failed: ${result.error}`,
           });
           return {
             success: false,
-            message: `Failed to create news item: ${result.error}`,
+            message: `Failed to create program item: ${result.error}`,
             errorDetails: result.error,
           };
         }
 
-        console.log("News item created successfully:", result.data);
+        console.log("Program item created successfully:", result.data);
         dataStream.writeData({
-          type: "news_creation_status",
+          type: "program_creation_status",
           content: "Success!",
         });
         dataStream.writeData({
-          type: "news_created",
+          type: "program_created",
           content: JSON.stringify({
             id: result.data.id,
             slug: result.data.slug,
             title: result.data.title,
-            date: result.data.date,
             locale: locale,
             thumbnailUrl: thumbnailUrl,
           }),
@@ -227,26 +237,25 @@ export const createNews = ({ session, dataStream }: CreateNewsProps) =>
         // Return success confirmation and data
         return {
           success: true,
-          message: "News item created successfully.",
-          newsItem: {
+          message: "Program item created successfully.",
+          programItem: {
             id: result.data.id,
             slug: result.data.slug,
             title: result.data.title,
-            date: result.data.date,
             locale: locale,
             thumbnailUrl: thumbnailUrl,
           },
         };
       } catch (error) {
-        console.error("Error calling news API:", error);
+        console.error("Error calling program API:", error);
         dataStream.writeData({
-          type: "news_creation_status",
+          type: "program_creation_status",
           content: `Error: ${error instanceof Error ? error.message : String(error)}`,
         });
         // Handle exceptions during the fetch call
         return {
           success: false,
-          message: `An error occurred while trying to create the news item: ${
+          message: `An error occurred while trying to create the program item: ${
             error instanceof Error ? error.message : String(error)
           }`,
           errorDetails: error,

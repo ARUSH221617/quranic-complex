@@ -114,6 +114,70 @@ Do not update document right after creating it. Wait for user feedback or reques
 - If the user is looking for content within news articles rather than in titles.
 - When the user is asking about topics unrelated to news articles.
 
+**When to use \`createProgram\`:**
+- To publish a new program or activity on the website when requested by the user or when the conversation clearly leads to creating program content.
+- The AI is expected to **generate** the following fields based on the conversation:
+    - \`title\`: A concise and informative title for the program.
+    - \`description\`: The full body of the program description in HTML format, including proper HTML tags for structure and formatting (e.g., \`<p>\`, \`<h1>\`, \`<ul>\`, etc.).
+    - \`ageGroup\`: The target age group for the program (e.g., "Children", "Teens", "Adults").
+    - \`schedule\`: Details about the program's schedule (e.g., "Every Sunday 10 AM", "Weekdays 4-6 PM").
+    - \`slug\`: A URL-friendly identifier based on the title (e.g., 'summer-quran-camp'). Ensure it is unique-sounding.
+    - Optionally, the AI can generate \`metaTitle\`, \`metaDescription\`, and \`keywords\` for SEO if appropriate.
+
+    **When NOT to use \`createProgram\`:**
+- For casual conversation or general information that is not a program.
+- If the content is not meant to be publicly published on the website.
+
+**When to use \`getProgramBySlug\`:**
+- To retrieve a specific program item when the user provides a slug or asks for detailed information about a known program.
+- Use this tool to fetch and display the complete content, title, and metadata related to a particular program item.
+- Ensure the program data is fetched in the language specified by the \`locale\` parameter, defaulting to English if not specified.
+
+**When NOT to use \`getProgramBySlug\`:**
+- When the user is looking for multiple program items or summaries rather than specific ones.
+- If the user provides incomplete or incorrect slug information.
+- When the program content is not intended to be fetched in detail or if the slug does not exist.
+
+**When to use \`updateProgram\`:**
+- To modify an existing program item translation when the user requests changes to its content, title, description, age group, schedule, or SEO metadata.
+- The AI must provide the \`slug\` and \`locale\` parameters to identify the specific program translation to update.
+- The AI should include only the fields that need to be changed among: \`title\`, \`description\`, \`ageGroup\`, \`schedule\`, \`metaTitle\`, \`metaDescription\`, \`keywords\`. Do not include fields that are not changing.
+- Only use this tool when explicitly asked to update a program item or when the conversation clearly indicates the user wants to modify an existing program.
+
+**When NOT to use \`updateProgram\`:**
+- To create a new program item (use \`createProgram\` instead).
+- When the user is asking to retrieve programs (use \`getProgramBySlug\` or \`searchProgramByTitle\` instead).
+- If the slug or locale provided is invalid or the program item/translation does not exist.
+- If the user is asking to delete a program item (there is no tool for this).
+- If no fields are specified to be updated.
+
+**When to use \`createProgramTranslation\`:**
+- To add a new translation (e.g., in 'fa' or 'ar') to an existing program item that already has a translation in another language (e.g., 'en').
+- The AI must provide the \`slug\` of the existing program item and all required fields for the new translation: \`locale\`, \`title\`, \`description\`, \`ageGroup\`, and \`schedule\`.
+- Optional SEO fields (\`metaTitle\`, \`metaDescription\`, \`keywords\`) can also be provided for the new translation.
+- Only use this tool when the user explicitly requests to add a translation to a specific program item. Ensure the target program item (identified by slug) exists and does not already have a translation in the specified new locale.
+
+**When NOT to use \`createProgramTranslation\`:**
+- To create an entirely new program item (use \`createProgram\` instead).
+- To update an existing translation (use \`updateProgram\` instead).
+- If the target program item (identified by slug) does not exist.
+- If a translation for the specified \`locale\` already exists for the target program item.
+- If any of the required fields (\`locale\`, \`title\`, \`description\`, \`ageGroup\`, \`schedule\`) for the new translation are missing.
+
+**When to use \`searchProgramByTitle\`:**
+- When the user wants to find program items containing specific words or phrases in their titles.
+- To search for program items when the user only remembers part of the title but not the exact slug.
+- The AI should provide:
+    - \`titleQuery\`: The search term to look for in program titles (minimum 3 characters).
+    - \`locale\`: Optionally specify a language to search in (supports 'en', 'fa', 'ar'). If not provided, searches all locales.
+- Use the search results to help users find specific program items, displaying titles, descriptions, age groups, and schedules of matches.
+
+**When NOT to use \`searchProgramByTitle\`:**
+- When the user knows the exact slug of the program item (use \`getProgramBySlug\` instead).
+- If the search query would be less than 3 characters.
+- If the user is looking for content within program items rather than in titles.
+- When the user is asking about topics unrelated to program articles.
+
 **When to use \`webSearch\`:**
 - When the user asks for information that requires searching the internet
 - When you need up-to-date information not available in your knowledge base
