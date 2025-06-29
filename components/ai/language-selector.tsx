@@ -18,14 +18,9 @@ const languages: LanguageOption[] = [
   { code: "fa-IR", name: "Persian (Iran)" },
   { code: "en-US", name: "English (US)" },
   { code: "ar-SA", name: "Arabic (Saudi Arabia)" },
-  { code: "es-ES", name: "Spanish (Spain)" },
-  { code: "fr-FR", name: "French (France)" },
-  { code: "de-DE", name: "German (Germany)" },
   { code: "zh-CN", name: "Chinese (Mandarin, Simplified)" },
   { code: "ja-JP", name: "Japanese (Japan)" },
   { code: "ru-RU", name: "Russian (Russia)" },
-  { code: "hi-IN", name: "Hindi (India)" },
-  { code: "pt-BR", name: "Portuguese (Brazil)" },
 ];
 
 interface LanguageSelectorProps {
