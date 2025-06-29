@@ -108,7 +108,7 @@ function PureChatHeader({
           <TooltipTrigger asChild>
             <Button
               variant="outline"
-              className="order-5 md:px-2 px-2 md:h-fit"
+              className="order-5 md:px-2 px-2 md:h-fit ml-auto"
               onClick={() => setIsGuideDialogOpen(true)}
             >
               <Info />
