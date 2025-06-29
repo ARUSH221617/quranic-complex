@@ -17,9 +17,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Info, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { SettingsDialogContent } from "@/components/ai/settings-dialog-content";
-import { GuideDialogContent } from "@/components/ai/guide-dialog-content";
 
 function PureChatHeader({
   chatId,
@@ -37,9 +36,7 @@ function PureChatHeader({
   onVoiceLanguageChange: (languageCode: string) => void;
 }) {
   const router = useRouter();
-  // State for controlling dialog visibility
-  // const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
-  const [isGuideDialogOpen, setIsGuideDialogOpen] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const { open } = useSidebar();
 
   const { width: windowWidth } = useWindowSize();
@@ -81,7 +78,7 @@ function PureChatHeader({
       )} */}
 
       {/* Settings Button and Dialog */}
-      {/* <Dialog
+      <Dialog
         open={isSettingsDialogOpen}
         onOpenChange={setIsSettingsDialogOpen}
       >
@@ -102,30 +99,7 @@ function PureChatHeader({
           <DialogHeader>
             <DialogTitle>Chat Settings</DialogTitle>
           </DialogHeader>
-          <SettingsDialogContent />
-        </DialogContent>
-      </Dialog> */}
-
-      {/* Guide Button and Dialog */}
-      <Dialog open={isGuideDialogOpen} onOpenChange={setIsGuideDialogOpen}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="outline"
-              className="order-5 md:px-2 px-2 md:h-fit ml-auto"
-              onClick={() => setIsGuideDialogOpen(true)}
-            >
-              <Info />
-              <span className="md:sr-only">Guid</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Guid</TooltipContent>
-        </Tooltip>
-        <DialogContent className="max-w-lg rounded-lg shadow-lg p-6">
-          <DialogHeader>
-            <DialogTitle>AI Chat Guide</DialogTitle>
-          </DialogHeader>
-          <GuideDialogContent
+          <SettingsDialogContent
             selectedLanguage={selectedVoiceLanguage}
             onLanguageChange={onVoiceLanguageChange}
           />
