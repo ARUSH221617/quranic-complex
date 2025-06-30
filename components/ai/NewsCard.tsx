@@ -12,6 +12,7 @@ import {
 import { cn, fetcher } from "@/lib/utils";
 import useSWR from "swr";
 import Link from "next/link";
+import Image from "next/image";
 
 interface PreviewNewsData {
   id?: string;
@@ -269,22 +270,20 @@ export function NewsCard({ result, args }: NewsCardProps) {
           >
             <ShareIcon size={16} />
           </Link>
-          {/* TODO: Edit clicked */}
-          <button
-            onClick={() => console.log("Edit clicked")}
+          <Link
+            href={`/admin/news`}
             className="p-2 hover:bg-muted-foreground/10 rounded-lg transition-colors"
             title="Edit article"
           >
             <PencilEditIcon size={16} />
-          </button>
-          {/* TODO: Delete clicked */}
-          <button
-            onClick={() => console.log("Delete clicked")}
+          </Link>
+          <Link
+            href={`/admin/news`}
             className="p-2 hover:bg-muted-foreground/10 rounded-lg transition-colors text-destructive"
             title="Delete article"
           >
             <TrashIcon size={16} />
-          </button>
+          </Link>
         </div>
       </div>
 
@@ -296,11 +295,11 @@ export function NewsCard({ result, args }: NewsCardProps) {
       >
         {displayImage && (
           <div className="aspect-video w-full bg-muted-foreground/10 rounded overflow-hidden">
-            <img
+            <Image
               src={
                 displayImage.startsWith("http")
                   ? displayImage
-                  : `${displayImage}` // Using template literal for safety, same as original
+                  : `${displayImage}`
               }
               alt={newsData.title}
               className="w-full h-full object-cover"
