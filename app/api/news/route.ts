@@ -2,36 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
-// import path from "path"; // No longer needed
-// import fs from "fs"; // No longer needed
-import { put } from '@vercel/blob';
-
-// Helper function to handle file saving (now handled by Vercel Blob)
-/*
-async function saveFile(
-  file: File | null,
-  uploadSubDir: string,
-  fileNamePrefix: string,
-): Promise<string | undefined> {
-  if (!file) return undefined;
-
-  // --- Save new file ---
-  const uploadDir = path.join(process.cwd(), "public", "uploads", uploadSubDir);
-  await fs.promises.mkdir(uploadDir, { recursive: true });
-
-  const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-  const filename = `${fileNamePrefix}-${uniqueSuffix}${path.extname(file.name)}`;
-  const filePath = path.join(uploadDir, filename);
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-  await fs.promises.writeFile(filePath, buffer);
-
-  const relativePath = `/uploads/${uploadSubDir}/${filename}`;
-  console.log(`Saved new file: ${filePath} (relative: ${relativePath})`);
-  return relativePath;
-}
-*/
+import { put } from "@vercel/blob";
 
 // Schema for POST request validation
 const createNewsSchema = z.object({
@@ -179,24 +150,28 @@ export async function POST(request: NextRequest) {
     let imagePath: string | null = null;
     if (imageFile) {
       if (!process.env.BLOB_READ_WRITE_TOKEN) {
-        console.error('BLOB_READ_WRITE_TOKEN is not set.');
+        console.error("BLOB_READ_WRITE_TOKEN is not set.");
         return NextResponse.json(
-          { message: 'Missing Blob storage configuration.' },
-          { status: 500 }
+          { message: "Missing Blob storage configuration." },
+          { status: 500 },
         );
       }
       try {
-        const blob = await put(`news/${Date.now()}-${imageFile.name}`, imageFile, {
-          access: 'public',
-          token: process.env.BLOB_READ_WRITE_TOKEN,
-        });
+        const blob = await put(
+          `news/${Date.now()}-${imageFile.name}`,
+          imageFile,
+          {
+            access: "public",
+            token: process.env.BLOB_READ_WRITE_TOKEN,
+          },
+        );
         imagePath = blob.url; // Store the URL from Vercel Blob
         console.log(`Uploaded to Vercel Blob: ${imagePath}`);
       } catch (uploadError) {
-        console.error('Error uploading to Vercel Blob:', uploadError);
+        console.error("Error uploading to Vercel Blob:", uploadError);
         return NextResponse.json(
-          { message: 'Failed to upload image.' },
-          { status: 500 }
+          { message: "Failed to upload image." },
+          { status: 500 },
         );
       }
     }
