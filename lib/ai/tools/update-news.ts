@@ -11,7 +11,9 @@ interface UpdateNewsProps {
 
 // Define the schema for the tool parameters
 const updateNewsToolSchema = z.object({
-  slug: z.string().describe("The unique slug identifier for the news item to update."),
+  slug: z
+    .string()
+    .describe("The unique slug identifier for the news item to update."),
   locale: z
     .enum(["en", "fa", "ar"])
     .optional()
@@ -19,12 +21,45 @@ const updateNewsToolSchema = z.object({
     .describe(
       "The locale of the news translation to update (must be one of: 'en', 'fa', 'ar'). Defaults to 'en'.",
     ),
-  title: z.string().optional().describe("The new title for the news item translation."),
-  content: z.string().optional().describe("The new full content for the news item translation (can be in Markdown or HTML)."),
-  excerpt: z.string().optional().describe("The new short summary for the news item translation."),
-  metaTitle: z.string().optional().nullable().describe("Optional new SEO meta title for the news item translation."),
-  metaDescription: z.string().optional().nullable().describe("Optional new SEO meta description for the news item translation."),
-  keywords: z.string().optional().nullable().describe("Optional new SEO keywords (comma-separated) for the news item translation."),
+  title: z
+    .string()
+    .optional()
+    .describe("The new title for the news item translation."),
+  content: z
+    .string()
+    .optional()
+    .describe(
+      "The new full content for the news item translation (can be in Markdown or HTML).",
+    ),
+  excerpt: z
+    .string()
+    .optional()
+    .describe("The new excerpt/summary for the news item translation."),
+  metaTitle: z
+    .string()
+    .optional()
+    .nullable()
+    .describe("Optional new SEO meta title for the news item translation."),
+  metaDescription: z
+    .string()
+    .optional()
+    .nullable()
+    .describe(
+      "Optional new SEO meta description for the news item translation.",
+    ),
+  keywords: z
+    .string()
+    .optional()
+    .nullable()
+    .describe(
+      "Optional new SEO keywords (comma-separated) for the news item translation.",
+    ),
+  date: z
+    .string()
+    .optional()
+    .describe(
+      "Optional new publication date for the news item (ISO date string, e.g., '2024-01-15T10:30:00Z').",
+    ),
 });
 
 export const updateNews = ({ session, dataStream }: UpdateNewsProps) =>
@@ -39,29 +74,63 @@ export const updateNews = ({ session, dataStream }: UpdateNewsProps) =>
       });
 
       // Check if any fields are provided for update
-      const fieldsToUpdateCount = Object.values(updateFields).filter(value => value !== undefined).length;
+      const fieldsToUpdateCount = Object.values(updateFields).filter(
+        (value) => value !== undefined,
+      ).length;
 
       if (fieldsToUpdateCount === 0) {
-          dataStream.writeData({
-              type: "news_update_status",
-              content: "Failed: No fields provided for update."
-          });
-          return {
-              success: false,
-              message: "No fields provided for update."
-          };
+        dataStream.writeData({
+          type: "news_update_status",
+          content: "Failed: No fields provided for update.",
+        });
+        return {
+          success: false,
+          message: "No fields provided for update.",
+        };
       }
 
       try {
-        // Prepare data for the server action, including slug and locale
-        const dataForAction = {
-            slug,
-            locale,
-            ...updateFields,
-        };
+        // Create FormData for the server action
+        const formData = new FormData();
+        formData.append("slug", slug);
+        formData.append("locale", locale);
 
-        // Call the server action
-        const result = await updateNewsAction(dataForAction);
+        // Add all update fields to FormData if they are defined
+        Object.entries(updateFields).forEach(([key, value]) => {
+          if (value !== undefined) {
+            if (value === null) {
+              formData.append(key, "");
+            } else {
+              formData.append(key, String(value));
+            }
+          }
+        });
+
+        // Stream the parameters being sent
+        dataStream.writeData({
+          type: "news_param",
+          name: "slug",
+          content: slug,
+        });
+        dataStream.writeData({
+          type: "news_param",
+          name: "locale",
+          content: locale,
+        });
+
+        // Stream other parameters if they exist
+        Object.entries(updateFields).forEach(([key, value]) => {
+          if (value !== undefined) {
+            dataStream.writeData({
+              type: "news_param",
+              name: key,
+              content: String(value),
+            });
+          }
+        });
+
+        // Call the server action with FormData
+        const result = await updateNewsAction(formData);
 
         if (!result.success || !result.data) {
           console.error("Server Action Error:", result.error);
@@ -87,6 +156,9 @@ export const updateNews = ({ session, dataStream }: UpdateNewsProps) =>
             id: result.data.id,
             locale: result.data.locale,
             title: result.data.title,
+            slug: result.data.slug,
+            image: result.data.image,
+            date: result.data.date,
           }),
         });
 
@@ -98,6 +170,9 @@ export const updateNews = ({ session, dataStream }: UpdateNewsProps) =>
             id: result.data.id,
             locale: result.data.locale,
             title: result.data.title,
+            slug: result.data.slug,
+            image: result.data.image,
+            date: result.data.date,
           },
         };
       } catch (error) {

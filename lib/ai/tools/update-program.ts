@@ -88,15 +88,47 @@ export const updateProgram = ({ session, dataStream }: UpdateProgramProps) =>
       }
 
       try {
-        // Prepare data for the server action, including slug and locale
-        const dataForAction = {
-          slug,
-          locale,
-          ...updateFields,
-        };
+        // Create FormData for the server action
+        const formData = new FormData();
+        formData.append("slug", slug);
+        formData.append("locale", locale);
 
-        // Call the server action
-        const result = await updateProgramAction(dataForAction);
+        // Add all update fields to FormData if they are defined
+        Object.entries(updateFields).forEach(([key, value]) => {
+          if (value !== undefined) {
+            if (value === null) {
+              formData.append(key, "");
+            } else {
+              formData.append(key, String(value));
+            }
+          }
+        });
+
+        // Stream the parameters being sent
+        dataStream.writeData({
+          type: "program_param",
+          name: "slug",
+          content: slug,
+        });
+        dataStream.writeData({
+          type: "program_param",
+          name: "locale",
+          content: locale,
+        });
+
+        // Stream other parameters if they exist
+        Object.entries(updateFields).forEach(([key, value]) => {
+          if (value !== undefined) {
+            dataStream.writeData({
+              type: "program_param",
+              name: key,
+              content: String(value),
+            });
+          }
+        });
+
+        // Call the server action with FormData
+        const result = await updateProgramAction(formData);
 
         if (!result.success || !result.data) {
           console.error("Server Action Error:", result.error);
@@ -122,6 +154,8 @@ export const updateProgram = ({ session, dataStream }: UpdateProgramProps) =>
             id: result.data.id,
             locale: result.data.locale,
             title: result.data.title,
+            slug: result.data.slug,
+            image: result.data.image,
           }),
         });
 
@@ -133,6 +167,8 @@ export const updateProgram = ({ session, dataStream }: UpdateProgramProps) =>
             id: result.data.id,
             locale: result.data.locale,
             title: result.data.title,
+            slug: result.data.slug,
+            image: result.data.image,
           },
         };
       } catch (error) {
