@@ -182,7 +182,7 @@ model ProgramTranslation {
 model Gallery {
   id        String   @id @default(cuid())
   image     String
-  category  String // Assuming category is not translated, adjust if needed
+  category  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
