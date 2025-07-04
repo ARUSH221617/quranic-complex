@@ -4,7 +4,7 @@ import "@/styles/tiptap.css";
 import SessionWrapper from "@/components/SessionWrapper";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/site-header";
-import { QueryProvider } from "@/components/providers/QueryProvider"; // Import QueryProvider
+import { QueryProvider } from "@/components/providers/QueryProvider";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -23,23 +23,26 @@ export default async function RootLayout({
       <body>
         <Toaster />
         <SessionWrapper>
-          <QueryProvider> {/* Wrap with QueryProvider */}
+          <QueryProvider>
+            {" "}
+            {/* Wrap with QueryProvider */}
             <main>
               <SidebarProvider>
                 <AppSidebar variant="inset" />
                 <SidebarInset>
-                <SiteHeader />
-                <div className="flex flex-1 flex-col">
-                  <div className="@container/main flex flex-1 flex-col gap-2">
-                    <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                      {children}
+                  <SiteHeader />
+                  <div className="flex flex-1 flex-col">
+                    <div className="@container/main flex flex-1 flex-col gap-2">
+                      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                        {children}
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </SidebarInset>
               </SidebarProvider>
             </main>
-          </QueryProvider> {/* Close QueryProvider */}
+          </QueryProvider>{" "}
+          {/* Close QueryProvider */}
         </SessionWrapper>
       </body>
     </html>

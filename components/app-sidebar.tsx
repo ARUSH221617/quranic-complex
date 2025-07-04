@@ -11,6 +11,7 @@ import {
   SettingsIcon,
   UsersIcon,
   BotIcon,
+  CalendarIcon,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -26,6 +27,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { ImageIcon } from "./ai/icons";
 
 const data = {
   navMain: [
@@ -45,6 +47,11 @@ const data = {
       icon: ClipboardListIcon,
     },
     {
+      title: "Events",
+      url: "/admin/events",
+      icon: CalendarIcon,
+    },
+    {
       title: "News Management",
       url: "/admin/news",
       icon: FileTextIcon,
@@ -53,6 +60,11 @@ const data = {
       title: "Contact Management",
       url: "/admin/contact",
       icon: DatabaseIcon,
+    },
+    {
+      title: "Gallery",
+      url: "/admin/gallery",
+      icon: ImageIcon,
     },
     {
       title: "AI Agent",
