@@ -253,7 +253,8 @@
     "categoryCompetitions": "مسابقات",
     "categoryLessons": "دروس",
     "categoryVisits": "زيارات",
-    "categoryFacilities": "مرافق"
+    "categoryFacilities": "مرافق",
+    "noGallery": "لا توجد صور متاحة في المعرض في الوقت الحالي."
   },
   "dashboard": {
     "title": "لوحة التحكم",

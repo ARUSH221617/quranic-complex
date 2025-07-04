@@ -36,14 +36,14 @@ export default async function GalleryPage() {
     locale,
   ).catch(() => []);
 
-  const categories = [
-    "categoryAll",
-    "categoryEvents",
-    "categoryCompetitions",
-    "categoryLessons",
-    "categoryVisits",
-    "categoryFacilities",
-  ] as const; // Define categories using keys
+  // Fetch categories from API
+  const fetchedCategories = await fetchWithLocale<string[]>(
+    "gallery/categories",
+    locale,
+  ).catch(() => []);
+
+  // Add "All" category to the list
+  const categories = ["All", ...fetchedCategories];
 
   return (
     <div className="flex flex-col">
@@ -102,12 +102,12 @@ export default async function GalleryPage() {
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            {categories.map((categoryKey) => (
+            {categories.map((category) => (
               <button
-                key={categoryKey}
+                key={category}
                 className="rounded-full bg-white px-6 py-2 text-gray-700 shadow-md transition-colors hover:bg-primary hover:text-white"
               >
-                {t(categoryKey)}
+                {category === "All" ? t("categoryAll") : category}
               </button>
             ))}
           </div>

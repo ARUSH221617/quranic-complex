@@ -253,7 +253,8 @@
         "categoryCompetitions": "مسابقات",
         "categoryLessons": "دروس",
         "categoryVisits": "بازدیدها",
-        "categoryFacilities": "امکانات"
+        "categoryFacilities": "امکانات",
+        "noGallery": "در حال حاضر هیچ تصویری در گالری موجود نیست."
     },
     "dashboard": {
         "title": "داشبورد",

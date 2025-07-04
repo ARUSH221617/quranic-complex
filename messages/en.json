@@ -253,7 +253,8 @@
     "categoryCompetitions": "Competitions",
     "categoryLessons": "Lessons",
     "categoryVisits": "Visits",
-    "categoryFacilities": "Facilities"
+    "categoryFacilities": "Facilities",
+    "noGallery": "No images available in the gallery at the moment."
   },
   "dashboard": {
     "title": "Dashboard",
