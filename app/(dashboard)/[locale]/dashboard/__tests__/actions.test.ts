@@ -1,21 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { getDashboardData } from "../actions";
-import { prisma } from "../../../../../lib/prisma";
-import { auth } from "../../../../../auth";
+import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
 
-vi.mock("next-auth", () => ({
-  default: () => ({
-    handlers: {
-      GET: vi.fn(),
-      POST: vi.fn(),
-    },
-    auth: vi.fn(),
-    signIn: vi.fn(),
-    signOut: vi.fn(),
-  }),
-}));
-
-vi.mock("../../../../../lib/prisma", () => ({
+vi.mock("@/lib/prisma", () => ({
   prisma: {
     enrollment: {
       count: vi.fn(),
@@ -29,8 +17,8 @@ vi.mock("../../../../../lib/prisma", () => ({
   },
 }));
 
-vi.mock("auth", () => ({
-  auth: vi.fn(),
+vi.mock("next-auth/next", () => ({
+  getServerSession: vi.fn(),
 }));
 
 describe("getDashboardData", () => {
@@ -41,7 +29,7 @@ describe("getDashboardData", () => {
       },
     };
 
-    auth.mockResolvedValue(session);
+    getServerSession.mockResolvedValue(session);
 
     prisma.enrollment.count.mockResolvedValue(5);
     prisma.lesson.count.mockResolvedValue(10);
@@ -57,7 +45,7 @@ describe("getDashboardData", () => {
   });
 
   it("should return 0 for all fields when there is no session", async () => {
-    auth.mockResolvedValue(null);
+    getServerSession.mockResolvedValue(null);
 
     const data = await getDashboardData();
 

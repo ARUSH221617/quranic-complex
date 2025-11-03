@@ -13,7 +13,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "./",
-      "auth": "./auth",
     },
   },
 });

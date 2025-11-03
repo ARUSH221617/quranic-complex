@@ -1,12 +1,12 @@
 "use server";
 
-import { prisma } from "../../../../lib/prisma";
-import { auth } from "../../../../auth";
+import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth/next";
 
 export async function getDashboardData() {
-  const session = await auth();
+  const session = await getServerSession();
 
-  if (!session) {
+  if (!session || !session.user || !session.user.id) {
     return {
       enrolledPrograms: 0,
       upcomingLessons: 0,
