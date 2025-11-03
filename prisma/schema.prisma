@@ -62,6 +62,8 @@ model User {
   dateOfBirth         DateTime
   quranicStudyLevel   QuranicStudyLevel
   nationalCardPicture String
+  bankCardNumber      String?
+  bankName            String?
 
   // Fields for email code login
   loginCode        String?
@@ -72,6 +74,7 @@ model User {
   chats       Chat[]
   documents   Document[]
   suggestions Suggestion[] // Relation for suggestions linked to the user (as owner)
+  payments    Payment[]
 }
 
 enum QuranicStudyLevel {
@@ -311,5 +314,19 @@ model Suggestion {
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Relation to the User who owns the document
 
   @@index([documentId, documentCreatedAt]) // Index for filtering
+  @@index([userId])
+}
+
+// --- Payment ---
+model Payment {
+  id          String     @id @default(cuid())
+  userId      String
+  image       String
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  status      UserStatus @default(PENDING)
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
 }

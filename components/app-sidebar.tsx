@@ -12,6 +12,7 @@ import {
   UsersIcon,
   BotIcon,
   CalendarIcon,
+  CreditCardIcon,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -40,6 +41,11 @@ const data = {
       title: "User Management",
       url: "/admin/user",
       icon: UsersIcon,
+    },
+    {
+      title: "Payment Management",
+      url: "/admin/payments",
+      icon: CreditCardIcon,
     },
     {
       title: "Program Management",
