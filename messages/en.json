@@ -193,7 +193,9 @@
       "title": "Make a Difference Today",
       "description": "Your contribution can help us make a positive impact on the lives of those in need. Join us in our mission to create a better world.",
       "donateNow": "Donate Now",
-      "volunteer": "Volunteer"
+      "volunteer": "Volunteer",
+      "browsePrograms": "Browse Initiatives",
+      "contactUs": "Contact Us"
     }
   },
   "footer": {

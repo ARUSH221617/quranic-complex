@@ -65,7 +65,7 @@ export default async function NewsPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="bg-secondary py-16 text-white">
+      <section className="bg-primary py-16 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold">{t("heroTitle")}</h1>
@@ -79,7 +79,7 @@ export default async function NewsPage() {
       {/* News Listing */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="mb-8 text-3xl font-bold text-secondary-text">
+          <h2 className="mb-8 text-3xl font-bold text-gray-800 dark:text-white">
             {t("newsSectionTitle")}
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -87,19 +87,21 @@ export default async function NewsPage() {
               formattedNews.map((item) => (
                 <Card
                   key={item.id}
-                  className="overflow-hidden transition-all duration-300 hover:shadow-xl"
+                  className="overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:shadow-xl dark:bg-gray-800"
                 >
                   <div className="relative h-48 w-full">
                     <Image
-                      src={item.image || "/placeholder.svg"}
+                      src={item.image || "/placeholder.jpg"}
                       alt={item.title}
                       fill
                       className="object-cover"
                     />
                   </div>
                   <CardHeader>
-                    <CardTitle>{item.title}</CardTitle>
-                    <p className="text-sm text-gray-500">
+                    <CardTitle className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {item.title}
+                    </CardTitle>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {new Date(item.date).toLocaleDateString(
                         locale === "ar"
                           ? "ar-EG"
@@ -115,12 +117,14 @@ export default async function NewsPage() {
                     </p>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700">{item.excerpt}</p>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {item.excerpt}
+                    </p>
                   </CardContent>
                   <CardFooter>
                     <Link
                       href={`/${locale}/news/${item.slug}`}
-                      className="text-primary hover:underline"
+                      className="font-semibold text-primary hover:underline dark:text-accent"
                     >
                       {t("readMore")}
                     </Link>
@@ -128,7 +132,7 @@ export default async function NewsPage() {
                 </Card>
               ))
             ) : (
-              <div className="col-span-3 text-center text-gray-500">
+              <div className="col-span-3 text-center text-gray-500 dark:text-gray-400">
                 {t("noNews")}
               </div>
             )}
@@ -137,39 +141,44 @@ export default async function NewsPage() {
       </section>
 
       {/* Upcoming Events */}
-      <section className="bg-gray-50 py-16">
+      <section className="bg-gray-100 py-16 dark:bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary-text">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
               {t("eventsSectionTitle")}
             </h2>
             <div className="mx-auto mt-4 h-1 w-20 bg-accent"></div>
           </div>
-          <div className="mt-12 rounded-lg bg-white p-8 shadow-lg">
+          <div className="mt-12 overflow-hidden rounded-lg bg-white shadow-lg dark:bg-gray-800">
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="py-3 text-right font-bold text-gray-700">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
                       {t("eventsTable.event")}
                     </th>
-                    <th className="py-3 text-right font-bold text-gray-700">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
                       {t("eventsTable.date")}
                     </th>
-                    <th className="py-3 text-right font-bold text-gray-700">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
                       {t("eventsTable.time")}
                     </th>
-                    <th className="py-3 text-right font-bold text-gray-700">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300">
                       {t("eventsTable.location")}
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-gray-800">
                   {formattedEvents.length > 0 ? (
                     formattedEvents.map((event) => (
-                      <tr key={event.id} className="border-b border-gray-200">
-                        <td className="py-4 text-gray-700">{event.name}</td>
-                        <td className="py-4 text-gray-700">
+                      <tr
+                        key={event.id}
+                        className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
+                      >
+                        <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                          {event.name}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
                           {new Date(event.date).toLocaleDateString(
                             locale === "ar"
                               ? "ar-EG"
@@ -183,15 +192,19 @@ export default async function NewsPage() {
                             },
                           )}
                         </td>
-                        <td className="py-4 text-gray-700">{event.time}</td>
-                        <td className="py-4 text-gray-700">{event.location}</td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                          {event.time}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500 dark:text-gray-300">
+                          {event.location}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
                       <td
                         colSpan={4}
-                        className="py-4 text-center text-gray-500"
+                        className="py-4 text-center text-sm text-gray-500 dark:text-gray-400"
                       >
                         No upcoming events
                       </td>

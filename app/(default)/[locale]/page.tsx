@@ -1,7 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { unstable_noStore as noStore } from "next/cache";
 import {
   Card,
   CardContent,
@@ -9,88 +6,78 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// Remove direct Program import if no longer needed elsewhere, keep News if used
-import type { News } from "@prisma/client";
+import { getFeaturedPrograms } from "@/lib/db/queries";
+import { getLatestNews } from "@/lib/db/queries/news"; // Ensure correct import
 import { getLocale, getTranslations } from "next-intl/server";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
 
-// Define the expected structure for a program returned by the API
+// Define the shape of the FeaturedProgram and LatestNews objects for type safety
 interface FeaturedProgram {
   id: string;
-  slug: string;
+  image: string | null;
   title: string;
   description: string;
   ageGroup: string;
   schedule: string;
-  image: string | null;
+  slug: string; // Add slug for linking
 }
 
-// Define the expected structure for a news item returned by the API
-// Assuming the /api/news route returns a similar flat structure
 interface LatestNews {
   id: string;
-  slug: string;
+  image: string | null;
   title: string;
   excerpt: string;
-  image: string | null;
-  date: Date; // API returns a Date object that we'll format
-  metaTitle: string | null;
-  metaDescription: string | null;
-}
-
-async function getFeaturedPrograms(locale: string): Promise<FeaturedProgram[]> {
-  return [];
-}
-
-async function getLatestNews(locale: string): Promise<LatestNews[]> {
-  return [];
+  date: Date;
+  slug: string; // Add slug for linking
 }
 
 export default async function Home() {
   const t = await getTranslations("home");
-  const locale = await getLocale(); // locale is already available here
+  const locale = await getLocale();
 
-  // Fetch data concurrently
-  const [featuredPrograms, latestNews] = await Promise.all([
-    getFeaturedPrograms(locale),
-    getLatestNews(locale), // Assuming getLatestNews also needs locale
-  ]);
+  // Fetch featured programs and latest news from the database
+  const featuredPrograms = await getFeaturedPrograms(locale);
+  const latestNews = await getLatestNews(locale);
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
+    <div>
+      {/* Hero Section -- UPDATED SECTION */}
       <section
-        className="relative py-20 text-white"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/placeholder.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        className="relative min-h-[60vh] bg-cover bg-center text-white"
+        style={{ backgroundImage: "url('/pattern/islamic-pattern.svg')" }}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div className="flex flex-col justify-center">
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">
+        {/* Adds a semi-transparent overlay for better text readability */}
+        <div className="absolute inset-0 bg-primary/80"></div>
+        <div className="container relative mx-auto flex h-full min-h-[60vh] items-center px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
                 {t("hero.title")}
               </h1>
-              <p className="mt-4 text-xl">{t("hero.subtitle")}</p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href={`/${locale}/donate`}>
+              <p className="mx-auto mt-4 max-w-lg text-xl text-gray-200 md:mx-0">
+                {t("hero.subtitle")}
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
+                <Link href={`/${locale}/programs`}>
+                  {" "}
+                 {/* Add locale to link */}
                   <Button
                     size="lg"
                     className="bg-primary text-white hover:bg-primary/90"
                   >
-                    {t("hero.donateNow")}
+                    {t("hero.browsePrograms")}
                   </Button>
                 </Link>
-                <Link href={`/${locale}/volunteer`}>
+                <Link href={`/${locale}/contact`}>
+                  {" "}
+                  {/* Add locale to link */}
                   <Button
                     size="lg"
                     variant="outline"
                     className="border-white bg-transparent text-white hover:bg-white/10"
                   >
-                    {t("hero.volunteer")}
+                    {t("hero.contactUs")}
                   </Button>
                 </Link>
               </div>
@@ -98,12 +85,13 @@ export default async function Home() {
             <div className="flex items-center justify-center">
               <div className="relative h-64 w-full overflow-hidden rounded-lg md:h-80">
                 <Image
-                  src="/placeholder.jpg"
-                  alt="Tehran Charity"
+                  // Ensure image path is correct
+                  src="/masged.webp" // Removed query params unless specifically needed for optimization tool
+                  alt="Quranic Complex Hero Image" // More descriptive alt text
                   fill
                   className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority // Keep priority for LCP element
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Add sizes attribute
                 />
               </div>
             </div>

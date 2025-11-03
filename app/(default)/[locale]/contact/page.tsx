@@ -162,19 +162,19 @@ export default function ContactPage() {
                     className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-primary focus:outline-none focus:ring-primary"
                   >
                     <option value="">{t("formSubjectPlaceholder")}</option>
-                    <option value="General Inquiry">
+                    <option value={t("formSubjectOptionGeneral")}>
                       {t("formSubjectOptionGeneral")}
                     </option>
-                    <option value="Donation">
+                    <option value={t("formSubjectOptionDonation")}>
                       {t("formSubjectOptionDonation")}
                     </option>
-                    <option value="Volunteer">
+                    <option value={t("formSubjectOptionVolunteer")}>
                       {t("formSubjectOptionVolunteer")}
                     </option>
-                    <option value="Suggestions">
+                    <option value={t("formSubjectOptionSuggestions")}>
                       {t("formSubjectOptionSuggestions")}
                     </option>
-                    <option value="Other">{t("formSubjectOptionOther")}</option>
+                    <option value={t("formSubjectOptionOther")}>{t("formSubjectOptionOther")}</option>
                   </select>
                 </div>
                 <div>

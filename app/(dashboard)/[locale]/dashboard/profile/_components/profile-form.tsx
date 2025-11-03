@@ -54,7 +54,7 @@ export default function ProfileForm({ user }: { user: User }) {
           <CardTitle>Update your profile</CardTitle>
           <CardDescription>
             Update your profile information below.
-          </-carddescription>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form
