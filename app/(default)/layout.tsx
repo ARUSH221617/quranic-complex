@@ -8,8 +8,8 @@ import SessionWrapper from "@/components/SessionWrapper";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: "Khorramshahr Quranic Complex",
-  description: "Educational center for Quranic studies",
+  title: "Tehran Charity",
+  description: "A charity organization dedicated to helping those in need.",
 };
 
 export default async function RootLayout({

@@ -39,48 +39,11 @@ interface LatestNews {
 }
 
 async function getFeaturedPrograms(locale: string): Promise<FeaturedProgram[]> {
-  noStore();
-  try {
-    // Ensure NEXT_PUBLIC_API_URL is set correctly in your environment
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!apiUrl) {
-      throw new Error("API URL is not configured.");
-    }
-    const res = await fetch(`${apiUrl}/api/programs?locale=${locale}`);
-    if (!res.ok) {
-      console.error(`Error fetching programs: ${res.status} ${res.statusText}`);
-      // Optionally log response body if helpful: await res.text()
-      throw new Error(`Failed to fetch programs (status: ${res.status})`);
-    }
-    const data: FeaturedProgram[] = await res.json();
-    // Assuming the API itself doesn't limit, slice here
-    return data.slice(0, 3);
-  } catch (error) {
-    console.error("Error fetching or processing programs:", error);
-    return []; // Return empty array on error
-  }
+  return [];
 }
 
 async function getLatestNews(locale: string): Promise<LatestNews[]> {
-  noStore();
-  try {
-    // Ensure NEXT_PUBLIC_API_URL is set correctly in your environment
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!apiUrl) {
-      throw new Error("API URL is not configured.");
-    }
-    const res = await fetch(`${apiUrl}/api/news?locale=${locale}`);
-    if (!res.ok) {
-      console.error(`Error fetching news: ${res.status} ${res.statusText}`);
-      throw new Error(`Failed to fetch news (status: ${res.status})`);
-    }
-    const data: LatestNews[] = await res.json();
-    // Assuming the API itself doesn't limit, slice here
-    return data.slice(0, 3);
-  } catch (error) {
-    console.error("Error fetching or processing news:", error);
-    return []; // Return empty array on error
-  }
+  return [];
 }
 
 export default async function Home() {
@@ -95,12 +58,12 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section (No changes needed here) */}
+      {/* Hero Section */}
       <section
         className="relative py-20 text-white"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(223, 207, 159, 0.9), rgba(223, 207, 159, 0.9)), url('/pattern/islamic-geometric-pattern.webp')",
+            "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/placeholder.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -113,25 +76,21 @@ export default async function Home() {
               </h1>
               <p className="mt-4 text-xl">{t("hero.subtitle")}</p>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link href={`/${locale}/programs`}>
-                  {" "}
-                  {/* Add locale to link */}
+                <Link href={`/${locale}/donate`}>
                   <Button
                     size="lg"
                     className="bg-primary text-white hover:bg-primary/90"
                   >
-                    {t("hero.browsePrograms")}
+                    {t("hero.donateNow")}
                   </Button>
                 </Link>
-                <Link href={`/${locale}/contact`}>
-                  {" "}
-                  {/* Add locale to link */}
+                <Link href={`/${locale}/volunteer`}>
                   <Button
                     size="lg"
                     variant="outline"
                     className="border-white bg-transparent text-white hover:bg-white/10"
                   >
-                    {t("hero.contactUs")}
+                    {t("hero.volunteer")}
                   </Button>
                 </Link>
               </div>
@@ -139,13 +98,12 @@ export default async function Home() {
             <div className="flex items-center justify-center">
               <div className="relative h-64 w-full overflow-hidden rounded-lg md:h-80">
                 <Image
-                  // Ensure image path is correct
-                  src="/masged.webp" // Removed query params unless specifically needed for optimization tool
-                  alt="Quranic Complex Hero Image" // More descriptive alt text
+                  src="/placeholder.jpg"
+                  alt="Tehran Charity"
                   fill
                   className="object-cover"
-                  priority // Keep priority for LCP element
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Add sizes attribute
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
             </div>

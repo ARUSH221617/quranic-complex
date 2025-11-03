@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           {/* About section */}
           <div>
-            <h3 className="text-xl font-bold">Khorramshahr Quranic Complex</h3>
+            <h3 className="text-xl font-bold">{t('brand')}</h3>
             <p className="mt-4 text-base leading-7 text-secondary-text-foreground/90">
               {t('description')}
             </p>
