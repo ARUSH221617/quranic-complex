@@ -1,6 +1,6 @@
 {
   "navigation": {
-    "brand": "Khorramshahr Quranic Complex",
+    "brand": "Tehran Charity",
     "home": "Home",
     "about": "About Us",
     "programs": "Programs",
@@ -17,10 +17,10 @@
   },
   "home": {
     "hero": {
-      "title": "Khorramshahr Quranic Complex",
-      "subtitle": "A specialized center for teaching the Holy Quran and its sciences using modern educational methods",
-      "browsePrograms": "Browse Programs",
-      "contactUs": "Contact Us"
+      "title": "Tehran Charity",
+      "subtitle": "A charity organization dedicated to helping those in need.",
+      "donateNow": "Donate Now",
+      "volunteer": "Volunteer"
     },
     "auth": {
       "login": {
@@ -127,41 +127,36 @@
     },
     "about": {
       "title": "About Us",
-      "description": "Khorramshahr Quranic Complex is an educational center specialized in teaching the Holy Quran and its sciences, established in 2010 with the aim of spreading Quranic culture and promoting the memorization and recitation of the Holy Quran. The complex includes a group of specialized teachers in Quranic sciences.",
-      "moreAboutUs": "More About Us"
+      "description": "Tehran Charity is a non-profit organization dedicated to providing assistance to those in need. We believe in creating a community where everyone has the opportunity to thrive.",
+      "moreAboutUs": "Learn More"
     },
     "programs": {
-      "title": "Our Featured Programs",
+      "title": "Our Initiatives",
       "viewDetails": "View Details",
-      "viewAllPrograms": "View All Programs",
-      "ageGroup": "Age Group",
+      "viewAllPrograms": "View All Initiatives",
+      "ageGroup": "Target Audience",
       "schedule": "Schedule",
       "page": {
-        "heroTitle": "Programs & Courses",
-        "heroDescription": "Explore our diverse programs in teaching the Holy Quran and its sciences",
-        "programsTitle": "Our Educational Programs",
-        "programsDescription": "Khorramshahr Quranic Complex offers a variety of educational programs and courses in the field of the Holy Quran and its sciences, suitable for different age groups and educational levels.",
-        "registrationTitle": "Registration Information",
-        "registrationDescription": "To register for any of our programs, please visit the complex headquarters or contact us by phone or email.",
-        "requiredDocuments": "Documents required for registration:",
-        "documents": [
-          "A copy of personal ID or passport",
-          "Two personal photos",
-          "Registration form (available at the complex headquarters or can be downloaded from our website)",
-          "Payment of registration fees"
-        ],
-        "contactButton": "Contact Us for Registration",
-        "registrationOpen": "Registration Open"
+        "heroTitle": "Our Initiatives",
+        "heroDescription": "Learn more about our initiatives and how you can get involved.",
+        "programsTitle": "Our Initiatives",
+        "programsDescription": "Tehran Charity is committed to making a difference in our community. We offer a variety of programs and services to help those in need.",
+        "registrationTitle": "Get Involved",
+        "registrationDescription": "There are many ways to get involved with Tehran Charity. You can donate, volunteer, or participate in one of our programs.",
+        "requiredDocuments": "How to get involved:",
+        "documents": "Donate,Volunteer,Participate",
+        "contactButton": "Contact Us to Get Involved",
+        "registrationOpen": "Get Involved"
       }
     },
     "news": {
-      "title": "Latest News & Events",
+      "title": "Latest Updates",
       "readMore": "Read More about {title}",
-      "viewAllNews": "View All News",
+      "viewAllNews": "View All Updates",
       "page": {
         "heroTitle": "News & Events",
-        "heroDescription": "Latest news and events from Khorramshahr Quranic Complex",
-        "newsSectionTitle": "News",
+        "heroDescription": "Stay up to date with the latest news and events from Tehran Charity.",
+        "newsSectionTitle": "Latest News",
         "loadingNews": "Loading news...",
         "noNews": "No news available",
         "readMore": "Read More",
@@ -174,40 +169,43 @@
         },
         "events": [
           {
-            "name": "Quran Memorization Competition",
+            "name": "Fundraising Gala",
             "date": "April 10, 2025",
-            "time": "10:00 AM",
-            "location": "Main Hall"
-          },
-          {
-            "name": "Lecture on the Virtues of Quran Recitation",
-            "date": "March 25, 2025",
             "time": "7:00 PM",
-            "location": "Lecture Hall"
+            "location": "Grand Hotel"
           },
           {
-            "name": "Intensive Summer Course",
+            "name": "Community Food Drive",
+            "date": "March 25, 2025",
+            "time": "10:00 AM",
+            "location": "Community Center"
+          },
+          {
+            "name": "Volunteer Appreciation Day",
             "date": "June 1, 2025",
-            "time": "9:00 AM",
-            "location": "All Halls"
+            "time": "12:00 PM",
+            "location": "City Park"
           }
         ]
       }
     },
     "cta": {
-      "title": "Join Us Today",
-      "description": "Register now in one of our distinguished programs to learn the Holy Quran and its sciences under the guidance of specialized teachers.",
-      "browsePrograms": "Browse Programs",
+      "title": "Make a Difference Today",
+      "description": "Your contribution can help us make a positive impact on the lives of those in need. Join us in our mission to create a better world.",
+      "donateNow": "Donate Now",
+      "volunteer": "Volunteer",
+      "browsePrograms": "Browse Initiatives",
       "contactUs": "Contact Us"
     }
   },
   "footer": {
-    "description": "An educational center specialized in teaching the Holy Quran and its sciences, aiming to spread Quranic culture and promote the memorization of the Holy Quran.",
+    "brand": "Tehran Charity",
+    "description": "A charity organization dedicated to helping those in need.",
     "quickLinks": "Quick Links",
     "contactInfo": "Contact Information",
-    "address": "Khorramshahr, Imam Street, next to the Grand Mosque",
+    "address": "123 Main Street, Tehran, Iran",
     "phone": "Phone: 123-456-7890",
-    "email": "Email: info@quran-khorramshahr.com",
+    "email": "Email: info@tehran-charity.com",
     "copyright": "All rights reserved.",
     "about": "About Us",
     "programs": "Programs",
@@ -217,7 +215,7 @@
   },
   "contact": {
     "title": "Contact Us",
-    "subtitle": "We are here to answer your inquiries and assist you with registration",
+    "subtitle": "We would love to hear from you. Please reach out with any questions or comments.",
     "formTitle": "Send Us a Message",
     "formNameLabel": "Name",
     "formEmailLabel": "Email Address",
@@ -225,8 +223,8 @@
     "formSubjectLabel": "Subject",
     "formSubjectPlaceholder": "Select Subject",
     "formSubjectOptionGeneral": "General Inquiry",
-    "formSubjectOptionRegistration": "Registration",
-    "formSubjectOptionPrograms": "Programs & Courses",
+    "formSubjectOptionDonation": "Donation",
+    "formSubjectOptionVolunteer": "Volunteer",
     "formSubjectOptionSuggestions": "Suggestions",
     "formSubjectOptionOther": "Other",
     "formMessageLabel": "Message",
@@ -235,9 +233,9 @@
     "formSubmitSuccess": "Your message has been sent successfully. We will contact you soon.",
     "infoTitle": "Contact Information",
     "infoAddressTitle": "Address",
-    "infoAddressValue": "Khorramshahr, Imam Street, next to the Grand Mosque",
+    "infoAddressValue": "123 Main Street, Tehran, Iran",
     "infoHoursTitle": "Working Hours",
-    "infoHoursSatThu": "Saturday to Thursday: 8:00 AM - 8:00 PM",
+    "infoHoursSatThu": "Saturday to Thursday: 9:00 AM - 5:00 PM",
     "infoHoursFri": "Friday: Closed",
     "infoPhoneTitle": "Phone",
     "infoEmailTitle": "Email",
@@ -246,33 +244,33 @@
   },
   "gallery": {
     "title": "Gallery",
-    "subtitle": "Photos from events and activities of the Khorramshahr Quranic Complex",
+    "subtitle": "Photos from our events and activities.",
     "categoriesTitle": "Image Categories",
     "categoryAll": "All",
     "categoryEvents": "Events",
-    "categoryCompetitions": "Competitions",
-    "categoryLessons": "Lessons",
-    "categoryVisits": "Visits",
-    "categoryFacilities": "Facilities",
+    "categoryFundraising": "Fundraising",
+    "categoryCommunity": "Community",
+    "categoryVolunteers": "Volunteers",
+    "categoryImpact": "Impact",
     "noGallery": "No images available in the gallery at the moment."
   },
   "dashboard": {
     "title": "Dashboard",
-    "enrolledPrograms": "Enrolled Programs",
-    "upcomingLessons": "Upcoming Lessons",
+    "enrolledPrograms": "My Initiatives",
+    "upcomingLessons": "Upcoming Events",
     "notifications": "Notifications",
     "welcome": "Welcome, {name}",
-    "welcomeMessage": "Welcome to the student portal of Khorramshahr Quranic Complex. From here, you can track your programs, lessons, and view your progress.",
-    "student": "Student",
+    "welcomeMessage": "Welcome to the Tehran Charity portal. From here, you can track your initiatives, events, and view your impact.",
+    "student": "Volunteer",
     "sidebar": {
-      "brand": "Student Portal",
+      "brand": "Volunteer Portal",
       "home": "Home",
-      "programs": "My Programs",
+      "programs": "My Initiatives",
       "schedule": "Schedule",
       "profile": "Profile",
       "settings": "Settings",
       "signOut": "Sign out",
-      "user": "Student",
+      "user": "Volunteer",
       "userMenu": {
         "profile": "Profile",
         "logout": "Logout"
@@ -320,35 +318,35 @@
   },
   "about": {
     "title": "About Us",
-    "subtitle": "Learn about Khorramshahr Quranic Complex, our mission, vision, and values",
-    "historyTitle": "History of the Complex",
-    "historyPara1": "Khorramshahr Quranic Complex was established in 2010 through the initiative of a group of religious scholars and individuals interested in spreading Quranic sciences in the region.",
-    "historyPara2": "The complex started with only two classrooms and a limited number of students, gradually expanding to become a comprehensive educational institution comprising numerous classrooms and modern educational facilities.",
-    "historyPara3": "Over the years, hundreds of Quran memorizers have graduated from the complex, and it has become a leading center for teaching the Holy Quran and its sciences in the region.",
-    "historyImageAlt": "History of Khorramshahr Quranic Complex",
+    "subtitle": "Learn about Tehran Charity, our mission, vision, and values",
+    "historyTitle": "Our History",
+    "historyPara1": "Tehran Charity was founded in 2010 with the simple mission of helping those in need. What started as a small group of volunteers has grown into a thriving organization that has impacted the lives of thousands.",
+    "historyPara2": "Over the years, we have expanded our programs and services to meet the evolving needs of our community. We are proud of our history and the positive change we have brought to the lives of so many.",
+    "historyPara3": "We are grateful for the support of our donors and volunteers who have made our work possible. We look forward to continuing to serve our community for many years to come.",
+    "historyImageAlt": "Our History",
     "missionVisionTitle": "Our Mission & Vision",
     "missionTitle": "Our Mission",
-    "missionText": "At Khorramshahr Quranic Complex, we strive to spread the teachings of the Holy Quran and its sciences among community members, and to graduate a distinguished generation of Quran memorizers proficient in its recitation and applying its rulings, by providing outstanding educational programs led by a selection of specialized teachers.",
+    "missionText": "Our mission is to provide assistance to those in need and to create a community where everyone has the opportunity to thrive.",
     "visionTitle": "Our Vision",
-    "visionText": "We aspire for Khorramshahr Quranic Complex to be a leading educational institution at the regional level in the field of teaching the Holy Quran and its sciences, and to be a reliable reference in spreading Quranic culture and Islamic values in society.",
+    "visionText": "We envision a world where everyone has access to the resources and support they need to live a healthy and fulfilling life.",
     "valuesTitle": "Our Values",
-    "valueMasteryTitle": "Mastery",
-    "valueMasteryText": "We always strive to provide the highest levels of quality in education and training, and we are keen on mastering work in all its aspects.",
-    "valueRespectTitle": "Respect",
-    "valueRespectText": "We believe in the importance of respecting all individuals regardless of their backgrounds and abilities, and we work to provide an educational environment based on mutual respect.",
-    "valueExcellenceTitle": "Excellence",
-    "valueExcellenceText": "We always strive for excellence in all our work, and we encourage our students to strive for excellence in their studies and lives.",
+    "valueMasteryTitle": "Compassion",
+    "valueMasteryText": "We believe in treating everyone with kindness, empathy, and respect.",
+    "valueRespectTitle": "Integrity",
+    "valueRespectText": "We are committed to being honest, transparent, and accountable in all that we do.",
+    "valueExcellenceTitle": "Collaboration",
+    "valueExcellenceText": "We believe in the power of working together to achieve our goals.",
     "valueInnovationTitle": "Innovation",
-    "valueInnovationText": "We believe in the importance of innovation and renewal in teaching methods, and we always seek to develop our programs and teaching methods.",
-    "valueCooperationTitle": "Cooperation",
-    "valueCooperationText": "We believe in the importance of teamwork and cooperation among all members of the complex, including administration, teachers, students, and parents.",
+    "valueInnovationText": "We are always looking for new and creative ways to make a difference.",
+    "valueCooperationTitle": "Dedication",
+    "valueCooperationText": "We are passionate about our work and dedicated to making a positive impact.",
     "valueResponsibilityTitle": "Responsibility",
-    "valueResponsibilityText": "We take responsibility for our actions and always strive to achieve our goals with honesty and sincerity.",
+    "valueResponsibilityText": "We are committed to being good stewards of the resources that have been entrusted to us.",
     "staffTitle": "Our Team",
-    "staffDescription": "Khorramshahr Quranic Complex includes a selection of specialized teachers in Quranic sciences, recitation (Tajweed), and interpretation (Tafsir), in addition to a distinguished administrative team.",
+    "staffDescription": "Our team is made up of passionate and dedicated individuals who are committed to making a difference.",
     "staffMemberAlt": "Team Member {index}",
-    "staffMemberName": "Professor Mohamed {index}",
-    "staffMemberRole": "Quran and Tajweed Teacher"
+    "staffMemberName": "Team Member {index}",
+    "staffMemberRole": "Volunteer"
   },
   "curriculum": {
     "title": "Curriculum",

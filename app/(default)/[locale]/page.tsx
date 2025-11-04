@@ -1,7 +1,4 @@
-import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { unstable_noStore as noStore } from "next/cache";
 import {
   Card,
   CardContent,
@@ -9,113 +6,60 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-// Remove direct Program import if no longer needed elsewhere, keep News if used
-import type { News } from "@prisma/client";
+import { getLatestNews } from "@/lib/ai/actions/get-news";
 import { getLocale, getTranslations } from "next-intl/server";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
 
-// Define the expected structure for a program returned by the API
+// Define the shape of the FeaturedProgram and LatestNews objects for type safety
 interface FeaturedProgram {
   id: string;
-  slug: string;
+  image: string | null;
   title: string;
   description: string;
   ageGroup: string;
   schedule: string;
-  image: string | null;
+  slug: string; // Add slug for linking
 }
 
-// Define the expected structure for a news item returned by the API
-// Assuming the /api/news route returns a similar flat structure
 interface LatestNews {
   id: string;
-  slug: string;
+  image: string | null;
   title: string;
   excerpt: string;
-  image: string | null;
-  date: Date; // API returns a Date object that we'll format
-  metaTitle: string | null;
-  metaDescription: string | null;
-}
-
-async function getFeaturedPrograms(locale: string): Promise<FeaturedProgram[]> {
-  noStore();
-  try {
-    // Ensure NEXT_PUBLIC_API_URL is set correctly in your environment
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!apiUrl) {
-      throw new Error("API URL is not configured.");
-    }
-    const res = await fetch(`${apiUrl}/api/programs?locale=${locale}`);
-    if (!res.ok) {
-      console.error(`Error fetching programs: ${res.status} ${res.statusText}`);
-      // Optionally log response body if helpful: await res.text()
-      throw new Error(`Failed to fetch programs (status: ${res.status})`);
-    }
-    const data: FeaturedProgram[] = await res.json();
-    // Assuming the API itself doesn't limit, slice here
-    return data.slice(0, 3);
-  } catch (error) {
-    console.error("Error fetching or processing programs:", error);
-    return []; // Return empty array on error
-  }
-}
-
-async function getLatestNews(locale: string): Promise<LatestNews[]> {
-  noStore();
-  try {
-    // Ensure NEXT_PUBLIC_API_URL is set correctly in your environment
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!apiUrl) {
-      throw new Error("API URL is not configured.");
-    }
-    const res = await fetch(`${apiUrl}/api/news?locale=${locale}`);
-    if (!res.ok) {
-      console.error(`Error fetching news: ${res.status} ${res.statusText}`);
-      throw new Error(`Failed to fetch news (status: ${res.status})`);
-    }
-    const data: LatestNews[] = await res.json();
-    // Assuming the API itself doesn't limit, slice here
-    return data.slice(0, 3);
-  } catch (error) {
-    console.error("Error fetching or processing news:", error);
-    return []; // Return empty array on error
-  }
+  date: Date;
+  slug: string; // Add slug for linking
 }
 
 export default async function Home() {
   const t = await getTranslations("home");
-  const locale = await getLocale(); // locale is already available here
+  const locale = await getLocale();
 
-  // Fetch data concurrently
-  const [featuredPrograms, latestNews] = await Promise.all([
-    getFeaturedPrograms(locale),
-    getLatestNews(locale), // Assuming getLatestNews also needs locale
-  ]);
+  // Fetch featured programs and latest news from the database
+  const latestNews = await getLatestNews({ locale });
 
   return (
-    <div className="flex flex-col">
-      {/* Hero Section (No changes needed here) */}
+    <div>
+      {/* Hero Section -- UPDATED SECTION */}
       <section
-        className="relative py-20 text-white"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(223, 207, 159, 0.9), rgba(223, 207, 159, 0.9)), url('/pattern/islamic-geometric-pattern.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
+        className="relative min-h-[60vh] bg-cover bg-center text-white"
+        style={{ backgroundImage: "url('/pattern/islamic-pattern.svg')" }}
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div className="flex flex-col justify-center">
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">
+        {/* Adds a semi-transparent overlay for better text readability */}
+        <div className="absolute inset-0 bg-primary/80"></div>
+        <div className="container relative mx-auto flex h-full min-h-[60vh] items-center px-4 py-16 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
                 {t("hero.title")}
               </h1>
-              <p className="mt-4 text-xl">{t("hero.subtitle")}</p>
-              <div className="mt-8 flex flex-wrap gap-4">
+              <p className="mx-auto mt-4 max-w-lg text-xl text-gray-200 md:mx-0">
+                {t("hero.subtitle")}
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start">
                 <Link href={`/${locale}/programs`}>
                   {" "}
-                  {/* Add locale to link */}
+                 {/* Add locale to link */}
                   <Button
                     size="lg"
                     className="bg-primary text-white hover:bg-primary/90"
@@ -182,85 +126,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Programs -- UPDATED SECTION */}
-      <section className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary-text">
-              {t("programs.title")}
-            </h2>
-            <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
-          </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Use the FeaturedProgram type */}
-            {featuredPrograms.map((program: FeaturedProgram) => (
-              <Card
-                key={program.id}
-                className="overflow-hidden transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={program.image as string}
-                    // Use the direct title from the API response
-                    alt={program.title}
-                    fill
-                    className="object-cover"
-                    // Add sizes attribute for optimization
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-                <CardHeader>
-                  {/* Use the direct title */}
-                  <CardTitle>{program.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {/* Use the direct description */}
-                  <p
-                    className="line-clamp-3 text-gray-700"
-                    dangerouslySetInnerHTML={{ __html: program.description }}
-                  />
-                  <div className="mt-4 space-y-2 text-sm text-gray-600">
-                    <p>
-                      <span className="font-semibold">
-                        {t("programs.ageGroup")}:
-                      </span>{" "}
-                      {/* Use the direct ageGroup */}
-                      {program.ageGroup}
-                    </p>
-                    <p>
-                      <span className="font-semibold">
-                        {t("programs.schedule")}:
-                      </span>{" "}
-                      {/* Use the direct schedule */}
-                      {program.schedule}
-                    </p>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  {/* Link to the specific program page using its slug */}
-                  <Link
-                    href={`/${locale}/programs/${program.slug}`}
-                    className="text-primary hover:underline"
-                  >
-                    {t("programs.viewDetails")}
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            {/* Link to the main programs page */}
-            <Link href={`/${locale}/programs`}>
-              {" "}
-              {/* Add locale to link */}
-              <Button className="bg-primary text-white hover:bg-primary/90">
-                {t("programs.viewAllPrograms")}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Latest News -- UPDATED SECTION (assuming similar API structure) */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,7 +137,7 @@ export default async function Home() {
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {/* Use the LatestNews type */}
-            {latestNews.map((item: LatestNews) => (
+            {latestNews.data.map((item: LatestNews) => (
               <Card
                 key={item.id}
                 className="overflow-hidden transition-all duration-300 hover:shadow-xl"

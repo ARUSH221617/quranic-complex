@@ -61,11 +61,11 @@ export default function Header() {
         <div className="flex h-16 sm:h-18 md:h-20 items-center justify-between">
           <div className="flex items-center">
             <Link href={`/${locale}`} className="flex items-center">
-              <span className="sr-only">Khorramshahr Quranic Complex</span>
+              <span className="sr-only">Tehran Charity</span>
               <div className="relative h-10 w-10 sm:h-12 sm:w-12 overflow-hidden rounded-full bg-primary/10">
                 <Image
                   src={"/logo.webp"}
-                  alt=""
+                  alt="Tehran Charity Logo"
                   width={150}
                   height={150}
                   className="h-full w-full object-cover"

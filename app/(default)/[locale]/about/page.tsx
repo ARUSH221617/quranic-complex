@@ -31,7 +31,7 @@ export default function AboutPage() {
             <div className="flex items-center justify-center">
               <div className="relative h-80 w-full overflow-hidden rounded-lg">
                 <Image
-                  src="/placeholder.svg?height=400&width=600"
+                  src="/placeholder.jpg"
                   alt={t("historyImageAlt")}
                   fill
                   className="object-cover"
@@ -122,7 +122,7 @@ export default function AboutPage() {
                   />
                 </div>
                 {/* Staff name is likely dynamic or placeholder, keeping original structure */}
-                <h3 className="mt-4 text-xl font-bold text-secondary-text">الأستاذ محمد {index}</h3>
+                <h3 className="mt-4 text-xl font-bold text-secondary-text">{t("staffMemberName", { index })}</h3>
                 <p className="text-primary">{t("staffMemberRole")}</p>
               </div>
             ))}
