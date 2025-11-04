@@ -74,7 +74,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="bg-secondary py-16 text-white">
+      <section className="bg-primary py-16 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold">{t("title")}</h1>
