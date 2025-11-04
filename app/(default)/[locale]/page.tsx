@@ -6,8 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getFeaturedPrograms } from "@/lib/db/queries";
-import { getLatestNews } from "@/lib/db/queries/news"; // Ensure correct import
+import { getLatestNews } from "@/lib/ai/actions/get-news";
 import { getLocale, getTranslations } from "next-intl/server";
 import Image from "next/image";
 import Link from "next/link";
@@ -37,8 +36,7 @@ export default async function Home() {
   const locale = await getLocale();
 
   // Fetch featured programs and latest news from the database
-  const featuredPrograms = await getFeaturedPrograms(locale);
-  const latestNews = await getLatestNews(locale);
+  const latestNews = await getLatestNews({ locale });
 
   return (
     <div>
@@ -128,85 +126,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Featured Programs -- UPDATED SECTION */}
-      <section className="bg-gray-50 py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-secondary-text">
-              {t("programs.title")}
-            </h2>
-            <div className="mx-auto mt-4 h-1 w-20 bg-secondary-text/90"></div>
-          </div>
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {/* Use the FeaturedProgram type */}
-            {featuredPrograms.map((program: FeaturedProgram) => (
-              <Card
-                key={program.id}
-                className="overflow-hidden transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="relative h-48 w-full">
-                  <Image
-                    src={program.image as string}
-                    // Use the direct title from the API response
-                    alt={program.title}
-                    fill
-                    className="object-cover"
-                    // Add sizes attribute for optimization
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  />
-                </div>
-                <CardHeader>
-                  {/* Use the direct title */}
-                  <CardTitle>{program.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {/* Use the direct description */}
-                  <p
-                    className="line-clamp-3 text-gray-700"
-                    dangerouslySetInnerHTML={{ __html: program.description }}
-                  />
-                  <div className="mt-4 space-y-2 text-sm text-gray-600">
-                    <p>
-                      <span className="font-semibold">
-                        {t("programs.ageGroup")}:
-                      </span>{" "}
-                      {/* Use the direct ageGroup */}
-                      {program.ageGroup}
-                    </p>
-                    <p>
-                      <span className="font-semibold">
-                        {t("programs.schedule")}:
-                      </span>{" "}
-                      {/* Use the direct schedule */}
-                      {program.schedule}
-                    </p>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  {/* Link to the specific program page using its slug */}
-                  <Link
-                    href={`/${locale}/programs/${program.slug}`}
-                    className="text-primary hover:underline"
-                  >
-                    {t("programs.viewDetails")}
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-12 text-center">
-            {/* Link to the main programs page */}
-            <Link href={`/${locale}/programs`}>
-              {" "}
-              {/* Add locale to link */}
-              <Button className="bg-primary text-white hover:bg-primary/90">
-                {t("programs.viewAllPrograms")}
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Latest News -- UPDATED SECTION (assuming similar API structure) */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -218,7 +137,7 @@ export default async function Home() {
           </div>
           <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {/* Use the LatestNews type */}
-            {latestNews.map((item: LatestNews) => (
+            {latestNews.data.map((item: LatestNews) => (
               <Card
                 key={item.id}
                 className="overflow-hidden transition-all duration-300 hover:shadow-xl"
