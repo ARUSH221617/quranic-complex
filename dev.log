@@ -1,15 +1,3 @@
 
 > complex@0.1.0 dev /app
 > next dev --turbopack
-
-   ▲ Next.js 15.3.1 (Turbopack)
-   - Local:        http://localhost:3000
-   - Network:      http://192.168.0.2:3000
-   - Environments: .env
-   - Experiments (use with caution):
-     · turbo
-     ✓ webpackBuildWorker
-     ✓ parallelServerCompiles
-     · ...
-
- ✓ Starting...

@@ -43,15 +43,15 @@ export default async function Home() {
   const locale = await getLocale();
 
   // Fetch featured programs and latest news from the database
-  // const latestNews = await getLatestNews({ locale });
+  const latestNews = await getLatestNews({ locale });
 
   return (
     <div>
       {/* Hero Section */}
       <section className="relative min-h-[80vh] bg-cover bg-center text-white">
         <div className="absolute inset-0 bg-primary/90"></div>
-        <div className="container relative mx-auto flex h-full min-h-[80vh] items-center px-4 py-16 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
+        <div className="container relative mx-auto flex h-full min-h-[80vh] flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex flex-col items-center gap-12 md:flex-row md:items-center">
             <div className="text-center md:text-left">
               <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
                 {t("hero.title")}
@@ -60,7 +60,7 @@ export default async function Home() {
                 {t("hero.subtitle")}
               </p>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="w-full max-w-md">
               <DonationForm />
             </div>
           </div>
