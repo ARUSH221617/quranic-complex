@@ -25,11 +25,6 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/programs" className="text-base text-secondary-text-foreground/90 hover:text-secondary-text-foreground transition-colors">
-                  {t('programs')}
-                </Link>
-              </li>
-              <li>
                 <Link href="/news" className="text-base text-secondary-text-foreground/90 hover:text-secondary-text-foreground transition-colors">
                   {t('news')}
                 </Link>
