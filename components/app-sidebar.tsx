@@ -3,7 +3,6 @@
 import { ComponentProps } from "react";
 import {
   ArrowUpCircleIcon,
-  ClipboardListIcon,
   DatabaseIcon,
   FileTextIcon,
   HelpCircleIcon,
@@ -46,11 +45,6 @@ const data = {
       title: "Payment Management",
       url: "/admin/payments",
       icon: CreditCardIcon,
-    },
-    {
-      title: "Program Management",
-      url: "/admin/programs",
-      icon: ClipboardListIcon,
     },
     {
       title: "Events",
