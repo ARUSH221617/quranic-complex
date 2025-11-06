@@ -17,10 +17,180 @@
     },
     "home": {
         "hero": {
-            "title": "خیریه تهران",
-            "subtitle": "یک موسسه خیریه برای کمک به نیازمندان.",
+            "title": "کمک شما می‌تواند زندگی‌ها را تغییر دهد",
+            "subtitle": "در ماموریت ما برای حمایت از جوامع نیازمند به ما بپیوندید. هر کمکی، بزرگ یا کوچک، تفاوتی ایجاد می‌کند.",
             "donateNow": "هم اکنون کمک کنید",
             "volunteer": "داوطلب شوید"
+        },
+        "auth": {
+            "login": {
+                "title": "ورود",
+                "subtitle": "برای دسترسی به پورتال دانشجویی وارد شوید",
+                "emailLabel": "ایمیل",
+                "passwordLabel": "رمز عبور",
+                "signIn": "ورود",
+                "signingInProgress": "در حال ورود...",
+                "noAccount": "حساب کاربری ندارید؟",
+                "register": "ثبت‌نام",
+                "invalidCredentials": "ایمیل یا رمز عبور نامعتبر است",
+                "loginError": "خطا در هنگام ورود رخ داد",
+                "pleaseTryAgain": "لطفاً دوباره تلاش کنید",
+                "loginSuccess": "ورود با موفقیت انجام شد",
+                "redirecting": "در حال انتقال...",
+                "unexpectedError": "خطای غیرمنتظره رخ داد",
+                "emailVerifiedSuccess": "ایمیل شما با موفقیت تأیید شد! اکنون می‌توانید وارد شوید.",
+                "emailNotVerifiedTitle": "ایمیل تأیید نشده است",
+                "emailNotVerifiedDesc": "لطفاً ایمیل خود را بررسی کرده و روی لینک تأیید کلیک کنید.",
+                "verificationErrorTitle": "خطای تأیید",
+                "verificationInvalidTokenDesc": "لینک تأیید نامعتبر است یا قبلاً استفاده شده است.",
+                "verificationExpiredTokenDesc": "لینک تأیید منقضی شده است. لطفاً دوباره ثبت‌نام کنید.",
+                "emailRequired": "آدرس ایمیل الزامی است.",
+                "requestCodeFailed": "ارسال کد ورود ناموفق بود. لطفاً دوباره تلاش کنید.",
+                "codeSentSuccess": "کد ورود با موفقیت ارسال شد. ایمیل خود را بررسی کنید.",
+                "verificationSuccessTitle": "ایمیل تأیید شد!",
+                "errorTitle": "خطا",
+                "infoTitle": "اطلاعات",
+                "passwordMethod": "رمز عبور",
+                "emailCodeMethod": "کد ایمیل",
+                "signInWithPassword": "ورود با رمز عبور",
+                "sendingCode": "در حال ارسال کد...",
+                "sendLoginCode": "ارسال کد ورود",
+                "loginCodeLabel": "کد ورود",
+                "signInWithCode": "ورود با کد",
+                "useDifferentEmail": "استفاده از ایمیل یا روش دیگر"
+            },
+            "register": {
+                "title": "ایجاد حساب کاربری",
+                "subtitle": "برای دسترسی به پورتال دانشجویی ثبت‌نام کنید",
+                "nameLabel": "نام کامل",
+                "emailLabel": "ایمیل",
+                "passwordLabel": "رمز عبور",
+                "confirmPasswordLabel": "تکرار رمز عبور",
+                "register": "ثبت‌نام",
+                "registeringProgress": "در حال ثبت‌نام...",
+                "hasAccount": "قبلاً حساب کاربری دارید؟",
+                "signIn": "ورود",
+                "passwordMismatch": "رمزهای عبور مطابقت ندارند",
+                "phoneLabel": "شماره تلفن",
+                "optional": "اختیاری",
+                "dateOfBirthLabel": "تاریخ تولد",
+                "nationalCodeLabel": "کد ملی",
+                "quranicLevelLabel": "سطح تحصیلات قرآنی",
+                "selectLevelPlaceholder": "سطح خود را انتخاب کنید",
+                "nationalCardLabel": "تصویر کارت ملی",
+                "registrationFailed": "ثبت‌نام ناموفق بود. لطفاً دوباره تلاش کنید.",
+                "networkError": "خطای شبکه رخ داد. لطفاً اتصال خود را بررسی کرده و دوباره تلاش کنید.",
+                "nameRequired": "نام کامل الزامی است",
+                "invalidEmail": "لطفاً یک ایمیل معتبر وارد کنید",
+                "passwordMinLength": "رمز عبور باید حداقل 6 کاراکتر باشد",
+                "invalidDateFormat": "لطفاً تاریخ معتبر وارد کنید",
+                "nationalCodeLength": "کد ملی باید دقیقاً 10 رقم باشد",
+                "nationalCodeNumeric": "کد ملی باید فقط شامل اعداد باشد",
+                "quranicLevelRequired": "لطفاً سطح تحصیلات قرآنی خود را انتخاب کنید",
+                "nationalCardRequired": "تصویر کارت ملی الزامی است",
+                "quranicLevels": {
+                    "BEGINNER": "مبتدی",
+                    "INTERMEDIATE": "متوسط",
+                    "ADVANCED": "پیشرفته"
+                },
+                "invalidImageType": "نوع تصویر نامعتبر است. لطفاً یک فایل PNG، JPG یا JPEG آپلود کنید.",
+                "imageTooLarge": "حجم تصویر نمی‌تواند بیشتر از {size} باشد.",
+                "nationalCardPreviewAlt": "پیش‌نمایش کارت ملی",
+                "removeImageAriaLabel": "حذف تصویر",
+                "changeImageAriaLabel": "تغییر تصویر",
+                "registrationSuccessCheckEmail": "ثبت‌نام با موفقیت انجام شد! لطفاً ایمیل خود را برای تأیید حساب بررسی کنید.",
+                "checkEmailSubtitle": "لطفاً ایمیل خود را برای تکمیل ثبت‌نام بررسی کنید.",
+                "verificationEmailSentInfo": "لینک تأیید به آدرس ایمیل شما ارسال شد. برای فعال‌سازی حساب خود روی لینک کلیک کنید.",
+                "goToLogin": "رفتن به صفحه ورود"
+            },
+             "error": {
+                "defaultTitle": "خطای احراز هویت",
+                "defaultMessage": "خطایی در فرآیند احراز هویت رخ داد.",
+                "configErrorTitle": "خطای پیکربندی",
+                "configErrorMessage": "مشکلی در پیکربندی سرور وجود دارد.",
+                "accessDeniedTitle": "دسترسی رد شد",
+                "accessDeniedMessage": "شما اجازه دسترسی به این صفحه را ندارید.",
+                "verificationErrorTitle": "خطای تأیید",
+                "verificationGenericMessage": "مشکلی در تأیید ایمیل شما وجود داشت. لطفاً دوباره تلاش کنید یا با پشتیبانی تماس بگیرید.",
+                "signInErrorTitle": "خطای ورود",
+                "credentialsSignInMessage": "ورود ناموفق بود. جزئیات وارد شده را بررسی کنید.",
+                "verificationError_VerificationMissingToken": "لینک تأیید ناقص است. لطفاً از لینک موجود در ایمیل خود استفاده کنید.",
+                "verificationError_VerificationInvalidToken": "لینک تأیید نامعتبر است یا قبلاً استفاده شده است.",
+                "verificationError_VerificationExpiredToken": "لینک تأیید منقضی شده است. لطفاً دوباره ثبت‌نام کنید.",
+                "verificationError_VerificationUserNotFound": "کاربری مرتبط با این لینک تأیید یافت نشد.",
+                "verificationError_VerificationFailed": "تأیید ایمیل به دلیل خطای غیرمنتظره ناموفق بود.",
+                "emailNotVerifiedTitle": "ایمیل تأیید نشده است",
+                "emailNotVerifiedMessage": "لطفاً قبل از ادامه، آدرس ایمیل خود را تأیید کنید.",
+                "invalidOrExpiredCodeMessage": "کد ورود نامعتبر یا منقضی شده است. لطفاً کد جدید درخواست کنید.",
+                "backToLogin": "بازگشت به صفحه ورود"
+            }
+        },
+        "donation": {
+            "form": {
+                "title": "کمک مالی کنید",
+                "amount": "مبلغ",
+                "customAmount": "مبلغ دلخواه",
+                "frequency": "فرکانس",
+                "oneTime": "یک‌باره",
+                "monthly": "ماهانه",
+                "name": "نام کامل",
+                "namePlaceholder": "نام کامل خود را وارد کنید",
+                "email": "آدرس ایمیل",
+                "emailPlaceholder": "آدرس ایمیل خود را وارد کنید",
+        "donateNow": "هم اکنون کمک کنید",
+        "thankYou": "متشکرم!",
+        "thankYouMessage": "کمک شما دریافت شد. از حمایت شما سپاسگزاریم."
+            }
+        },
+        "impact": {
+            "title": "تأثیر ما",
+            "metric1": {
+                "value": "+۱۰٬۰۰۰",
+                "label": "افراد کمک شده"
+            },
+            "metric2": {
+                "value": "+۵۰٬۰۰۰",
+                "label": "وعده غذایی ارائه شده"
+            },
+            "metric3": {
+                "value": "+۱۰۰",
+                "label": "مکان‌های خدمت‌رسانی شده"
+            },
+            "story": {
+                "title": "داستان یک بهره‌مند",
+                "content": "«به لطف خیریه تهران، من و خانواده‌ام سقفی بالای سرمان و غذایی برای خوردن داریم. ما از حمایت آنها بسیار سپاسگزاریم.»"
+            }
+        },
+        "trust": {
+            "title": "مورد اعتماد جامعه ما",
+            "testimonial1": {
+                "content": "«سال‌هاست که اهداکننده هستم و همیشه تحت تأثیر شفافیت و تأثیر این سازمان قرار گرفته‌ام.»",
+                "author": "— یک اهداکننده سپاسگزار"
+            },
+            "testimonial2": {
+                "content": "«کاری که خیریه تهران انجام می‌دهد واقعاً الهام‌بخش است. من افتخار می‌کنم که بخشی از مأموریت آنها هستم.»",
+                "author": "— یک داوطلب متعهد"
+            },
+            "testimonial3": {
+                "content": "«من از نزدیک تغییرات مثبتی را که این سازمان برای جامعه ما به ارمغان می‌آورد، دیده‌ام. آنها چراغ امیدی هستند.»",
+                "author": "— یک رهبر جامعه"
+            },
+            "partnersTitle": "شرکای ما"
+        },
+        "faq": {
+            "title": "سوالات متداول",
+            "question1": {
+                "title": "آیا پرداخت من امن است؟",
+                "content": "بله، ما از یک پردازشگر پرداخت سازگار با PCI DSS برای اطمینان از امنیت اطلاعات پرداخت شما استفاده می‌کنیم. ما اطلاعات کارت اعتباری شما را در سرورهای خود ذخیره نمی‌کنیم."
+            },
+            "question2": {
+                "title": "چگونه می‌توانم کمک مالی تکراری خود را مدیریت کنم؟",
+                "content": "شما می‌توانید با ورود به حساب کاربری خود یا با تماس مستقیم با ما، کمک مالی تکراری خود را مدیریت کنید. ما خوشحال می‌شویم به شما در انجام هرگونه تغییری که نیاز دارید کمک کنیم."
+            },
+            "question3": {
+                "title": "آیا داده‌های من خصوصی است؟",
+                "content": "ما حریم خصوصی شما را جدی می‌گیریم. ما هرگز اطلاعات شخصی شما را بدون رضایت شما با اشخاص ثالث به اشتراک نخواهیم گذاشت. برای اطلاعات بیشتر می‌توانید سیاست حفظ حریم خصوصی ما را بخوانید."
+            }
         },
         "auth": {
             "login": {
