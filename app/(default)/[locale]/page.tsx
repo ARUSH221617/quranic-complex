@@ -56,7 +56,7 @@ export default async function Home() {
               <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
                 {t("hero.title")}
               </h1>
-              <p className="mx-auto mt-4 max-w-lg text-xl text-gray-200 md:mx-0">
+              <p className="mx-auto mt-4 max-w-sm text-xl text-gray-200 md:mx-0 md:max-w-lg">
                 {t("hero.subtitle")}
               </p>
             </div>
