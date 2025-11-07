@@ -63,7 +63,7 @@ export default function Header() {
               <span className="sr-only">Tehran Charity</span>
               <div className="relative h-10 w-10 sm:h-12 sm:w-12 overflow-hidden rounded-full bg-primary/10">
                 <Image
-                  src={"/logo.webp"}
+                  src={"/logo.png"}
                   alt="Tehran Charity Logo"
                   width={150}
                   height={150}

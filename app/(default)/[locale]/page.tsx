@@ -43,7 +43,7 @@ export default async function Home() {
   const locale = await getLocale();
 
   // Fetch featured programs and latest news from the database
-  const latestNews = await getLatestNews({ locale });
+  // const latestNews = await getLatestNews({ locale });
 
   return (
     <div>
