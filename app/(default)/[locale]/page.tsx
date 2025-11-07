@@ -51,12 +51,12 @@ export default async function Home() {
       <section className="relative min-h-[80vh] bg-cover bg-center text-white">
         <div className="absolute inset-0 bg-primary/90"></div>
         <div className="container relative mx-auto flex h-full min-h-[80vh] flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-12 md:flex-row md:items-center">
-            <div className="text-center md:text-left">
+          <div className="flex flex-col-reverse items-center gap-12 lg:flex-row lg:items-center">
+            <div className="text-center lg:text-left">
               <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
                 {t("hero.title")}
               </h1>
-              <p className="mx-auto mt-4 max-w-sm text-xl text-gray-200 md:mx-0 md:max-w-lg">
+              <p className="mx-auto mt-4 max-w-xl text-xl text-gray-200 lg:mx-0 lg:max-w-lg">
                 {t("hero.subtitle")}
               </p>
             </div>
