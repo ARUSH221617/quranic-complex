@@ -97,61 +97,64 @@ export default async function Home() {
     <div className="flex flex-col">
       {/* Hero Section (No changes needed here) */}
       <section
-        className="relative py-20 text-white"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(223, 207, 159, 0.9), rgba(223, 207, 159, 0.9)), url('/pattern/islamic-geometric-pattern.webp')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div className="flex flex-col justify-center">
-              <h1 className="text-4xl font-bold leading-tight md:text-5xl">
-                {t("hero.title")}
-              </h1>
-              <p className="mt-4 text-xl">{t("hero.subtitle")}</p>
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Link href={`/${locale}/programs`}>
-                  {" "}
-                  {/* Add locale to link */}
-                  <Button
-                    size="lg"
-                    className="bg-primary text-white hover:bg-primary/90"
-                  >
-                    {t("hero.browsePrograms")}
-                  </Button>
-                </Link>
-                <Link href={`/${locale}/contact`}>
-                  {" "}
-                  {/* Add locale to link */}
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="border-white bg-transparent text-white hover:bg-white/10"
-                  >
-                    {t("hero.contactUs")}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <div className="relative h-64 w-full overflow-hidden rounded-lg md:h-80">
-                <Image
-                  // Ensure image path is correct
-                  src="/masged.webp" // Removed query params unless specifically needed for optimization tool
-                  alt="Quranic Complex Hero Image" // More descriptive alt text
-                  fill
-                  className="object-cover"
-                  priority // Keep priority for LCP element
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Add sizes attribute
-                />
-              </div>
-            </div>
-          </div>
+  className="relative isolate py-16 text-white sm:py-20 md:py-24"
+  style={{
+    backgroundImage:
+      "linear-gradient(rgba(223, 207, 159, 0.9), rgba(223, 207, 159, 0.9)), url('/pattern/islamic-geometric-pattern.webp')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
+      {/* Text side */}
+      <div className="text-center md:text-left">
+        <h1 className="text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">
+          {t("hero.title")}
+        </h1>
+        <p className="mt-4 text-lg md:text-xl">
+          {t("hero.subtitle")}
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 md:justify-start">
+          <Link href={`/${locale}/programs`}>
+            <Button
+              size="lg"
+              className="bg-primary text-white hover:bg-primary/90"
+            >
+              {t("hero.browsePrograms")}
+            </Button>
+          </Link>
+          <Link href={`/${locale}/contact`}>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white bg-transparent text-white hover:bg-white/10"
+            >
+              {t("hero.contactUs")}
+            </Button>
+          </Link>
         </div>
-      </section>
+      </div>
+
+      {/* Image side */}
+      <div className="flex items-center justify-center">
+        {/* Give the parent a definite height and position for Image fill */}
+        <div className="relative h-64 w-full overflow-hidden rounded-lg sm:h-80 md:h-[26rem] lg:h-[30rem]">
+          <Image
+            src="/masged.webp"
+            alt="Quranic Complex Hero Image"
+            fill
+            priority
+            className="object-cover"
+            // 1-col on mobile (full width), 2-col at md (half width)
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* About Us Snippet (No changes needed here) */}
       <section className="py-16">
