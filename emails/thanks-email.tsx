@@ -10,33 +10,31 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface LoginCodeEmailProps {
-  loginCode: string;
+interface ThanksEmailProps {
+  name: string;
   siteName?: string;
 }
 
-const LoginCodeEmail = ({
-  loginCode,
-  siteName = "Charity Org",
-}: LoginCodeEmailProps) => (
+const ThanksEmail = ({
+  name,
+  siteName = "Quranic Complex",
+}: ThanksEmailProps) => (
   <Html>
     <Head />
-    <Preview>Your Login Code</Preview>
+    <Preview>Thank You for Your Donation</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={heading}>Your Login Code</Heading>
+        <Heading style={heading}>Thank You for Your Donation</Heading>
         <Section style={section}>
+          <Text style={text}>Dear {name},</Text>
           <Text style={text}>
-            Enter the following code on the login page to sign in to your{" "}
-            {siteName} account:
-          </Text>
-          <Text style={codeStyle}>{loginCode}</Text>
-          <Text style={text}>
-            This code will expire in 10 minutes.
+            Thank you for your generous donation to {siteName}. Your
+            support helps us continue our mission.
           </Text>
           <Text style={text}>
-            If you didn't request this code, you can safely ignore this email.
-            Someone else might have typed your email address by mistake.
+            We have received your donation and will be processing it shortly.
+            You will receive a confirmation once your donation has been
+            processed.
           </Text>
         </Section>
         <Text style={footer}>
@@ -47,9 +45,9 @@ const LoginCodeEmail = ({
   </Html>
 );
 
-export default LoginCodeEmail;
+export default ThanksEmail;
 
-// Styles (similar to VerifyEmail, adjust as needed)
+// Styles
 const main = {
   backgroundColor: "#f6f9fc",
   fontFamily:
@@ -82,15 +80,6 @@ const text = {
   fontSize: "16px",
   lineHeight: "24px",
   textAlign: "left" as const,
-};
-
-const codeStyle = {
-  color: "#333",
-  fontSize: "28px",
-  fontWeight: "bold",
-  textAlign: "center" as const,
-  margin: "30px 0",
-  letterSpacing: "4px",
 };
 
 const footer = {

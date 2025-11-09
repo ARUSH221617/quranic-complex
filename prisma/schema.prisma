@@ -258,6 +258,20 @@ model Chat {
   @@index([userId])
 }
 
+// --- Donation ---
+model Donation {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  amount    Float
+  receipt   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+}
+
 model Message {
   id          String      @id @default(cuid())
   chatId      String
