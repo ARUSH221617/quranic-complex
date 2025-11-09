@@ -48,33 +48,24 @@ export default async function Home() {
   return (
     <div>
       {/* Hero Section */}
-<section
-  className="relative isolate min-h-[60vh] sm:min-h-[70vh] lg:min-h-[80vh] bg-cover bg-center text-white"
-  dir={locale === "fa" ? "rtl" : "ltr"}
->
-  {/* Optional background image goes behind the overlay if you add it (see note below) */}
-
-  {/* Color overlay below content, above image */}
-  <div className="absolute inset-0 -z-10 bg-primary/90" />
-
-  {/* Content */}
-  <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-    <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2">
-      <div className="max-w-2xl text-center md:text-start">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight tracking-tight">
-          {t("hero.title")}
-        </h1>
-        <p className="mt-4 text-base sm:text-lg text-gray-200">
-          {t("hero.subtitle")}
-        </p>
-      </div>
-
-      <div className="w-full max-w-md mx-auto md:mx-0">
-        <DonationForm />
-      </div>
-    </div>
-  </div>
-</section>
+      <section className="relative min-h-[80vh] bg-cover bg-center text-white">
+        <div className="absolute inset-0 bg-primary/90"></div>
+        <div className="container relative mx-auto flex h-full min-h-[80vh] flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
+          <div className="flex flex-col-reverse items-center gap-12 lg:flex-row lg:items-center">
+            <div className="text-center lg:text-left">
+              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
+                {t("hero.title")}
+              </h1>
+              <p className="mx-auto mt-4 max-w-xl text-xl text-gray-200 lg:mx-0 lg:max-w-lg">
+                {t("hero.subtitle")}
+              </p>
+            </div>
+            <div className="w-full max-w-md">
+              <DonationForm />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Impact Section */}
       <section className="py-16">
