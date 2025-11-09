@@ -282,6 +282,83 @@ async function main() {
   });
   console.log(`Created contact: ${contact1.name}`);
 
+  // --- Seed Chat Bot Models ---
+
+  // Create a chat
+  const chat1 = await prisma.chat.create({
+    data: {
+      userId: user1.id,
+      title: "First Chat",
+    },
+  });
+
+  // Create messages in the chat
+  const message1 = await prisma.message.create({
+    data: {
+      chatId: chat1.id,
+      role: "USER",
+      parts: JSON.stringify([{ type: "text", text: "Hello, this is a test message." }]),
+      attachments: JSON.stringify([]),
+    },
+  });
+
+  const message2 = await prisma.message.create({
+    data: {
+      chatId: chat1.id,
+      role: "ASSISTANT",
+      parts: JSON.stringify([{ type: "text", text: "Hello, this is a test response." }]),
+      attachments: JSON.stringify([]),
+    },
+  });
+
+  // Create a vote for a message
+  await prisma.vote.create({
+    data: {
+      chatId: chat1.id,
+      messageId: message2.id,
+      isUpvoted: true,
+    },
+  });
+
+  console.log(`Created chat with messages and a vote.`);
+
+  // Create a document
+  const document1 = await prisma.document.create({
+    data: {
+      Did: "doc-1",
+      title: "Test Document",
+      content: "This is the original content of the document.",
+      userId: user1.id,
+      kind: "TEXT",
+    },
+  });
+
+  // Create a suggestion for the document
+  await prisma.suggestion.create({
+    data: {
+      documentId: document1.id,
+      documentCreatedAt: document1.createdAt,
+      originalText: "original content",
+      suggestedText: "updated content",
+      description: "A suggestion to improve the content.",
+      userId: user1.id,
+    },
+  });
+
+  console.log(`Created a document and a suggestion.`);
+
+  // --- Seed Payment ---
+  await prisma.payment.create({
+    data: {
+      userId: user2.id,
+      image: "/placeholder-payment.jpg",
+      description: "Monthly donation",
+      status: "APPROVED",
+    },
+  });
+
+  console.log(`Created a payment record.`);
+
   console.log(`Seeding finished.`);
 }
 
